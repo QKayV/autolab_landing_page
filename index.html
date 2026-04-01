@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>autolab</title>
+  <meta name="description" content="autonomous ai research infrastructure">
+  <meta name="color-scheme" content="dark">
+  <meta property="og:title" content="autolab">
+  <meta property="og:description" content="autonomous ai research infrastructure">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    ::selection {
+      background: #5BDCB4;
+      color: #0A0A0A;
+    }
+
+    body {
+      background: #0A0A0A;
+      color: #F0F0F0;
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 400;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 48px 24px;
+    }
+
+    .content {
+      max-width: 640px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .name-mark {
+      font-size: 52px;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      line-height: 1;
+    }
+
+    .slash {
+      color: #5BDCB4;
+    }
+
+    .tagline {
+      margin-top: 24px;
+      font-size: 14px;
+      font-weight: 400;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #888;
+    }
+
+    .statement {
+      margin-top: 88px;
+      font-size: 16px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: #F0F0F0;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .vision-link {
+      display: inline-block;
+      margin-top: 24px;
+      font-size: 13px;
+      font-weight: 400;
+      color: #888;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .vision-link:hover {
+      color: #5BDCB4;
+    }
+
+    .signup {
+      margin-top: 64px;
+      display: flex;
+      max-width: 420px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .signup input {
+      flex: 1;
+      min-width: 0;
+      background: transparent;
+      border: 1px solid #333;
+      border-right: none;
+      color: #F0F0F0;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 14px;
+      font-weight: 400;
+      padding: 12px 16px;
+      outline: none;
+      border-radius: 0;
+      -webkit-appearance: none;
+      transition: border-color 0.2s;
+    }
+
+    .signup input::placeholder {
+      color: #555;
+    }
+
+    .signup input:focus {
+      border-color: #555;
+    }
+
+    .signup button {
+      background: #5BDCB4;
+      color: #0A0A0A;
+      border: 1px solid #5BDCB4;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 12px 20px;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      border-radius: 0;
+      -webkit-appearance: none;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .signup button:hover {
+      background: #6FE6C3;
+      border-color: #6FE6C3;
+    }
+
+    .signup button:active {
+      background: #4CC9A3;
+      border-color: #4CC9A3;
+    }
+
+    .confirmation {
+      margin-top: 80px;
+      font-size: 14px;
+      font-weight: 400;
+      color: #888;
+      display: none;
+    }
+
+    .footer {
+      margin-top: 120px;
+      font-size: 12px;
+      font-weight: 400;
+      color: #555;
+    }
+
+    @media (max-width: 480px) {
+      .name-mark {
+        font-size: 40px;
+      }
+
+      .statement {
+        margin-top: 64px;
+      }
+
+      .signup {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .signup input {
+        border-right: 1px solid #333;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="content">
+      <h1 class="name-mark">auto<span class="slash">/</span>lab</h1>
+      <p class="tagline">autonomous ai research infrastructure</p>
+
+      <p class="statement">
+        You send the ideas. Your agent writes the code, runs the
+        experiments, reads every log, and decides what to run next.
+      </p>
+
+      <a class="vision-link" href="/manifesto.html">our vision</a>
+
+      <form class="signup" id="signup-form">
+        <input type="email" name="email" placeholder="your email" required autocomplete="email">
+        <button type="submit">request access</button>
+      </form>
+      <p class="confirmation" id="confirmation">we'll be in touch.</p>
+
+      <footer class="footer">autolab 2026</footer>
+    </div>
+  </main>
+
+  <script>
+    // Replace YOUR_FORM_ID with your Formspree form ID (https://formspree.io)
+    var FORMSPREE_ID = 'YOUR_FORM_ID';
+
+    document.getElementById('signup-form').addEventListener('submit', function(e) {
+      e.preventDefault();
+      var form = this;
+      var email = form.querySelector('input[name="email"]').value;
+      var btn = form.querySelector('button');
+      btn.textContent = '...';
+      btn.disabled = true;
+
+      fetch('https://formspree.io/f/' + FORMSPREE_ID, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({ email: email })
+      }).then(function(res) {
+        if (res.ok) {
+          form.style.display = 'none';
+          document.getElementById('confirmation').style.display = 'block';
+        } else {
+          btn.textContent = 'request access';
+          btn.disabled = false;
+        }
+      }).catch(function() {
+        btn.textContent = 'request access';
+        btn.disabled = false;
+      });
+    });
+  </script>
+</body>
+</html>

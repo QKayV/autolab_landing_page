@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>our vision — autolab</title>
+  <meta name="description" content="our vision for autonomous ai research infrastructure">
+  <meta name="color-scheme" content="dark">
+  <meta property="og:title" content="our vision — autolab">
+  <meta property="og:description" content="our vision for autonomous ai research infrastructure">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    ::selection {
+      background: #5BDCB4;
+      color: #0A0A0A;
+    }
+
+    body {
+      background: #0A0A0A;
+      color: #F0F0F0;
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 400;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .page {
+      min-height: 100vh;
+      padding: 80px 24px 64px;
+    }
+
+    .content {
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .name-mark {
+      font-size: 36px;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      text-align: center;
+    }
+
+    .name-mark a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .slash {
+      color: #5BDCB4;
+    }
+
+    .title {
+      margin-top: 72px;
+      font-size: 20px;
+      font-weight: 500;
+      color: #F0F0F0;
+      line-height: 1.4;
+    }
+
+    .beliefs {
+      margin-top: 56px;
+    }
+
+    .belief {
+      margin-bottom: 56px;
+    }
+
+    .belief:last-child {
+      margin-bottom: 0;
+    }
+
+    .belief-statement {
+      font-size: 16px;
+      font-weight: 500;
+      line-height: 1.6;
+      color: #F0F0F0;
+    }
+
+    .belief-support {
+      margin-top: 12px;
+      padding-left: 24px;
+    }
+
+    .belief-support p {
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: #AAA;
+      margin-bottom: 16px;
+    }
+
+    .belief-support p:last-child {
+      margin-bottom: 0;
+    }
+
+    .back-link {
+      margin-top: 80px;
+      padding-top: 48px;
+      border-top: 1px solid #1A1A1A;
+    }
+
+    .back-link a {
+      font-size: 13px;
+      font-weight: 400;
+      color: #888;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .back-link a:hover {
+      color: #5BDCB4;
+      text-decoration: underline;
+      text-decoration-color: #5BDCB4;
+      text-underline-offset: 3px;
+    }
+
+    @media (max-width: 480px) {
+      .page {
+        padding: 48px 20px 48px;
+      }
+
+      .name-mark {
+        font-size: 28px;
+      }
+
+      .title {
+        margin-top: 56px;
+        font-size: 18px;
+      }
+
+      .belief-support {
+        padding-left: 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="content">
+      <div class="name-mark">
+        <a href="/">auto<span class="slash">/</span>lab</a>
+      </div>
+
+      <h1 class="title">our vision</h1>
+
+      <div class="beliefs">
+        <div class="belief">
+          <p class="belief-statement">AI research is becoming an engineering discipline.</p>
+          <div class="belief-support">
+            <p>
+              The era of single-PhD-single-paper is ending. The best results
+              now come from systematic experimentation at scale, not individual
+              flashes of insight.
+            </p>
+            <p>
+              The researchers who win will be the ones who run the most
+              informative experiments per unit of compute, not the most
+              experiments total.
+            </p>
+          </div>
+        </div>
+
+        <div class="belief">
+          <p class="belief-statement">
+            Agents are good at writing code. They are bad at understanding
+            what happened.
+          </p>
+          <div class="belief-support">
+            <p>
+              Autoresearch today is a 630-line system prompt. It works because
+              the codebase fits in a context window. It breaks the moment you
+              try anything real.
+            </p>
+            <p>
+              The bottleneck is not reasoning quality. It is context starvation.
+              Agents make bad decisions because they receive almost no structured
+              information about what actually happened during training.
+            </p>
+          </div>
+        </div>
+
+        <div class="belief">
+          <p class="belief-statement">The missing layer is intelligence infrastructure.</p>
+          <div class="belief-support">
+            <p>
+              Someone needs to log everything that happens during a training run
+              without slowing it down. Compress it into structured, multi-resolution
+              summaries. Assemble the right context for each decision. Feed it to
+              the agent at the right time.
+            </p>
+            <p>
+              This is not a dashboard. This is not experiment tracking. This is a
+              new category of infrastructure that sits between your training code
+              and the agent that decides what to do next.
+            </p>
+          </div>
+        </div>
+
+        <div class="belief">
+          <p class="belief-statement">No compute should sit idle.</p>
+          <div class="belief-support">
+            <p>
+              Every GPU cycle not running an experiment is money lost. Every hour
+              an engineer spends manually analyzing W&B dashboards is an hour the
+              agent should have spent planning the next run.
+            </p>
+            <p>
+              Heterogeneous compute matters. The 3090 sitting unused in your lab
+              can run ablations that inform what the H100 cluster does next.
+            </p>
+          </div>
+        </div>
+
+        <div class="belief">
+          <p class="belief-statement">The right interface is not a dashboard.</p>
+          <div class="belief-support">
+            <p>
+              Dashboards are for humans staring at screens. The future of
+              research interaction is: you send a voice memo from the train
+              with a new idea, and the system implements it, tests it, and
+              tells you what happened.
+            </p>
+            <p>
+              The agent should explain its findings to you. Not the other way
+              around.
+            </p>
+          </div>
+        </div>
+
+        <div class="belief">
+          <p class="belief-statement">We are building this because we need it.</p>
+          <div class="belief-support">
+            <p>
+              We are ML researchers at Harvard and MIT. We train models every day.
+              We have wasted weeks on bugs we should have caught in the first
+              60 seconds of a run.
+            </p>
+            <p>
+              We built autolab because the tools we needed did not exist.
+            </p>
+          </div>
+        </div>
+
+        <div class="belief">
+          <p class="belief-statement">Open research, closed loop.</p>
+          <div class="belief-support">
+            <p>
+              The logging layer is open source. The intelligence layer is our
+              product. We give you deep visibility into your training runs for
+              free. We charge for the system that turns that visibility into
+              better experiments.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="back-link">
+        <a href="/">back to autolab</a>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
