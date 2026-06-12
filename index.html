@@ -79,9 +79,14 @@
       margin-right: auto;
     }
 
-    .vision-link {
-      display: inline-block;
+    .page-links {
       margin-top: 24px;
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+    }
+
+    .page-links a {
       font-size: 13px;
       font-weight: 400;
       color: #888;
@@ -89,7 +94,7 @@
       transition: color 0.2s;
     }
 
-    .vision-link:hover {
+    .page-links a:hover {
       color: #5BDCB4;
     }
 
@@ -167,6 +172,16 @@
       color: #555;
     }
 
+    .footer a {
+      color: #555;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer a:hover {
+      color: #5BDCB4;
+    }
+
     @media (max-width: 480px) {
       .name-mark {
         font-size: 40px;
@@ -198,7 +213,10 @@
         experiments, reads every log, and decides what to run next.
       </p>
 
-      <a class="vision-link" href="/manifesto.html">our vision</a>
+      <nav class="page-links">
+        <a href="/manifesto.html">our vision</a>
+        <a href="/careers.html">careers</a>
+      </nav>
 
       <form class="signup" id="signup-form">
         <input type="email" name="email" placeholder="your email" required autocomplete="email">
@@ -206,7 +224,7 @@
       </form>
       <p class="confirmation" id="confirmation">we'll be in touch.</p>
 
-      <footer class="footer">autolab 2026</footer>
+      <footer class="footer">autolab 2026 · <a href="/careers.html">careers</a></footer>
     </div>
   </main>
 

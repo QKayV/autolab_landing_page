@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>careers — autolab</title>
+  <meta name="description" content="Open roles at autolab. We build autoresearch infrastructure — agents that accelerate model training by automating complex ML experiments and decision-making.">
+  <meta name="color-scheme" content="dark">
+  <meta property="og:title" content="careers — autolab">
+  <meta property="og:description" content="Open roles at autolab. We build autoresearch infrastructure — agents that accelerate model training by automating complex ML experiments and decision-making.">
+  <meta property="og:type" content="website">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    ::selection {
+      background: #5BDCB4;
+      color: #0A0A0A;
+    }
+
+    body {
+      background: #0A0A0A;
+      color: #F0F0F0;
+      font-family: 'IBM Plex Mono', monospace;
+      font-weight: 400;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    .page {
+      min-height: 100vh;
+      padding: 80px 24px 64px;
+    }
+
+    .content {
+      max-width: 640px;
+      margin: 0 auto;
+    }
+
+    .name-mark {
+      font-size: 36px;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      line-height: 1;
+      text-align: center;
+    }
+
+    .name-mark a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .slash {
+      color: #5BDCB4;
+    }
+
+    .title {
+      margin-top: 72px;
+      font-size: 20px;
+      font-weight: 500;
+      color: #F0F0F0;
+      line-height: 1.4;
+    }
+
+    .intro {
+      margin-top: 16px;
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: #AAA;
+    }
+
+    .comp-note {
+      margin-top: 16px;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: #888;
+    }
+
+    .roles {
+      margin-top: 64px;
+    }
+
+    .role {
+      margin-bottom: 72px;
+      padding-top: 48px;
+      border-top: 1px solid #1A1A1A;
+      scroll-margin-top: 24px;
+    }
+
+    .role:last-child {
+      margin-bottom: 0;
+    }
+
+    .role-title {
+      font-size: 18px;
+      font-weight: 500;
+      line-height: 1.4;
+      color: #F0F0F0;
+    }
+
+    .role-title a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .role-title a:hover .role-anchor {
+      color: #5BDCB4;
+    }
+
+    .role-anchor {
+      color: #333;
+      transition: color 0.2s;
+    }
+
+    .role-meta {
+      margin-top: 8px;
+      font-size: 13px;
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      color: #888;
+    }
+
+    .role-about {
+      margin-top: 20px;
+      font-size: 15px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: #AAA;
+    }
+
+    .role-section-label {
+      margin-top: 28px;
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #888;
+    }
+
+    .role ul {
+      margin-top: 12px;
+      padding-left: 24px;
+      list-style: none;
+    }
+
+    .role li {
+      position: relative;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: #AAA;
+      margin-bottom: 8px;
+    }
+
+    .role li::before {
+      content: "/";
+      position: absolute;
+      left: -20px;
+      color: #5BDCB4;
+    }
+
+    .role li:last-child {
+      margin-bottom: 0;
+    }
+
+    .apply-btn {
+      display: inline-block;
+      margin-top: 28px;
+      background: #5BDCB4;
+      color: #0A0A0A;
+      border: 1px solid #5BDCB4;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 12px 20px;
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .apply-btn:hover {
+      background: #6FE6C3;
+      border-color: #6FE6C3;
+    }
+
+    .apply-btn:active {
+      background: #4CC9A3;
+      border-color: #4CC9A3;
+    }
+
+    .open-call {
+      margin-top: 72px;
+      padding-top: 48px;
+      border-top: 1px solid #1A1A1A;
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.7;
+      color: #888;
+    }
+
+    .open-call a {
+      color: #F0F0F0;
+      text-decoration: underline;
+      text-decoration-color: #333;
+      text-underline-offset: 3px;
+      transition: color 0.2s, text-decoration-color 0.2s;
+    }
+
+    .open-call a:hover {
+      color: #5BDCB4;
+      text-decoration-color: #5BDCB4;
+    }
+
+    .back-link {
+      margin-top: 80px;
+      padding-top: 48px;
+      border-top: 1px solid #1A1A1A;
+      display: flex;
+      gap: 24px;
+    }
+
+    .back-link a {
+      font-size: 13px;
+      font-weight: 400;
+      color: #888;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .back-link a:hover {
+      color: #5BDCB4;
+      text-decoration: underline;
+      text-decoration-color: #5BDCB4;
+      text-underline-offset: 3px;
+    }
+
+    @media (max-width: 480px) {
+      .page {
+        padding: 48px 20px 48px;
+      }
+
+      .name-mark {
+        font-size: 28px;
+      }
+
+      .title {
+        margin-top: 56px;
+        font-size: 18px;
+      }
+
+      .roles {
+        margin-top: 48px;
+      }
+
+      .role {
+        margin-bottom: 56px;
+        padding-top: 40px;
+      }
+
+      .role ul {
+        padding-left: 16px;
+      }
+
+      .role li::before {
+        left: -14px;
+      }
+    }
+
+    @media print {
+      body {
+        background: #fff;
+        color: #111;
+      }
+
+      .title, .role-title, .belief-statement {
+        color: #111;
+      }
+
+      .intro, .role-about, .role li {
+        color: #333;
+      }
+
+      .comp-note, .role-meta, .role-section-label, .open-call {
+        color: #555;
+      }
+
+      .apply-btn {
+        background: none;
+        border: 1px solid #555;
+        color: #111;
+      }
+
+      .apply-btn::after {
+        content: " — " attr(href);
+        font-weight: 400;
+      }
+
+      .open-call a {
+        color: #111;
+      }
+
+      .open-call a::after {
+        content: " (" attr(href) ")";
+      }
+
+      .back-link {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <div class="content">
+      <div class="name-mark">
+        <a href="/">auto<span class="slash">/</span>lab</a>
+      </div>
+
+      <h1 class="title">Work with Autolab</h1>
+
+      <p class="intro">
+        Autolab builds autoresearch infrastructure — agents that accelerate
+        model training by automating complex ML experiments and
+        decision-making. We are hiring for our first roles.
+      </p>
+
+      <p class="comp-note">
+        Every role offers competitive salary and meaningful equity.
+      </p>
+
+      <div class="roles">
+
+        <section class="role" id="infrastructure-engineer">
+          <h2 class="role-title">
+            <a href="#infrastructure-engineer"><span class="role-anchor">#</span> Infrastructure Engineer</a>
+          </h2>
+          <p class="role-meta">Cambridge, MA · San Francisco, CA · Full-time</p>
+          <p class="role-about">
+            Build the distributed systems that run thousands of concurrent ML
+            experiments: job orchestration, GPU scheduling, artifact storage,
+            observability.
+          </p>
+          <p class="role-section-label">what you'll do</p>
+          <ul>
+            <li>Design and operate the orchestration layer that schedules thousands of concurrent experiments across heterogeneous GPU fleets.</li>
+            <li>Build GPU scheduling that keeps clusters near full utilization — from a single lab 3090 to multi-node H100 clusters.</li>
+            <li>Own artifact storage for checkpoints, datasets, and logs: versioned, deduplicated, and fast to fetch.</li>
+            <li>Build the observability pipeline that ingests training telemetry at high volume without slowing runs down.</li>
+            <li>Make experiment launches reproducible: environments, dependencies, and data pinned by default.</li>
+            <li>Set the engineering practices — CI, deployment, on-call — that the team grows into.</li>
+          </ul>
+          <p class="role-section-label">what we're looking for</p>
+          <ul>
+            <li>You have built and operated distributed systems in production: schedulers, queues, or storage.</li>
+            <li>Strong Python plus a systems language (Go, Rust, or C++).</li>
+            <li>Hands-on experience with cluster tooling such as Kubernetes, Slurm, or Ray.</li>
+            <li>You have run GPU or HPC workloads and know where they break.</li>
+            <li>Pragmatic by default: ship the simple version, measure, then harden.</li>
+            <li>Comfortable owning large areas with little process in an early-stage team.</li>
+          </ul>
+          <a class="apply-btn" href="https://forms.gle/LmXvrgc22B9tRtZj7" target="_blank" rel="noopener noreferrer">Apply</a>
+        </section>
+
+        <section class="role" id="harness-and-agents-engineer">
+          <h2 class="role-title">
+            <a href="#harness-and-agents-engineer"><span class="role-anchor">#</span> Harness &amp; Agents Engineer</a>
+          </h2>
+          <p class="role-meta">Cambridge, MA · San Francisco, CA · Full-time</p>
+          <p class="role-about">
+            Design the agent harness: tool interfaces, sandboxing, evaluation
+            loops, and the control logic that lets agents plan and execute
+            research autonomously.
+          </p>
+          <p class="role-section-label">what you'll do</p>
+          <ul>
+            <li>Design the tool interfaces agents use to write code, launch experiments, and read results.</li>
+            <li>Build sandboxing that lets agents execute generated code safely against real training infrastructure.</li>
+            <li>Implement evaluation loops that measure whether agents make good research decisions, not just whether code runs.</li>
+            <li>Develop the control logic for long-horizon work: when to branch an experiment, kill a run, or escalate to a human.</li>
+            <li>Instrument agent trajectories so failures are debuggable and successes are repeatable.</li>
+            <li>Iterate on prompts, context assembly, and memory alongside the post-training team.</li>
+          </ul>
+          <p class="role-section-label">what we're looking for</p>
+          <ul>
+            <li>You have built LLM agent systems or harnesses that ran against real workloads, not just demos.</li>
+            <li>Strong software engineering fundamentals and good taste in API design.</li>
+            <li>Experience with isolation and sandboxing: containers, VMs, or permission models.</li>
+            <li>You have written evals and know how easily they mislead.</li>
+            <li>Enough ML background to understand the experiments your agents are running.</li>
+            <li>You treat agent reliability as an engineering problem, not a prompting trick.</li>
+          </ul>
+          <a class="apply-btn" href="https://forms.gle/LmXvrgc22B9tRtZj7" target="_blank" rel="noopener noreferrer">Apply</a>
+        </section>
+
+        <section class="role" id="post-training-ml-engineer">
+          <h2 class="role-title">
+            <a href="#post-training-ml-engineer"><span class="role-anchor">#</span> Post-training ML Engineer</a>
+          </h2>
+          <p class="role-meta">Cambridge, MA · San Francisco, CA · Full-time</p>
+          <p class="role-about">
+            Own post-training for our agent models: RL and SFT pipelines,
+            reward design, evals, and data engines built from experiment
+            trajectories.
+          </p>
+          <p class="role-section-label">what you'll do</p>
+          <ul>
+            <li>Own RL and SFT pipelines end to end: data, training, evaluation, and deployment.</li>
+            <li>Design reward signals for research decisions, where ground truth arrives hours or days after the action.</li>
+            <li>Build data engines that turn experiment trajectories into training data.</li>
+            <li>Run post-training experiments with proper baselines and ablations, and write up what you learn.</li>
+            <li>Build the eval suites that catch capability regressions before they ship.</li>
+            <li>Work with the harness team to close the loop between agent behavior and model updates.</li>
+          </ul>
+          <p class="role-section-label">what we're looking for</p>
+          <ul>
+            <li>Hands-on post-training experience with LLMs: SFT, RLHF/RLAIF, DPO, or similar.</li>
+            <li>Strong PyTorch or JAX, and comfort working inside distributed training stacks.</li>
+            <li>Empirical rigor: you reach for a baseline and an ablation before an opinion.</li>
+            <li>You have felt reward hacking and eval overfitting firsthand and design against them.</li>
+            <li>Able to build the data tooling around training, not just the training loop.</li>
+            <li>Publications or shipped models are both welcome; neither is required.</li>
+          </ul>
+          <a class="apply-btn" href="https://forms.gle/LmXvrgc22B9tRtZj7" target="_blank" rel="noopener noreferrer">Apply</a>
+        </section>
+
+        <section class="role" id="forward-deployed-engineer">
+          <h2 class="role-title">
+            <a href="#forward-deployed-engineer"><span class="role-anchor">#</span> Forward Deployed Engineer</a>
+          </h2>
+          <p class="role-meta">Cambridge, MA · San Francisco, CA · Remote (US) · Full-time</p>
+          <p class="role-about">
+            Embed with design partners (self-driving, robotics, CV teams),
+            integrate Autolab into their training stacks, and feed what you
+            learn back into the product.
+          </p>
+          <p class="role-section-label">what you'll do</p>
+          <ul>
+            <li>Embed with design partners in self-driving, robotics, and computer vision, and get Autolab running in their training stacks.</li>
+            <li>Debug across the boundary: their training code, our agents, and the infrastructure in between.</li>
+            <li>Build the integrations, adapters, and examples that make the next deployment faster than the last.</li>
+            <li>Turn partner pain points into concrete, prioritized product feedback.</li>
+            <li>Be the partner's technical point of contact from first call to production use.</li>
+            <li>Travel to partner sites when the problem is easier to solve in the same room.</li>
+          </ul>
+          <p class="role-section-label">what we're looking for</p>
+          <ul>
+            <li>A strong generalist engineer who is productive in an unfamiliar codebase within days.</li>
+            <li>Real ML training experience — you have trained models, not just called APIs.</li>
+            <li>You communicate clearly with customers, including when the news is bad.</li>
+            <li>Bias to ownership: when something is broken at a partner, you fix it or find who can.</li>
+            <li>Comfortable with ambiguity, context switching, and occasional travel.</li>
+            <li>You enjoy being the person the product gets judged by.</li>
+          </ul>
+          <a class="apply-btn" href="https://forms.gle/LmXvrgc22B9tRtZj7" target="_blank" rel="noopener noreferrer">Apply</a>
+        </section>
+
+        <section class="role" id="chief-of-staff">
+          <h2 class="role-title">
+            <a href="#chief-of-staff"><span class="role-anchor">#</span> Chief of Staff</a>
+          </h2>
+          <p class="role-meta">Cambridge, MA · San Francisco, CA · Full-time</p>
+          <p class="role-about">
+            Work directly with the founders on operations, hiring, partner
+            relationships, and everything that keeps a fast-moving research
+            company running.
+          </p>
+          <p class="role-section-label">what you'll do</p>
+          <ul>
+            <li>Run hiring end to end: sourcing, pipelines, scheduling, references, and closing.</li>
+            <li>Own day-to-day operations: legal, finance, vendors, and workspace.</li>
+            <li>Manage partner and investor relationships alongside the founders.</li>
+            <li>Build the lightweight internal processes the team needs — and kill the ones it doesn't.</li>
+            <li>Take whole problems off the founders' plates and return them solved.</li>
+            <li>Keep the company's commitments tracked and kept as the pace increases.</li>
+          </ul>
+          <p class="role-section-label">what we're looking for</p>
+          <ul>
+            <li>Experience at an early-stage startup or another environment where you owned outcomes, not tasks.</li>
+            <li>Excellent writing: you can turn a messy discussion into a clear one-pager.</li>
+            <li>Organized under load — many threads, none dropped.</li>
+            <li>Comfortable with contracts, budgets, and people in the same afternoon.</li>
+            <li>Enough technical fluency to follow what an ML research company builds and why.</li>
+            <li>Discretion and judgment: you will see everything.</li>
+          </ul>
+          <a class="apply-btn" href="https://forms.gle/LmXvrgc22B9tRtZj7" target="_blank" rel="noopener noreferrer">Apply</a>
+        </section>
+
+      </div>
+
+      <p class="open-call">
+        Don't see your role? Tell us what you'd build:
+        <a href="https://forms.gle/LmXvrgc22B9tRtZj7" target="_blank" rel="noopener noreferrer">apply here</a>
+      </p>
+
+      <div class="back-link">
+        <a href="/">back to autolab</a>
+        <a href="/manifesto.html">our vision</a>
+      </div>
+    </div>
+  </main>
+</body>
+</html>
