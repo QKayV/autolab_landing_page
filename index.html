@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="color-scheme" content="light">
 <title>Autolab · Supercharge your research</title>
 <meta name="description" content="Autolab turns each of your researchers into a hundred. A thousand experiments in parallel, on your compute, scored against your evals.">
 <meta property="og:title" content="Autolab · Supercharge your research">
@@ -19,8 +18,6 @@ body{background:var(--paper);font-family:'IBM Plex Sans',sans-serif;color:#1A191
 .topbar{position:sticky;top:0;z-index:50;background:rgba(247,245,240,.97);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid #DCD8CA}
 .wordmark{font-weight:500;font-size:19px;letter-spacing:-.01em;color:var(--ink)}
 .navlinks{display:flex;gap:28px;align-items:center}
-.navlinks a{color:inherit;text-decoration:none}
-a:focus-visible,.btn:focus-visible{outline:2px solid var(--mint-deep);outline-offset:3px;border-radius:3px}
 .navbtn{border:1px solid #B9B4A4;padding:8px 16px;border-radius:3px;color:var(--ink)}
 .eyebrow{font:500 13px/1 'IBM Plex Mono',monospace;letter-spacing:.09em;color:#8A857A;margin-bottom:16px}
 h1{font:500 clamp(40px,4.8vw,72px)/1.08 'IBM Plex Serif',serif;letter-spacing:-.015em}
@@ -112,6 +109,9 @@ section{padding:84px 0 0}
 a.btn{text-decoration:none;color:inherit;display:inline-block}
 .fl a{color:inherit;text-decoration:none;cursor:pointer}
 .fl a:hover{color:var(--ink)}
+.heropill{display:inline-block;font:500 11.5px/1 'IBM Plex Mono',monospace;letter-spacing:.14em;color:#6E6A5E;border:1px solid #C9C5B8;border-radius:999px;padding:8px 15px;margin-bottom:26px}
+#rail{position:absolute;top:0;left:0;pointer-events:none;z-index:1;display:none}
+@media (min-width:768px){#rail{display:block}}
 .figcap{font:400 12.5px/1.6 'IBM Plex Mono',monospace;color:#8A857A;text-align:center;padding-top:10px}
 .seg{stroke-dasharray:1;stroke-dashoffset:1}
 .dot{opacity:0;transform-box:fill-box;transform-origin:center;transform:scale(.2)}
@@ -153,7 +153,10 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 .trust p{font:400 16px/1.65 'IBM Plex Sans',sans-serif;color:#5C584E;max-width:62ch}
 .backed{font:400 13px/2 'IBM Plex Mono',monospace;color:#8A857A;margin-top:22px}
 .backed b{color:#55524A;font-weight:500}
-.closer{margin:120px 0 0;padding:90px 0;border-top:1px solid #DDD8C9;text-align:center}
+.closer{margin:120px 0 0;padding:110px 0;background:#141414;text-align:center}
+.closer .line{color:#F7F5F0}
+.closer .line em{color:#2FCE96}
+.closer .sub2{color:#A8A49A}
 .closer .line{font:italic 500 clamp(26px,3vw,42px)/1.25 'IBM Plex Serif',serif;margin-bottom:14px}
 .closer .line em{color:var(--mint-deep)}
 .closer .sub2{font:400 16px/1.55 'IBM Plex Sans',sans-serif;color:#8A857A;margin-bottom:34px}
@@ -167,7 +170,10 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
   .herocols{padding-bottom:3vh}
 }
 @media (max-width:1000px){.fold{min-height:0}.herocols{flex:none;padding:24px 0 40px}.fansil{height:auto;width:100%}.herocols,.seccols,.rowhead,.trust .inner{flex-direction:column}.cards3{grid-template-columns:1fr}.pilotrow{grid-template-columns:1fr 1fr}.heroright{padding-top:0;width:100%}.agrid{grid-template-columns:1fr 1fr}}
+
+a:focus-visible,.btn:focus-visible{outline:2px solid var(--mint-deep);outline-offset:3px;border-radius:3px}
 </style></head><body>
+<svg id="rail" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"></svg>
 <header class="topbar"><nav class="nav" aria-label="Main"><div class="wordmark">autolab<span class="caret2">▮</span></div><div class="navlinks"><a class="navbtn" href="https://calendar.superhuman.com/book/11Wx5q95SPgTTclPo4/KrRGA" target="_blank" rel="noopener">Book a demo</a></div></nav></header>
 <div class="inner">
 
@@ -176,6 +182,7 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 <!-- HERO: statement + CLI going -->
 <div class="herocols">
   <div class="heroleft">
+    <div class="heropill">THE AUTORESEARCH PLATFORM</div>
     <h1 aria-label="Supercharge your research, training, inference">Supercharge your <em id="herocycle" aria-hidden="true">research</em></h1>
     <p class="sub">A thousand experiments in parallel, on your compute, scored against your evals. State of the art with the team and budget you already have.</p>
     <div class="ctarow"><a class="btn" href="https://calendar.superhuman.com/book/11Wx5q95SPgTTclPo4/KrRGA" target="_blank" rel="noopener">Book a demo</a></div>
@@ -193,12 +200,11 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
 
 <!-- 01 A THOUSAND AT ONCE -->
 <section>
-  <div class="seccols" style="margin-top:6px;align-items:flex-start">
-    <div class="txt" style="padding-top:26px">
+  <div class="rowhead">
+    <div class="txt">
       <h2 class="rv">One thousand agents. One goal.</h2>
-      <p class="body rv d1">Write down what you want: beat this baseline, cut this latency, test these three ideas. Autolab reads your repo, plans the experiments, and spins up an agent for each one, across every machine you give it. They keep going until the goal is met.</p>
+      <p class="body rv d1" style="max-width:680px">Write down what you want: beat this baseline, cut this latency, test these three ideas. Autolab reads your repo, plans the experiments, and spins up an agent for each one, across every machine you give it. They keep going until the goal is met.</p>
     </div>
-    <div class="fig" id="fandiv"><svg class="fanport" role="img" aria-label="One goal branches into three experiments, nine follow-ups, then a wide swarm of twenty-seven; losers get a pruning mark, three winners turn mint, and the best one sweeps down to a single merge" viewBox="0 0 680 620" xmlns="http://www.w3.org/2000/svg"><circle cx="340" cy="28" r="4.5" fill="#55524A"/><path class="seg" data-s="0.04" data-e="0.18" pathLength="1" d="M340,28 C 340,109 170,109 170,175" fill="none" stroke="#A8A393" stroke-width="1.7"/><circle class="dot" data-s="0.15" data-e="0.2" cx="170" cy="175" r="4" fill="#F7F5F0" stroke="#8F8A79" stroke-width="1.2"/><path class="seg" data-s="0.06" data-e="0.2" pathLength="1" d="M340,28 C 340,109 340,109 340,175" fill="none" stroke="#A8A393" stroke-width="1.7"/><circle class="dot" data-s="0.17" data-e="0.22" cx="340" cy="175" r="4" fill="#F7F5F0" stroke="#8F8A79" stroke-width="1.2"/><path class="seg" data-s="0.08" data-e="0.22" pathLength="1" d="M340,28 C 340,109 510,109 510,175" fill="none" stroke="#A8A393" stroke-width="1.7"/><circle class="dot" data-s="0.19" data-e="0.24" cx="510" cy="175" r="4" fill="#F7F5F0" stroke="#8F8A79" stroke-width="1.2"/><path class="seg" data-s="0.24" data-e="0.4" pathLength="1" d="M170,175 C 170,260 60,260 60,330" fill="none" stroke="#BEB9A9" stroke-width="1.2"/><circle class="dot" data-s="0.37" data-e="0.42" cx="60" cy="330" r="3.1" fill="#F7F5F0" stroke="#9C9784" stroke-width="1"/><path class="seg" data-s="0.262" data-e="0.422" pathLength="1" d="M170,175 C 170,260 130,260 130,330" fill="none" stroke="#BEB9A9" stroke-width="1.2"/><circle class="dot" data-s="0.392" data-e="0.442" cx="130" cy="330" r="3.1" fill="#F7F5F0" stroke="#9C9784" stroke-width="1"/><path class="seg" data-s="0.284" data-e="0.444" pathLength="1" d="M170,175 C 170,260 200,260 200,330" fill="none" stroke="#BEB9A9" stroke-width="1.2"/><circle class="dot" data-s="0.414" data-e="0.464" cx="200" cy="330" r="3.1" fill="#F7F5F0" stroke="#9C9784" stroke-width="1"/><path class="seg" data-s="0.252" data-e="0.412" pathLength="1" d="M340,175 C 340,260 270,260 270,330" fill="none" stroke="#BEB9A9" stroke-width="1.2"/><circle class="dot" data-s="0.382" data-e="0.432" cx="270" cy="330" r="3.1" fill="#F7F5F0" stroke="#9C9784" stroke-width="1"/><path class="seg" data-s="0.274" data-e="0.434" pathLength="1" d="M340,175 C 340,260 340,260 340,330" fill="none" stroke="#BEB9A9" stroke-width="1.2"/><circle class="dot" data-s="0.404" data-e="0.454" cx="340" cy="330" r="3.1" fill="#F7F5F0" stroke="#9C9784" stroke-width="1"/><path class="seg" data-s="0.296" data-e="0.456" pathLength="1" d="M340,175 C 340,260 410,260 410,330" fill="none" stroke="#BEB9A9" stroke-width="1.2"/><circle class="dot" data-s="0.426" data-e="0.476" cx="410" cy="330" r="3.1" fill="#F7F5F0" stroke="#9C9784" stroke-width="1"/><path class="seg" data-s="0.264" data-e="0.424" pathLength="1" d="M510,175 C 510,260 480,260 480,330" fill="none" stroke="#BEB9A9" stroke-width="1.2"/><circle class="dot" data-s="0.394" data-e="0.444" cx="480" cy="330" r="3.1" fill="#F7F5F0" stroke="#9C9784" stroke-width="1"/><path class="seg" data-s="0.286" data-e="0.446" pathLength="1" d="M510,175 C 510,260 550,260 550,330" fill="none" stroke="#BEB9A9" stroke-width="1.2"/><circle class="dot" data-s="0.416" data-e="0.466" cx="550" cy="330" r="3.1" fill="#F7F5F0" stroke="#9C9784" stroke-width="1"/><path class="seg" data-s="0.308" data-e="0.468" pathLength="1" d="M510,175 C 510,260 620,260 620,330" fill="none" stroke="#BEB9A9" stroke-width="1.2"/><circle class="dot" data-s="0.438" data-e="0.488" cx="620" cy="330" r="3.1" fill="#F7F5F0" stroke="#9C9784" stroke-width="1"/><path class="seg g3" data-s="0.5" data-e="0.66" pathLength="1" d="M60,330 C 60,412 26,412 26,480" fill="none" stroke="#CFCABB" stroke-width="0.9"/><circle class="dot tip" data-s="0.64" data-e="0.69" cx="26" cy="480" r="2.5" fill="#F7F5F0" stroke="#A8A393" stroke-width="0.9"/><g class="lbl xg" data-s="0.74" data-e="0.79" stroke="#A8A393" stroke-width="1.1"><line x1="23" y1="476.9" x2="29" y2="483.1"/><line x1="23" y1="483.1" x2="29" y2="476.9"/></g><path class="seg g3" data-s="0.518" data-e="0.678" pathLength="1" d="M60,330 C 60,412 50,412 50,480" fill="none" stroke="#CFCABB" stroke-width="0.9"/><circle class="dot tip" data-s="0.658" data-e="0.708" cx="50" cy="480" r="2.5" fill="#F7F5F0" stroke="#A8A393" stroke-width="0.9"/><g class="lbl xg" data-s="0.751" data-e="0.801" stroke="#A8A393" stroke-width="1.1"><line x1="47" y1="476.9" x2="53" y2="483.1"/><line x1="47" y1="483.1" x2="53" y2="476.9"/></g><path class="seg g3" data-s="0.536" data-e="0.696" pathLength="1" d="M60,330 C 60,412 74,412 74,480" fill="none" stroke="#CFCABB" stroke-width="0.9"/><circle class="dot tip" data-s="0.676" data-e="0.726" cx="74" cy="480" r="2.5" fill="#F7F5F0" stroke="#A8A393" stroke-width="0.9"/><g class="lbl xg" data-s="0.762" data-e="0.812" stroke="#A8A393" stroke-width="1.1"><line x1="71" y1="476.9" x2="77" y2="483.1"/><line x1="71" y1="483.1" x2="77" y2="476.9"/></g><path class="seg g3" data-s="0.5" data-e="0.66" pathLength="1" d="M130,330 C 130,412 98,412 98,480" fill="none" stroke="#CFCABB" stroke-width="0.9"/><circle class="dot tip" data-s="0.64" data-e="0.69" cx="98" cy="480" r="2.5" fill="#F7F5F0" stroke="#A8A393" stroke-width="0.9"/><g class="lbl xg" data-s="0.773" data-e="0.823" stroke="#A8A393" stroke-width="1.1"><line x1="95" y1="476.9" x2="102" y2="483.1"/><line x1="95" y1="483.1" x2="102" y2="476.9"/></g><path class="seg g3" data-s="0.518" data-e="0.678" pathLength="1" d="M130,330 C 130,412 123,412 123,480" fill="none" stroke="#0FA97A" stroke-width="1.5"/><circle class="dot tip" data-s="0.658" data-e="0.708" cx="123" cy="480" r="4.2" fill="#2FCE96" stroke="#0C8A5F" stroke-width="1.3"/><g class="lbl xg" data-s="0.784" data-e="0.834" style="display:none" stroke="#A8A393" stroke-width="1.1"><line x1="120" y1="476.9" x2="126" y2="483.1"/><line x1="120" y1="483.1" x2="126" y2="476.9"/></g><path class="seg g3" data-s="0.536" data-e="0.696" pathLength="1" d="M130,330 C 130,412 147,412 147,480" fill="none" stroke="#CFCABB" stroke-width="0.9"/><circle class="dot tip" data-s="0.676" data-e="0.726" cx="147" cy="480" r="2.5" fill="#F7F5F0" stroke="#A8A393" stroke-width="0.9"/><g class="lbl xg" data-s="0.795" data-e="0.845" stroke="#A8A393" stroke-width="1.1"><line x1="144" y1="476.9" x2="150" y2="483.1"/><line x1="144" y1="483.1" x2="150" y2="476.9"/></g><path class="seg g3" data-s="0.5" data-e="0.66" pathLength="1" d="M200,330 C 200,412 171,412 171,480" fill="none" stroke="#CFCABB" stroke-width="0.9"/><circle class="dot tip" data-s="0.64" data-e="0.69" cx="171" cy="480" r="2.5" fill="#F7F5F0" stroke="#A8A393" stroke-width="0.9"/><g class="lbl xg" data-s="0.806" data-e="0.856" stroke="#A8A393" stroke-width="1.1"><line x1="168" y1="476.9" x2="174" y2="483.1"/><line x1="168" y1="483.1" x2="174" y2="476.9"/></g><path class="seg g3" data-s="0.518" data-e="0.678" pathLength="1" d="M200,330 C 200,412 195,412 195,480" fill="none" stroke="#CFCABB" stroke-width="0.9"/><circle class="dot tip" data-s="0.658" data-e="0.708" cx="195" cy="480" r="2.5" fill="#F7F5F0" stroke="#A8A393" stroke-width="0.9"/><g class="lbl xg" data-s="0.817" data-e="0.867" stroke="#A8A393" stroke-width="1.1"><line x1="192" y1="476.9" x2="198" y2="483.1"/><line x1="192" y1="483.1" x2="198" y2="476.9"/></g><path class="seg g3" data-s="0.536" data-e="0.696" pathLength="1" d="M200,330 C 200,412 219,412 219,480" fill="none" stroke="#CFCABB" stroke-width="0.9"/><circle class="dot tip" data-s="0.676" data-e="0.726" cx="219" cy="480" r="2.5" fill="#F7F5F0" stroke="#A8A393" stroke-width="0.9"/><g class="lbl xg" data-s="0.828" data-e="0.878" stroke="#A8A393" stroke-width="1.1"><line x1="216" y1="476.9" x2="222" y2="483.1"/><line x1="216" y1="483.1" x2="222" y2="476.9"/></g><path class="seg g3" data-s="0.512" data-e="0.672" pathLength="1" d="M270,330 C 270,412 243,412 243,480" fill="none" stroke="#CFCABB" stroke-width="0.9"/><circle class="dot tip" data-s="0.652" data-e="0.702" cx="243" cy="480" r="2.5" fill="#F7F5F0" stroke="#A8A393" stroke-width="0.9"/><g class="lbl xg" data-s="0.74" data-e="0.79" stroke="#A8A393" stroke-width="1.1"><line x1="240" y1="476.9" x2="246" y2="483.1"/><line x1="240" y1="483.1" x2="246" y2="476.9"/></g><path class="seg g3" data-s="0.53" data-e="0.69" pathLength="1" d="M270,330 C 270,412 268,412 268,480" fill="none" stroke="#CFCABB" stroke-width="0.9"/><circle class="dot tip" data-s="0.67" data-e="0.72" cx="268" cy="480" r="2.5" fill="#F7F5F0" stroke="#A8A393" stroke-width="0.9"/><g class="lbl xg" data-s="0.751" data-e="0.801" stroke="#A8A393" stroke-width="1.1"><line x1="264" y1="476.9" x2="271" y2="483.1"/><line x1="264" y1="483.1" x2="271" y2="476.9"/></g><path class="seg g3" data-s="0.548" data-e="0.708" pathLength="1" d="M270,330 C 270,412 292,412 292,480" fill="none" stroke="#CFCABB" stroke-width="0.9"/><circle class="dot tip" data-s="0.688" data-e="0.738" cx="292" cy="480" r="2.5" fill="#F7F5F0" stroke="#A8A393" stroke-width="0.9"/><g class="lbl xg" data-s="0.762" data-e="0.812" stroke="#A8A393" stroke-width="1.1"><line x1="289" y1="476.9" x2="295" y2="483.1"/><line x1="289" y1="483.1" x2="295" y2="476.9"/></g><path class="seg g3" data-s="0.512" data-e="0.672" pathLength="1" d="M340,330 C 340,412 316,412 316,480" fill="none" stroke="#CFCABB" stroke-width="0.9"/><circle class="dot tip" data-s="0.652" data-e="0.702" cx="316" cy="480" r="2.5" fill="#F7F5F0" stroke="#A8A393" stroke-width="0.9"/><g class="lbl xg" data-s="0.773" data-e="0.823" stroke="#A8A393" stroke-width="1.1"><line x1="313" y1="476.9" x2="319" y2="483.1"/><line x1="313" y1="483.1" x2="319" y2="476.9"/></g><path class="seg g3" data-s="0.53" data-e="0.69" pathLength="1" d="M340,330 C 340,412 340,412 340,480" fill="none" stroke="#0FA97A" stroke-width="1.5"/><circle class="dot tip" data-s="0.67" data-e="0.72" cx="340" cy="480" r="5" fill="#2FCE96" stroke="#0C8A5F" stroke-width="1.3"/><g class="lbl xg" data-s="0.784" data-e="0.834" style="display:none" stroke="#A8A393" stroke-width="1.1"><line x1="337" y1="476.9" x2="343" y2="483.1"/><line x1="337" y1="483.1" x2="343" y2="476.9"/></g><path class="seg g3" data-s="0.548" data-e="0.708" pathLength="1" d="M340,330 C 340,412 364,412 364,480" fill="none" stroke="#CFCABB" stroke-width="0.9"/><circle class="dot tip" data-s="0.688" data-e="0.738" cx="364" cy="480" r="2.5" fill="#F7F5F0" stroke="#A8A393" stroke-width="0.9"/><g class="lbl xg" data-s="0.795" data-e="0.845" stroke="#A8A393" stroke-width="1.1"><line x1="361" y1="476.9" x2="367" y2="483.1"/><line x1="361" y1="483.1" x2="367" y2="476.9"/></g><path class="seg g3" data-s="0.512" data-e="0.672" pathLength="1" d="M410,330 C 410,412 388,412 388,480" fill="none" stroke="#CFCABB" stroke-width="0.9"/><circle class="dot tip" data-s="0.652" data-e="0.702" cx="388" cy="480" r="2.5" fill="#F7F5F0" stroke="#A8A393" stroke-width="0.9"/><g class="lbl xg" data-s="0.806" data-e="0.856" stroke="#A8A393" stroke-width="1.1"><line x1="385" y1="476.9" x2="391" y2="483.1"/><line x1="385" y1="483.1" x2="391" y2="476.9"/></g><path class="seg g3" data-s="0.53" data-e="0.69" pathLength="1" d="M410,330 C 410,412 412,412 412,480" fill="none" stroke="#CFCABB" stroke-width="0.9"/><circle class="dot tip" data-s="0.67" data-e="0.72" cx="412" cy="480" r="2.5" fill="#F7F5F0" stroke="#A8A393" stroke-width="0.9"/><g class="lbl xg" data-s="0.817" data-e="0.867" stroke="#A8A393" stroke-width="1.1"><line x1="409" y1="476.9" x2="416" y2="483.1"/><line x1="409" y1="483.1" x2="416" y2="476.9"/></g><path class="seg g3" data-s="0.548" data-e="0.708" pathLength="1" d="M410,330 C 410,412 437,412 437,480" fill="none" stroke="#CFCABB" stroke-width="0.9"/><circle class="dot tip" data-s="0.688" data-e="0.738" cx="437" cy="480" r="2.5" fill="#F7F5F0" stroke="#A8A393" stroke-width="0.9"/><g class="lbl xg" data-s="0.828" data-e="0.878" stroke="#A8A393" stroke-width="1.1"><line x1="434" y1="476.9" x2="440" y2="483.1"/><line x1="434" y1="483.1" x2="440" y2="476.9"/></g><path class="seg g3" data-s="0.524" data-e="0.684" pathLength="1" d="M480,330 C 480,412 461,412 461,480" fill="none" stroke="#CFCABB" stroke-width="0.9"/><circle class="dot tip" data-s="0.664" data-e="0.714" cx="461" cy="480" r="2.5" fill="#F7F5F0" stroke="#A8A393" stroke-width="0.9"/><g class="lbl xg" data-s="0.74" data-e="0.79" stroke="#A8A393" stroke-width="1.1"><line x1="458" y1="476.9" x2="464" y2="483.1"/><line x1="458" y1="483.1" x2="464" y2="476.9"/></g><path class="seg g3" data-s="0.542" data-e="0.702" pathLength="1" d="M480,330 C 480,412 485,412 485,480" fill="none" stroke="#CFCABB" stroke-width="0.9"/><circle class="dot tip" data-s="0.682" data-e="0.732" cx="485" cy="480" r="2.5" fill="#F7F5F0" stroke="#A8A393" stroke-width="0.9"/><g class="lbl xg" data-s="0.751" data-e="0.801" stroke="#A8A393" stroke-width="1.1"><line x1="482" y1="476.9" x2="488" y2="483.1"/><line x1="482" y1="483.1" x2="488" y2="476.9"/></g><path class="seg g3" data-s="0.56" data-e="0.72" pathLength="1" d="M480,330 C 480,412 509,412 509,480" fill="none" stroke="#CFCABB" stroke-width="0.9"/><circle class="dot tip" data-s="0.7" data-e="0.75" cx="509" cy="480" r="2.5" fill="#F7F5F0" stroke="#A8A393" stroke-width="0.9"/><g class="lbl xg" data-s="0.762" data-e="0.812" stroke="#A8A393" stroke-width="1.1"><line x1="506" y1="476.9" x2="512" y2="483.1"/><line x1="506" y1="483.1" x2="512" y2="476.9"/></g><path class="seg g3" data-s="0.524" data-e="0.684" pathLength="1" d="M550,330 C 550,412 533,412 533,480" fill="none" stroke="#CFCABB" stroke-width="0.9"/><circle class="dot tip" data-s="0.664" data-e="0.714" cx="533" cy="480" r="2.5" fill="#F7F5F0" stroke="#A8A393" stroke-width="0.9"/><g class="lbl xg" data-s="0.773" data-e="0.823" stroke="#A8A393" stroke-width="1.1"><line x1="530" y1="476.9" x2="536" y2="483.1"/><line x1="530" y1="483.1" x2="536" y2="476.9"/></g><path class="seg g3" data-s="0.542" data-e="0.702" pathLength="1" d="M550,330 C 550,412 557,412 557,480" fill="none" stroke="#0FA97A" stroke-width="1.5"/><circle class="dot tip" data-s="0.682" data-e="0.732" cx="557" cy="480" r="4.2" fill="#2FCE96" stroke="#0C8A5F" stroke-width="1.3"/><g class="lbl xg" data-s="0.784" data-e="0.834" style="display:none" stroke="#A8A393" stroke-width="1.1"><line x1="554" y1="476.9" x2="560" y2="483.1"/><line x1="554" y1="483.1" x2="560" y2="476.9"/></g><path class="seg g3" data-s="0.56" data-e="0.72" pathLength="1" d="M550,330 C 550,412 582,412 582,480" fill="none" stroke="#CFCABB" stroke-width="0.9"/><circle class="dot tip" data-s="0.7" data-e="0.75" cx="582" cy="480" r="2.5" fill="#F7F5F0" stroke="#A8A393" stroke-width="0.9"/><g class="lbl xg" data-s="0.795" data-e="0.845" stroke="#A8A393" stroke-width="1.1"><line x1="578" y1="476.9" x2="585" y2="483.1"/><line x1="578" y1="483.1" x2="585" y2="476.9"/></g><path class="seg g3" data-s="0.524" data-e="0.684" pathLength="1" d="M620,330 C 620,412 606,412 606,480" fill="none" stroke="#CFCABB" stroke-width="0.9"/><circle class="dot tip" data-s="0.664" data-e="0.714" cx="606" cy="480" r="2.5" fill="#F7F5F0" stroke="#A8A393" stroke-width="0.9"/><g class="lbl xg" data-s="0.806" data-e="0.856" stroke="#A8A393" stroke-width="1.1"><line x1="603" y1="476.9" x2="609" y2="483.1"/><line x1="603" y1="483.1" x2="609" y2="476.9"/></g><path class="seg g3" data-s="0.542" data-e="0.702" pathLength="1" d="M620,330 C 620,412 630,412 630,480" fill="none" stroke="#CFCABB" stroke-width="0.9"/><circle class="dot tip" data-s="0.682" data-e="0.732" cx="630" cy="480" r="2.5" fill="#F7F5F0" stroke="#A8A393" stroke-width="0.9"/><g class="lbl xg" data-s="0.817" data-e="0.867" stroke="#A8A393" stroke-width="1.1"><line x1="627" y1="476.9" x2="633" y2="483.1"/><line x1="627" y1="483.1" x2="633" y2="476.9"/></g><path class="seg g3" data-s="0.56" data-e="0.72" pathLength="1" d="M620,330 C 620,412 654,412 654,480" fill="none" stroke="#CFCABB" stroke-width="0.9"/><circle class="dot tip" data-s="0.7" data-e="0.75" cx="654" cy="480" r="2.5" fill="#F7F5F0" stroke="#A8A393" stroke-width="0.9"/><g class="lbl xg" data-s="0.828" data-e="0.878" stroke="#A8A393" stroke-width="1.1"><line x1="651" y1="476.9" x2="657" y2="483.1"/><line x1="651" y1="483.1" x2="657" y2="476.9"/></g><path class="seg" id="mergeseg" data-s="0.86" data-e="0.96" pathLength="1" d="M340,480 C 340,532 340,532 340,575" fill="none" stroke="#0FA97A" stroke-width="2.2"/><circle class="dot" data-s="0.95" data-e="1.0" cx="340" cy="579" r="7" fill="#2FCE96" stroke="#0C8A5F" stroke-width="1.6"/></svg></div>
   </div>
   <div class="agpanel rv">
     <div class="ahead"><span><span class="adot"></span>autolab · your-repo/frontier-model</span><span class="alive">24 AGENTS · LIVE</span></div>
@@ -289,13 +295,15 @@ a.btn{text-decoration:none;color:inherit;display:inline-block}
   </div>
   <div style="margin-top:30px"><a class="btn ghost" href="careers.html">Careers →</a></div>
 </section>
+</div>
 
-<div class="closer">
+<div class="closer"><div class="inner">
   <div class="line">One researcher. A lab&#8217;s worth of <em>insights</em>.</div>
   <div class="sub2">We are entering the era of autonomous research.</div>
   <a class="btn" href="https://calendar.superhuman.com/book/11Wx5q95SPgTTclPo4/KrRGA" target="_blank" rel="noopener">Book a demo</a>
-</div>
+</div></div>
 
+<div class="inner">
 <div class="footer"><span>autolab▮ © 2026</span><div class="fl"><a href="https://docs.autolab.ai">docs</a><a href="manifesto.html">vision</a><a href="careers.html">careers</a><a href="mailto:seanaklein@gmail.com">contact</a></div></div>
 </div>
 
@@ -391,6 +399,7 @@ var DELAYS=[850,850,1300,900,850,900,1500,950,900,1300,1400,1600];
       tiles[idx].classList.remove('sel');
       tiles[idx].setAttribute('aria-expanded', 'false');
       det.classList.remove('open');
+      if (window.__railRefresh) window.__railRefresh();
       setTimeout(function(){
         if (adStore && !det.classList.contains('open')) adStore.appendChild(det);
       }, 480);
@@ -406,6 +415,7 @@ var DELAYS=[850,850,1300,900,850,900,1500,950,900,1300,1400,1600];
       tiles[idx].classList.add('sel');
       tiles[idx].setAttribute('aria-expanded', 'true');
       openDet = det; openIdx = idx;
+      if (window.__railRefresh) window.__railRefresh();
     }
     tiles.forEach(function(tile, idx){
       tile.setAttribute('role', 'button');
@@ -439,29 +449,7 @@ var DELAYS=[850,850,1300,900,850,900,1500,950,900,1300,1400,1600];
   }
   var zones = ['linfig'].map(function(id){return document.getElementById(id);});
   var wallEl = document.getElementById('wallfig');
-  var fanz = document.getElementById('fandiv');
-  function fanRoll(){
-    if (!fanz) return;
-    var segs = fanz.querySelectorAll('.g3'), dots = fanz.querySelectorAll('.tip'), xs = fanz.querySelectorAll('.xg');
-    if (!segs.length) return;
-    var win = [];
-    for (var t = 0; t < 3; t++) win.push(t*9 + Math.floor(Math.random()*9));
-    var best = win[Math.floor(Math.random()*3)];
-    for (var i = 0; i < segs.length; i++) {
-      var w = win.indexOf(i) !== -1;
-      segs[i].setAttribute('stroke', w ? '#0FA97A' : '#CFCABB');
-      segs[i].setAttribute('stroke-width', w ? '1.5' : '0.9');
-      dots[i].setAttribute('r', w ? (i === best ? 5 : 4.2) : 2.5);
-      dots[i].setAttribute('fill', w ? '#2FCE96' : '#F7F5F0');
-      dots[i].setAttribute('stroke', w ? '#0C8A5F' : '#A8A393');
-      dots[i].setAttribute('stroke-width', w ? '1.3' : '0.9');
-      xs[i].style.display = w ? 'none' : '';
-    }
-    var bx = 26 + best * (628/26);
-    var m = document.getElementById('mergeseg');
-    if (m) m.setAttribute('d', 'M' + bx.toFixed(0) + ',480 C ' + bx.toFixed(0) + ',532 340,532 340,575');
-  }
-  fanRoll();
+
 
   if (reduced || narrow) {
     applyEls(document.body, 1);
@@ -534,13 +522,7 @@ var DELAYS=[850,850,1300,900,850,900,1500,950,900,1300,1400,1600];
     }
     function onScroll(){
       wallTick();
-      if (fanz) {
-        var fr = fanz.getBoundingClientRect();
-        var fp = Math.max(0, Math.min(1, (window.innerHeight*0.92 - fr.top) / (window.innerHeight*0.62)));
-        if (fp >= 0.12) window.__fanGrew = true;
-        if (fp <= 0.01 && window.__fanGrew) { window.__fanGrew = false; fanRoll(); }
-        applyEls(fanz, fp);
-      }
+      if (window.__railTick) window.__railTick();
       zones.forEach(function(z){
         if (!z) return;
         var r = z.getBoundingClientRect();
@@ -550,6 +532,144 @@ var DELAYS=[850,850,1300,900,850,900,1500,950,900,1300,1400,1600];
     }
     window.addEventListener('scroll', onScroll, {passive:true});
     onScroll();
+
+    var railEl = document.getElementById('rail');
+    var railSegs = [], railMarks = [], railHeads = [], railGreen = null;
+    var railY0 = 0, railY1 = 1;
+    var SVGNS = 'http://www.w3.org/2000/svg';
+    function railBuild(){
+      if (!railEl) return;
+      railSegs = []; railMarks = []; railHeads = []; railGreen = null;
+      if (window.innerWidth < 768) { railEl.innerHTML = ''; return; }
+      var secs = Array.prototype.slice.call(document.querySelectorAll('section'));
+      var closerEl = document.querySelector('.closer');
+      if (secs.length < 5 || !closerEl) return;
+      var top = function(el){ return el.getBoundingClientRect().top + window.scrollY; };
+      var doc = document.documentElement.scrollHeight;
+      // fit the whole graph inside the real gutter, whatever the window is
+      var contentLeft = Math.max(32, (window.innerWidth - 1240) / 2);
+      var x0 = contentLeft <= 40 ? 8 : Math.max(22, contentLeft / 2 - 8);
+      var spread = Math.max(5, Math.min(12, (contentLeft - x0 - 6) / 2));
+      var x1 = x0 + spread, x2 = x0 + spread * 2;
+      railY0 = top(secs[0]) - 30;
+      railY1 = top(closerEl) + 66;
+      var yReadout = top(secs[1]), yCluster = top(secs[2]), yOutcomes = top(secs[3]), yPeople = top(secs[4]);
+      railEl.style.width = '120px';
+      railEl.style.height = doc + 'px';
+      railEl.setAttribute('viewBox', '0 0 120 ' + doc);
+      railEl.innerHTML = '';
+      var tr = 46;
+      var yFork = railY0 + Math.round(window.innerHeight * 0.30);
+      var yM1 = yReadout + Math.round((yCluster - yReadout) * 0.45);
+      var yS2 = yCluster + 40, yM2 = yOutcomes + 30;
+      var yS3 = yOutcomes + Math.round((yPeople - yOutcomes) * 0.55);
+      var yM3 = yPeople + 30;
+      var yPrune = yReadout - 52;
+      function curve(xa, ya, xb){ return ' C ' + xa + ',' + (ya + 26) + ' ' + xb + ',' + (ya + 20) + ' ' + xb + ',' + (ya + tr); }
+      function addPath(d, ys, ye, color, w, withHead, headColor, headR){
+        var base = document.createElementNS(SVGNS, 'path');
+        base.setAttribute('d', d); base.setAttribute('fill', 'none');
+        base.setAttribute('stroke', '#EBE7DA'); base.setAttribute('stroke-width', w);
+        railEl.appendChild(base);
+        var over = document.createElementNS(SVGNS, 'path');
+        over.setAttribute('d', d); over.setAttribute('fill', 'none');
+        over.setAttribute('stroke', color); over.setAttribute('stroke-width', w);
+        over.setAttribute('pathLength', '1');
+        over.setAttribute('stroke-dasharray', '1');
+        over.setAttribute('stroke-dashoffset', '1');
+        railEl.appendChild(over);
+        var seg = {el: over, y0: ys, y1: ye, hd: null};
+        if (withHead) {
+          var hd = document.createElementNS(SVGNS, 'circle');
+          hd.setAttribute('r', headR); hd.setAttribute('fill', headColor); hd.setAttribute('opacity', '0');
+          railEl.appendChild(hd);
+          seg.hd = hd; railHeads.push(seg);
+        }
+        railSegs.push(seg);
+        return seg;
+      }
+      function mark(kind, x, y, extra){
+        var g = document.createElementNS(SVGNS, 'g');
+        if (kind === 'merge') {
+          g.innerHTML = '<circle cx="' + x + '" cy="' + y + '" r="' + (extra && extra.big ? 6 : 3.6) + '" fill="#F7F5F0" stroke="#B9B4A4" stroke-width="1.1"/>';
+        } else if (kind === 'prune') {
+          g.innerHTML = '<line x1="' + (x-3) + '" y1="' + (y-3) + '" x2="' + (x+3) + '" y2="' + (y+3) + '" stroke="#A8A393" stroke-width="1.2"/>' +
+                        '<line x1="' + (x-3) + '" y1="' + (y+3) + '" x2="' + (x+3) + '" y2="' + (y-3) + '" stroke="#A8A393" stroke-width="1.2"/>';
+          g.setAttribute('opacity', '0');
+        } else if (kind === 'label') {
+          g.innerHTML = '<text x="' + (x + 11) + '" y="' + (y + 4) + '" font-family="IBM Plex Mono" font-size="10" fill="#8A857A">' + extra.text + '</text>';
+          g.setAttribute('opacity', '0');
+        }
+        g.setAttribute('data-y', y); g.setAttribute('data-kind', kind);
+        railEl.appendChild(g);
+        railMarks.push(g);
+      }
+      // THE GREEN THREAD: one continuous line that weaves lanes down the page.
+      // spine -> lane1 (first fork) -> back -> spine -> lane1 again (late) -> back -> merge.
+      var stemTop = Math.max(120, railY0 - Math.round(window.innerHeight * 0.55));
+      var gd = 'M' + x0 + ',' + stemTop + 'L' + x0 + ',' + yFork
+             + curve(x0, yFork, x1) + 'L' + x1 + ',' + (yM1 - tr)
+             + ' C ' + x1 + ',' + (yM1 - 20) + ' ' + x0 + ',' + (yM1 - 26) + ' ' + x0 + ',' + yM1
+             + 'L' + x0 + ',' + yS3
+             + curve(x0, yS3, x1) + 'L' + x1 + ',' + (yM3 - tr)
+             + ' C ' + x1 + ',' + (yM3 - 20) + ' ' + x0 + ',' + (yM3 - 26) + ' ' + x0 + ',' + yM3
+             + 'L' + x0 + ',' + railY1;
+      railGreen = addPath(gd, stemTop, railY1, '#0FA97A', 1.6, true, '#2FCE96', 3.2);
+      // GRAY EXPERIMENTS: inked only as the green head arrives at their fork.
+      addPath('M' + x0 + ',' + yFork + curve(x0, yFork, x2) + 'L' + x2 + ',' + yPrune, yFork, yPrune, '#A8A393', 1.1, true, '#8F8A79', 2.4);
+      addPath('M' + x0 + ',' + yFork + 'L' + x0 + ',' + yM1, yFork, yM1, '#A8A393', 1.1, true, '#8F8A79', 2.4);
+      addPath('M' + x0 + ',' + yS2 + curve(x0, yS2, x1) + 'L' + x1 + ',' + (yM2 - tr)
+            + ' C ' + x1 + ',' + (yM2 - 20) + ' ' + x0 + ',' + (yM2 - 26) + ' ' + x0 + ',' + yM2,
+            yS2, yM2, '#A8A393', 1.1, true, '#8F8A79', 2.4);
+      addPath('M' + x0 + ',' + yS3 + 'L' + x0 + ',' + yM3, yS3, yM3, '#A8A393', 1.1, true, '#8F8A79', 2.4);
+      mark('prune', x2, yPrune);
+      mark('merge', x0, yM1);
+      mark('merge', x0, yM2);
+      mark('merge', x0, yM3);
+      mark('merge', x0, railY1, {big: true});
+      mark('label', x0, railY1, {text: '9f41c2'});
+    }
+    function railTick(){
+      if (!railSegs.length) return;
+      var lead = window.scrollY + window.innerHeight * 0.55;
+      for (var i = 0; i < railSegs.length; i++) {
+        var sg = railSegs[i];
+        var t = Math.max(0, Math.min(1, (lead - sg.y0) / (sg.y1 - sg.y0)));
+        sg.el.style.strokeDashoffset = (1 - t).toFixed(4);
+        if (sg.hd) {
+          if (t > 0.001 && t < 0.999) {
+            var len = sg.el.getTotalLength();
+            var pt = sg.el.getPointAtLength(len * t);
+            sg.hd.setAttribute('cx', pt.x.toFixed(1));
+            sg.hd.setAttribute('cy', pt.y.toFixed(1));
+            sg.hd.setAttribute('opacity', sg === railGreen ? '1' : '0.85');
+          } else sg.hd.setAttribute('opacity', '0');
+        }
+      }
+      for (var j = 0; j < railMarks.length; j++) {
+        var mk = railMarks[j];
+        var on = lead >= +mk.getAttribute('data-y');
+        var kind = mk.getAttribute('data-kind');
+        if (kind === 'merge') {
+          var c = mk.querySelector('circle');
+          c.setAttribute('fill', on ? '#2FCE96' : '#F7F5F0');
+          c.setAttribute('stroke', on ? '#0C8A5F' : '#B9B4A4');
+        } else mk.setAttribute('opacity', on ? '1' : '0');
+      }
+    }
+    var railPulse = setInterval(function(){
+      var tms = Date.now();
+      for (var i = 0; i < railHeads.length; i++) {
+        var hd = railHeads[i].hd;
+        if (hd.getAttribute('opacity') !== '0' && railHeads[i] !== railGreen)
+          hd.setAttribute('r', (2.1 + 0.6 * Math.abs(Math.sin(tms / 420 + i))).toFixed(2));
+      }
+    }, 90);
+    window.__railTick = railTick;
+    window.__railRefresh = function(){ setTimeout(function(){ railBuild(); railTick(); }, 520); };
+    window.addEventListener('resize', function(){ railBuild(); railTick(); });
+    window.addEventListener('load', function(){ railBuild(); railTick(); });
+    railBuild(); railTick();
     var wallPoll = setInterval(function(){
       wallTick();
       if (wallDone) clearInterval(wallPoll);
