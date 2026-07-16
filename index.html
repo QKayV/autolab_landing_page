@@ -316,7 +316,7 @@ var LINES=[
 var DELAYS=[850,850,1300,900,850,900,1500,950,900,1300,1400,1600];
 (function(){
   var reduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var narrow = window.matchMedia && window.matchMedia('(max-width: 1000px)').matches;
+  var narrow = window.matchMedia && window.matchMedia('(max-width: 767px)').matches;
   var feed = document.getElementById('termfeed');
   if (feed) {
     if (reduced) { feed.innerHTML = LINES.map(function(l){return '<span class="ln on">'+l+'</span>';}).join('\n'); }
