@@ -1,509 +1,255 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>careers — autolab</title>
-  <meta name="description" content="Open roles at autolab. We build autoresearch infrastructure — agents that accelerate model training by automating complex ML experiments and decision-making.">
-  <meta name="color-scheme" content="dark">
-  <meta property="og:title" content="careers — autolab">
-  <meta property="og:description" content="Open roles at autolab. We build autoresearch infrastructure — agents that accelerate model training by automating complex ML experiments and decision-making.">
-  <meta property="og:type" content="website">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <style>
-    *, *::before, *::after {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>Careers · Autolab</title>
+<meta name="description" content="Work with Autolab. We are hiring our first roles across infrastructure, agents, post-training, forward deployment, and operations.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect x='4' y='2' width='9' height='12' fill='%232FCE96'/%3E%3C/svg%3E">
+<style>
+:root{--mint:#2FCE96;--mint-deep:#0C8A5F;--paper:#F7F5F0;--ink:#141414}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);font-family:'IBM Plex Sans',sans-serif;color:#1A1916;-webkit-font-smoothing:antialiased}
+::selection{background:rgba(47,206,150,.30)}
+.inner{max-width:1240px;margin:0 auto;padding:0 32px}
+.nav{display:flex;justify-content:space-between;align-items:center;font:400 12.5px/1 'IBM Plex Mono',monospace;color:#6E6A5E;max-width:1240px;margin:0 auto;height:58px;padding:0 32px}
+.topbar{position:sticky;top:0;z-index:50;background:rgba(247,245,240,.97);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid #DCD8CA}
+.wordmark{font-weight:500;font-size:15px;color:var(--ink)}
+.navlinks{display:flex;gap:28px;align-items:center}
+.navlinks a{color:inherit;text-decoration:none}
+a:focus-visible,.btn:focus-visible{outline:2px solid var(--mint-deep);outline-offset:3px;border-radius:3px}
+.navbtn{border:1px solid #B9B4A4;padding:8px 16px;border-radius:3px;color:var(--ink)}
+.eyebrow{font:500 13px/1 'IBM Plex Mono',monospace;letter-spacing:.09em;color:#8A857A;margin-bottom:16px}
+h1{font:500 clamp(40px,4.8vw,72px)/1.08 'IBM Plex Serif',serif;letter-spacing:-.015em}
+h1 em,h2 em{font-style:italic;font-weight:400;color:var(--mint-deep)}
+h2{font:500 clamp(28px,3vw,42px)/1.16 'IBM Plex Serif',serif;letter-spacing:-.012em;margin-bottom:18px}
+.sub{font:400 18px/1.62 'IBM Plex Sans',sans-serif;color:#5C584E;max-width:52ch;margin:2.6vh 0 3.4vh}
+.body{font:400 16px/1.65 'IBM Plex Sans',sans-serif;color:#5C584E;max-width:56ch}
+.ctarow{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.btn{font:500 14.5px/1 'IBM Plex Sans',sans-serif;background:var(--mint);color:#06301F;padding:15px 26px;border-radius:3px}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid #B9B4A4}
+.install{font:400 13px/1 'IBM Plex Mono',monospace;color:#6E6A5E}
+.fold{min-height:calc(100svh - 59px);display:flex;flex-direction:column}
+.herocols{display:flex;gap:4.5vw;align-items:center;flex:1;padding:0 0 clamp(24px,11vh,150px)}
+.heroleft{flex:1.05;min-width:0}
+.heroright{flex:.95;min-width:0}
+.term{background:#FCFBF7;border:1px solid #DCD8CA;border-radius:9px;overflow:hidden;box-shadow:0 1px 2px rgba(20,20,20,.05),0 22px 52px rgba(20,20,20,.09)}
+.term .bar{background:#F1EEE4;padding:10px 14px;display:flex;gap:6px;align-items:center;border-bottom:1px solid #E2DED0}
+.term .bar i{width:9px;height:9px;border-radius:50%;background:#D8D4C6;display:block}
+.term .bar .t{font:400 11px/1 'IBM Plex Mono',monospace;color:#8A857A;margin-left:10px}
+.term pre{font:400 13px/2.05 'IBM Plex Mono',monospace;color:#45423A;padding:16px 20px;min-height:26.5em;white-space:pre-wrap}
+.term .ln{opacity:0;transition:opacity .4s}.term .ln.on{opacity:1}
+.term .p{color:var(--mint-deep)}.term .dim{color:#A29D8D}.term .hot{color:var(--mint-deep);font-weight:500}.term .you{color:#141414;font-weight:500}
+.term .caret{display:inline-block;width:8px;height:15px;background:var(--mint);vertical-align:-2px;animation:blink 1.1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+.termcap{font:400 11.5px/1.6 'IBM Plex Mono',monospace;color:#8A857A;text-align:right;padding-top:10px}
+.fanport{display:block;width:100%;max-width:620px;height:auto;margin:0 auto}
+.fadeout{opacity:1}
+section{padding:84px 0 0}
+.rowhead{display:flex;gap:4vw;align-items:flex-start}
+.rowhead .txt{flex:1.15;min-width:0}
+.inset{flex:.85;min-width:0;background:#FCFBF7;border:1px solid #DCD8CA;border-radius:10px;padding:22px 24px;box-shadow:0 1px 2px rgba(20,20,20,.04),0 12px 28px rgba(20,20,20,.05);align-self:center}
+.inset .it{font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.14em;color:#8A857A;margin-bottom:12px}
+.inset h3{font:500 19px/1.25 'IBM Plex Serif',serif;margin-bottom:8px}
+.inset p{font:400 14px/1.6 'IBM Plex Sans',sans-serif;color:#5C584E}
+.agpanel{background:#FCFBF7;border:1px solid #DCD8CA;border-radius:10px;overflow:hidden;box-shadow:0 1px 2px rgba(20,20,20,.05),0 24px 56px rgba(20,20,20,.10);margin-top:44px}
+.ahead{display:flex;justify-content:space-between;align-items:center;background:#F1EEE4;border-bottom:1px solid #E2DED0;padding:12px 18px;font:500 12px/1 'IBM Plex Mono',monospace;color:#55524A}
+.ahead .alive{color:var(--mint-deep);letter-spacing:.12em}
+.adot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--mint);margin-right:9px;animation:pulseD 2.2s ease-in-out infinite;vertical-align:1px}
+@keyframes pulseD{0%,100%{opacity:1}50%{opacity:.35}}
+.atile .adot{transition:background .25s}
+.atile .adot.err{background:#C2593B}
+.agrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;padding:16px}
+.atile{background:#F7F5F0;border:1px solid #E2DED0;border-radius:7px;padding:13px 14px;min-height:100px;position:relative;transition:border-color .18s ease,box-shadow .18s ease,transform .18s ease}
+.atile:hover{border-color:var(--mint-deep);background:#F2FAF6;box-shadow:0 6px 20px rgba(20,20,20,.09);transform:translateY(-2px)}
+.agrid .atile{cursor:pointer}
+.atile.sel{border-color:var(--mint-deep);background:#DFF3EA;box-shadow:0 6px 20px rgba(20,20,20,.09)}
+.adetail{grid-column:1/-1;background:#FCFBF7;border:1px solid #DCD8CA;border-radius:9px;position:relative;overflow:hidden;max-height:0;opacity:0;transition:max-height .45s ease,opacity .3s ease}
+.adetail.open{max-height:360px;opacity:1}
+.adin{padding:16px 18px}
+.adx{position:absolute;top:8px;right:10px;background:none;border:0;cursor:pointer;font:500 13px/1 'IBM Plex Mono',monospace;color:#8A857A;padding:6px}
+.adx:hover{color:var(--ink)}
+.adh{display:flex;gap:10px;align-items:baseline;font:500 12.5px/1 'IBM Plex Mono',monospace;color:var(--ink);margin-bottom:12px}
+.adh .atag{color:#8A857A;font-weight:400}
+.adhr{margin-left:auto;color:#8A857A;font-weight:400;padding-right:26px}
+.acharts{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.achart{background:#F7F5F0;border:1px solid #E7E3D5;border-radius:7px;padding:9px 10px 6px}
+.acr{display:flex;justify-content:space-between;font:400 10.5px/1 'IBM Plex Mono',monospace;color:#8A857A;margin-bottom:6px}
+.acr b{font-weight:500;color:var(--ink)}
+.acr b.up{color:var(--mint-deep)}
+.achart svg{display:block;width:100%;height:auto}
+.adf{margin-top:10px;font:400 10.5px/1 'IBM Plex Mono',monospace;color:#A29D8D}
+.ahint{color:#A29D8D;font-weight:400}
+@media (max-width:1000px){.acharts{grid-template-columns:1fr 1fr}}
 
-    ::selection {
-      background: #5BDCB4;
-      color: #0A0A0A;
-    }
+.ar1{display:flex;align-items:center;gap:7px;font:500 12px/1 'IBM Plex Mono',monospace;color:#141414;margin-bottom:9px}
+.ar1 .adot{width:6px;height:6px;margin:0}
+.ar1 .atag{color:#A29D8D;font-weight:400;margin-left:auto}
+.aact{font:400 12px/1.5 'IBM Plex Mono',monospace;color:#55524A;min-height:36px}
+.adelta{position:absolute;right:14px;bottom:10px;font:500 12.5px/1 'IBM Plex Mono',monospace;color:var(--mint-deep)}
+.adelta.dim{color:#A29D8D;font-weight:400}
+.adelta.neg{color:#8F8A79}
+.afoot{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #E2DED0;padding:12px 18px;font:500 12px/1 'IBM Plex Mono',monospace;color:#55524A}
+.achip{background:#EFF9F4;border:1px solid #BFE5D4;color:var(--mint-deep);border-radius:6px;padding:7px 10px}
+.figside{display:block;width:100%;height:auto}
+#wallfig .wcell{opacity:0;transform:scale(.2);transform-box:fill-box;transform-origin:center}
+#wallfig .wblock{opacity:0}
 
-    body {
-      background: #0A0A0A;
-      color: #F0F0F0;
-      font-family: 'IBM Plex Mono', monospace;
-      font-weight: 400;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-
-    .page {
-      min-height: 100vh;
-      padding: 80px 24px 64px;
-    }
-
-    .content {
-      max-width: 640px;
-      margin: 0 auto;
-    }
-
-    .name-mark {
-      font-size: 36px;
-      font-weight: 500;
-      letter-spacing: -0.02em;
-      line-height: 1;
-      text-align: center;
-    }
-
-    .name-mark a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .slash {
-      color: #5BDCB4;
-    }
-
-    .title {
-      margin-top: 72px;
-      font-size: 20px;
-      font-weight: 500;
-      color: #F0F0F0;
-      line-height: 1.4;
-    }
-
-    .intro {
-      margin-top: 16px;
-      font-size: 15px;
-      font-weight: 400;
-      line-height: 1.7;
-      color: #AAA;
-    }
-
-    .comp-note {
-      margin-top: 16px;
-      font-size: 14px;
-      font-weight: 400;
-      line-height: 1.7;
-      color: #888;
-    }
-
-    .roles {
-      margin-top: 64px;
-    }
-
-    .role {
-      margin-bottom: 72px;
-      padding-top: 48px;
-      border-top: 1px solid #1A1A1A;
-      scroll-margin-top: 24px;
-    }
-
-    .role:last-child {
-      margin-bottom: 0;
-    }
-
-    .role-title {
-      font-size: 18px;
-      font-weight: 500;
-      line-height: 1.4;
-      color: #F0F0F0;
-    }
-
-    .role-title a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .role-title a:hover .role-anchor {
-      color: #5BDCB4;
-    }
-
-    .role-anchor {
-      color: #333;
-      transition: color 0.2s;
-    }
-
-    .role-meta {
-      margin-top: 8px;
-      font-size: 13px;
-      font-weight: 400;
-      letter-spacing: 0.04em;
-      color: #888;
-    }
-
-    .role-about {
-      margin-top: 20px;
-      font-size: 15px;
-      font-weight: 400;
-      line-height: 1.7;
-      color: #AAA;
-    }
-
-    .role-section-label {
-      margin-top: 28px;
-      font-size: 13px;
-      font-weight: 500;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: #888;
-    }
-
-    .role ul {
-      margin-top: 12px;
-      padding-left: 24px;
-      list-style: none;
-    }
-
-    .role li {
-      position: relative;
-      font-size: 14px;
-      font-weight: 400;
-      line-height: 1.7;
-      color: #AAA;
-      margin-bottom: 8px;
-    }
-
-    .role li::before {
-      content: "/";
-      position: absolute;
-      left: -20px;
-      color: #5BDCB4;
-    }
-
-    .role li:last-child {
-      margin-bottom: 0;
-    }
-
-    .apply-btn {
-      display: inline-block;
-      margin-top: 28px;
-      background: #5BDCB4;
-      color: #0A0A0A;
-      border: 1px solid #5BDCB4;
-      font-family: 'IBM Plex Mono', monospace;
-      font-size: 14px;
-      font-weight: 500;
-      padding: 12px 20px;
-      text-decoration: none;
-      transition: background 0.2s, border-color 0.2s;
-    }
-
-    .apply-btn:hover {
-      background: #6FE6C3;
-      border-color: #6FE6C3;
-    }
-
-    .apply-btn:active {
-      background: #4CC9A3;
-      border-color: #4CC9A3;
-    }
-
-    .open-call {
-      margin-top: 72px;
-      padding-top: 48px;
-      border-top: 1px solid #1A1A1A;
-      font-size: 14px;
-      font-weight: 400;
-      line-height: 1.7;
-      color: #888;
-    }
-
-    .open-call a {
-      color: #F0F0F0;
-      text-decoration: underline;
-      text-decoration-color: #333;
-      text-underline-offset: 3px;
-      transition: color 0.2s, text-decoration-color 0.2s;
-    }
-
-    .open-call a:hover {
-      color: #5BDCB4;
-      text-decoration-color: #5BDCB4;
-    }
-
-    .back-link {
-      margin-top: 80px;
-      padding-top: 48px;
-      border-top: 1px solid #1A1A1A;
-      display: flex;
-      gap: 24px;
-    }
-
-    .back-link a {
-      font-size: 13px;
-      font-weight: 400;
-      color: #888;
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    .back-link a:hover {
-      color: #5BDCB4;
-      text-decoration: underline;
-      text-decoration-color: #5BDCB4;
-      text-underline-offset: 3px;
-    }
-
-    @media (max-width: 480px) {
-      .page {
-        padding: 48px 20px 48px;
-      }
-
-      .name-mark {
-        font-size: 28px;
-      }
-
-      .title {
-        margin-top: 56px;
-        font-size: 18px;
-      }
-
-      .roles {
-        margin-top: 48px;
-      }
-
-      .role {
-        margin-bottom: 56px;
-        padding-top: 40px;
-      }
-
-      .role ul {
-        padding-left: 16px;
-      }
-
-      .role li::before {
-        left: -14px;
-      }
-    }
-
-    @media print {
-      body {
-        background: #fff;
-        color: #111;
-      }
-
-      .title, .role-title, .belief-statement {
-        color: #111;
-      }
-
-      .intro, .role-about, .role li {
-        color: #333;
-      }
-
-      .comp-note, .role-meta, .role-section-label, .open-call {
-        color: #555;
-      }
-
-      .apply-btn {
-        background: none;
-        border: 1px solid #555;
-        color: #111;
-      }
-
-      .apply-btn::after {
-        content: " — " attr(href);
-        font-weight: 400;
-      }
-
-      .open-call a {
-        color: #111;
-      }
-
-      .open-call a::after {
-        content: " (" attr(href) ")";
-      }
-
-      .back-link {
-        display: none;
-      }
-    }
-  </style>
+#herocycle{display:inline-block;transition:opacity .3s ease,transform .3s ease}
+.h2sub{font:500 clamp(21px,2.3vw,29px)/1.3 'IBM Plex Serif',serif;color:var(--ink);margin:10px 0 18px}
+.fromlabel{font:500 11.5px/1 'IBM Plex Mono',monospace;letter-spacing:.14em;color:#A29D8D;margin:26px 0 16px}
+.logorow{display:flex;gap:40px;align-items:center;flex-wrap:wrap;margin-bottom:8px}
+.lg{display:block;opacity:.72}
+.lg svg{display:block;height:26px;width:auto}
+.lg-rl{display:flex;align-items:center;gap:9px}
+.rltext{font:600 16px/1 'IBM Plex Sans',sans-serif;color:#6E6A5E;white-space:nowrap}
+.lg-wide svg{height:22px}
+@media (prefers-reduced-motion: reduce){.caret2{animation:none}}
+.wordmark .caret2{display:inline-block;animation:blink 1.1s steps(1) infinite}
+.figcap{font:400 12px/1.6 'IBM Plex Mono',monospace;color:#8A857A;text-align:center;padding-top:10px}
+.seg{stroke-dasharray:1;stroke-dashoffset:1}
+.dot{opacity:0;transform-box:fill-box;transform-origin:center;transform:scale(.2)}
+.lbl{opacity:0}
+.rise{transform-box:fill-box}
+.seccols{display:flex;gap:4vw;align-items:center;margin-top:40px}
+.seccols .txt{flex:.9;min-width:0}
+.seccols .fig{flex:1.1;min-width:0}
+.cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:44px}
+.mcard{background:#FCFBF7;border:1px solid #DCD8CA;border-radius:10px;padding:26px 26px 22px;box-shadow:0 1px 2px rgba(20,20,20,.04),0 14px 34px rgba(20,20,20,.06)}
+.mcard h3{font:500 20px/1.2 'IBM Plex Serif',serif;margin-bottom:10px}
+.mcard p{font:400 14.5px/1.6 'IBM Plex Sans',sans-serif;color:#5C584E;min-height:70px}
+.mcard .chip{display:inline-block;font:500 13px/1 'IBM Plex Mono',monospace;color:var(--mint-deep);background:#EFF9F4;border:1px solid #BFE5D4;border-radius:5px;padding:7px 10px;margin-top:14px}
+.mcard .stamp{display:block;font:400 11px/1 'IBM Plex Mono',monospace;color:#A29D8D;margin-top:14px;letter-spacing:.08em}
+.footnote{font:400 11.5px/1.6 'IBM Plex Mono',monospace;color:#A29D8D;margin-top:18px}
+.tabs{margin-top:34px;max-width:760px}
+.tabrow{display:flex;gap:8px;margin-bottom:-1px;position:relative;z-index:2}
+.tab{font:500 12.5px/1 'IBM Plex Mono',monospace;color:#8A857A;border:1px solid #DCD8CA;border-bottom:none;background:#F1EEE4;border-radius:8px 8px 0 0;padding:11px 18px;cursor:pointer}
+.tab.on{background:#FCFBF7;color:#141414}
+.tabpane{display:none;background:#FCFBF7;border:1px solid #DCD8CA;border-radius:0 9px 9px 9px;box-shadow:0 1px 2px rgba(20,20,20,.05),0 18px 44px rgba(20,20,20,.07)}
+.tabpane.on{display:block}
+.tabpane pre{font:400 13.5px/2.15 'IBM Plex Mono',monospace;color:#45423A;padding:20px 22px;white-space:pre-wrap}
+.tabpane .p{color:var(--mint-deep);font-weight:500}
+.tabpane .dim{color:#A29D8D}
+.rv{opacity:0;transform:translateY(8px);transition:opacity .45s ease,transform .45s ease}
+.rv.on{opacity:1;transform:none}
+.d1{transition-delay:.05s}.d2{transition-delay:.1s}.d3{transition-delay:.15s}.d4{transition-delay:.2s}
+.pilotrow{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:44px;position:relative}
+.pilotrow:before{content:"";position:absolute;top:26px;left:4%;right:4%;border-top:1px solid #D8D3C4;z-index:0}
+.pcard{position:relative;z-index:1;background:#FCFBF7;border:1px solid #DCD8CA;border-radius:10px;padding:20px 18px;box-shadow:0 1px 2px rgba(20,20,20,.04),0 12px 28px rgba(20,20,20,.05)}
+.pcard .pt{font:500 11px/1 'IBM Plex Mono',monospace;letter-spacing:.12em;color:#8A857A;margin-bottom:12px}
+.pcard h4{font:500 16.5px/1.25 'IBM Plex Serif',serif;margin-bottom:8px}
+.pcard p{font:400 13px/1.55 'IBM Plex Sans',sans-serif;color:#5C584E}
+.pcard.mint{border-color:var(--mint-deep);background:#EFF9F4}
+.pcard.mint .pt,.pcard.mint p{color:#0C8A5F}
+.trust{margin-top:110px;background:#F1EEE4;border-top:1px solid #E2DED0;border-bottom:1px solid #E2DED0;padding:44px 0}
+.trust .inner{display:flex;gap:4vw;align-items:baseline}
+.trust h3{font:500 22px/1.2 'IBM Plex Serif',serif;flex:none}
+.trust p{font:400 14.5px/1.6 'IBM Plex Sans',sans-serif;color:#5C584E;max-width:64ch}
+.backed{font:400 13px/2 'IBM Plex Mono',monospace;color:#8A857A;margin-top:22px}
+.backed b{color:#55524A;font-weight:500}
+.closer{margin:120px 0 0;padding:90px 0;border-top:1px solid #DDD8C9;text-align:center}
+.closer .line{font:italic 500 clamp(26px,3vw,42px)/1.25 'IBM Plex Serif',serif;margin-bottom:14px}
+.closer .line em{color:var(--mint-deep)}
+.closer .sub2{font:400 15px/1.5 'IBM Plex Sans',sans-serif;color:#8A857A;margin-bottom:34px}
+.footer{display:flex;justify-content:space-between;align-items:center;padding:26px 0 40px;border-top:1px solid #DDD8C9;font:400 12px/1 'IBM Plex Mono',monospace;color:#8A857A}
+.footer .fl{display:flex;gap:22px}
+@media (max-height:820px){
+  h1{font-size:clamp(34px,4.2vw,54px)}
+  .sub{font-size:16px;margin:16px 0 22px}
+  .term pre{font-size:11.5px;padding:12px 16px}
+  .eyebrow{margin-bottom:16px}
+  .herocols{padding-bottom:3vh}
+}
+@media (max-width:1000px){.fold{min-height:0}.herocols{flex:none;padding:24px 0 40px}.fansil{height:auto;width:100%}.herocols,.seccols,.rowhead,.trust .inner{flex-direction:column}.cards3{grid-template-columns:1fr}.pilotrow{grid-template-columns:1fr 1fr}.heroright{padding-top:0;width:100%}.agrid{grid-template-columns:1fr 1fr}}
+</style>
+<style>
+.pageh1{font:500 clamp(34px,4.2vw,54px)/1.12 'IBM Plex Serif',serif;letter-spacing:-.01em;margin:10px 0 22px}
+.cintro{max-width:660px}
+.roles{margin-top:44px}
+.role{background:#FCFBF7;border:1px solid #DCD8CA;border-radius:10px;margin-bottom:14px;box-shadow:0 1px 2px rgba(20,20,20,.04)}
+.role summary{cursor:pointer;padding:20px 26px;display:flex;justify-content:space-between;align-items:center;gap:18px;list-style:none}
+.role summary::-webkit-details-marker{display:none}
+.role h3{font:500 21px/1.25 'IBM Plex Serif',serif;margin:0 0 6px}
+.rmeta{font:400 12.5px/1 'IBM Plex Mono',monospace;color:#8A857A}
+.rtoggle{font:400 22px/1 'IBM Plex Mono',monospace;color:#8A857A;flex-shrink:0}
+.role[open] .rtoggle .plus{display:none}
+.role:not([open]) .rtoggle .minus{display:none}
+.role summary:hover h3{color:var(--mint-deep)}
+.rbody{padding:2px 26px 26px;border-top:1px solid #EFEBDE}
+.rbody>.body{margin-top:18px;max-width:640px}
+.rlabel{font:500 11.5px/1 'IBM Plex Mono',monospace;letter-spacing:.14em;color:#A29D8D;margin:24px 0 10px}
+.rlist{list-style:none;margin:0;padding:0;max-width:660px}
+.rlist li{font:400 15px/1.65 'IBM Plex Sans',sans-serif;color:#3B3934;padding:5px 0 5px 20px;position:relative}
+.rlist li::before{content:'';position:absolute;left:2px;top:14px;width:5px;height:5px;background:var(--mint-deep)}
+.rapply{margin-top:26px}
+.opencall{margin-top:40px;font:400 15.5px/1.7 'IBM Plex Sans',sans-serif;color:#3B3934}
+.opencall a{color:var(--mint-deep)}
+a.btn{text-decoration:none;color:var(--ink);display:inline-block}
+.wordlink{color:inherit;text-decoration:none}
+</style>
 </head>
 <body>
-  <main class="page">
-    <div class="content">
-      <div class="name-mark">
-        <a href="/">auto<span class="slash">/</span>lab</a>
-      </div>
-
-      <h1 class="title">Work with Autolab</h1>
-
-      <p class="intro">
-        Autolab builds autoresearch infrastructure — agents that accelerate
-        model training by automating complex ML experiments and
-        decision-making. We are hiring for our first roles.
-      </p>
-
-      <p class="comp-note">
-        Every role offers competitive salary and meaningful equity.
-      </p>
-
-      <div class="roles">
-
-        <section class="role" id="infrastructure-engineer">
-          <h2 class="role-title">
-            <a href="#infrastructure-engineer"><span class="role-anchor">#</span> Infrastructure Engineer</a>
-          </h2>
-          <p class="role-meta">Cambridge, MA · San Francisco, CA · Full-time</p>
-          <p class="role-about">
-            Build the distributed systems that run thousands of concurrent ML
-            experiments: job orchestration, GPU scheduling, artifact storage,
-            observability.
-          </p>
-          <p class="role-section-label">what you'll do</p>
-          <ul>
-            <li>Design and operate the orchestration layer that schedules thousands of concurrent experiments across heterogeneous GPU fleets.</li>
-            <li>Build GPU scheduling that keeps clusters near full utilization — from a single lab 3090 to multi-node H100 clusters.</li>
-            <li>Own artifact storage for checkpoints, datasets, and logs: versioned, deduplicated, and fast to fetch.</li>
-            <li>Build the observability pipeline that ingests training telemetry at high volume without slowing runs down.</li>
-            <li>Make experiment launches reproducible: environments, dependencies, and data pinned by default.</li>
-            <li>Set the engineering practices — CI, deployment, on-call — that the team grows into.</li>
-          </ul>
-          <p class="role-section-label">what we're looking for</p>
-          <ul>
-            <li>You have built and operated distributed systems in production: schedulers, queues, or storage.</li>
-            <li>Strong Python plus a systems language (Go, Rust, or C++).</li>
-            <li>Hands-on experience with cluster tooling such as Kubernetes, Slurm, or Ray.</li>
-            <li>You have run GPU or HPC workloads and know where they break.</li>
-            <li>Pragmatic by default: ship the simple version, measure, then harden.</li>
-            <li>Comfortable owning large areas with little process in an early-stage team.</li>
-          </ul>
-          <a class="apply-btn" href="https://forms.gle/LmXvrgc22B9tRtZj7" target="_blank" rel="noopener noreferrer">Apply</a>
-        </section>
-
-        <section class="role" id="harness-and-agents-engineer">
-          <h2 class="role-title">
-            <a href="#harness-and-agents-engineer"><span class="role-anchor">#</span> Harness &amp; Agents Engineer</a>
-          </h2>
-          <p class="role-meta">Cambridge, MA · San Francisco, CA · Full-time</p>
-          <p class="role-about">
-            Design the agent harness: tool interfaces, sandboxing, evaluation
-            loops, and the control logic that lets agents plan and execute
-            research autonomously.
-          </p>
-          <p class="role-section-label">what you'll do</p>
-          <ul>
-            <li>Design the tool interfaces agents use to write code, launch experiments, and read results.</li>
-            <li>Build sandboxing that lets agents execute generated code safely against real training infrastructure.</li>
-            <li>Implement evaluation loops that measure whether agents make good research decisions, not just whether code runs.</li>
-            <li>Develop the control logic for long-horizon work: when to branch an experiment, kill a run, or escalate to a human.</li>
-            <li>Instrument agent trajectories so failures are debuggable and successes are repeatable.</li>
-            <li>Iterate on prompts, context assembly, and memory alongside the post-training team.</li>
-          </ul>
-          <p class="role-section-label">what we're looking for</p>
-          <ul>
-            <li>You have built LLM agent systems or harnesses that ran against real workloads, not just demos.</li>
-            <li>Strong software engineering fundamentals and good taste in API design.</li>
-            <li>Experience with isolation and sandboxing: containers, VMs, or permission models.</li>
-            <li>You have written evals and know how easily they mislead.</li>
-            <li>Enough ML background to understand the experiments your agents are running.</li>
-            <li>You treat agent reliability as an engineering problem, not a prompting trick.</li>
-          </ul>
-          <a class="apply-btn" href="https://forms.gle/LmXvrgc22B9tRtZj7" target="_blank" rel="noopener noreferrer">Apply</a>
-        </section>
-
-        <section class="role" id="post-training-ml-engineer">
-          <h2 class="role-title">
-            <a href="#post-training-ml-engineer"><span class="role-anchor">#</span> Post-training ML Engineer</a>
-          </h2>
-          <p class="role-meta">Cambridge, MA · San Francisco, CA · Full-time</p>
-          <p class="role-about">
-            Own post-training for our agent models: RL and SFT pipelines,
-            reward design, evals, and data engines built from experiment
-            trajectories.
-          </p>
-          <p class="role-section-label">what you'll do</p>
-          <ul>
-            <li>Own RL and SFT pipelines end to end: data, training, evaluation, and deployment.</li>
-            <li>Design reward signals for research decisions, where ground truth arrives hours or days after the action.</li>
-            <li>Build data engines that turn experiment trajectories into training data.</li>
-            <li>Run post-training experiments with proper baselines and ablations, and write up what you learn.</li>
-            <li>Build the eval suites that catch capability regressions before they ship.</li>
-            <li>Work with the harness team to close the loop between agent behavior and model updates.</li>
-          </ul>
-          <p class="role-section-label">what we're looking for</p>
-          <ul>
-            <li>Hands-on post-training experience with LLMs: SFT, RLHF/RLAIF, DPO, or similar.</li>
-            <li>Strong PyTorch or JAX, and comfort working inside distributed training stacks.</li>
-            <li>Empirical rigor: you reach for a baseline and an ablation before an opinion.</li>
-            <li>You have felt reward hacking and eval overfitting firsthand and design against them.</li>
-            <li>Able to build the data tooling around training, not just the training loop.</li>
-            <li>Publications or shipped models are both welcome; neither is required.</li>
-          </ul>
-          <a class="apply-btn" href="https://forms.gle/LmXvrgc22B9tRtZj7" target="_blank" rel="noopener noreferrer">Apply</a>
-        </section>
-
-        <section class="role" id="forward-deployed-engineer">
-          <h2 class="role-title">
-            <a href="#forward-deployed-engineer"><span class="role-anchor">#</span> Forward Deployed Engineer</a>
-          </h2>
-          <p class="role-meta">Cambridge, MA · San Francisco, CA · Remote (US) · Full-time</p>
-          <p class="role-about">
-            Embed with design partners (self-driving, robotics, CV teams),
-            integrate Autolab into their training stacks, and feed what you
-            learn back into the product.
-          </p>
-          <p class="role-section-label">what you'll do</p>
-          <ul>
-            <li>Embed with design partners in self-driving, robotics, and computer vision, and get Autolab running in their training stacks.</li>
-            <li>Debug across the boundary: their training code, our agents, and the infrastructure in between.</li>
-            <li>Build the integrations, adapters, and examples that make the next deployment faster than the last.</li>
-            <li>Turn partner pain points into concrete, prioritized product feedback.</li>
-            <li>Be the partner's technical point of contact from first call to production use.</li>
-            <li>Travel to partner sites when the problem is easier to solve in the same room.</li>
-          </ul>
-          <p class="role-section-label">what we're looking for</p>
-          <ul>
-            <li>A strong generalist engineer who is productive in an unfamiliar codebase within days.</li>
-            <li>Real ML training experience — you have trained models, not just called APIs.</li>
-            <li>You communicate clearly with customers, including when the news is bad.</li>
-            <li>Bias to ownership: when something is broken at a partner, you fix it or find who can.</li>
-            <li>Comfortable with ambiguity, context switching, and occasional travel.</li>
-            <li>You enjoy being the person the product gets judged by.</li>
-          </ul>
-          <a class="apply-btn" href="https://forms.gle/LmXvrgc22B9tRtZj7" target="_blank" rel="noopener noreferrer">Apply</a>
-        </section>
-
-        <section class="role" id="chief-of-staff">
-          <h2 class="role-title">
-            <a href="#chief-of-staff"><span class="role-anchor">#</span> Chief of Staff</a>
-          </h2>
-          <p class="role-meta">Cambridge, MA · San Francisco, CA · Full-time</p>
-          <p class="role-about">
-            Work directly with the founders on operations, hiring, partner
-            relationships, and everything that keeps a fast-moving research
-            company running.
-          </p>
-          <p class="role-section-label">what you'll do</p>
-          <ul>
-            <li>Run hiring end to end: sourcing, pipelines, scheduling, references, and closing.</li>
-            <li>Own day-to-day operations: legal, finance, vendors, and workspace.</li>
-            <li>Manage partner and investor relationships alongside the founders.</li>
-            <li>Build the lightweight internal processes the team needs — and kill the ones it doesn't.</li>
-            <li>Take whole problems off the founders' plates and return them solved.</li>
-            <li>Keep the company's commitments tracked and kept as the pace increases.</li>
-          </ul>
-          <p class="role-section-label">what we're looking for</p>
-          <ul>
-            <li>Experience at an early-stage startup or another environment where you owned outcomes, not tasks.</li>
-            <li>Excellent writing: you can turn a messy discussion into a clear one-pager.</li>
-            <li>Organized under load — many threads, none dropped.</li>
-            <li>Comfortable with contracts, budgets, and people in the same afternoon.</li>
-            <li>Enough technical fluency to follow what an ML research company builds and why.</li>
-            <li>Discretion and judgment: you will see everything.</li>
-          </ul>
-          <a class="apply-btn" href="https://forms.gle/LmXvrgc22B9tRtZj7" target="_blank" rel="noopener noreferrer">Apply</a>
-        </section>
-
-      </div>
-
-      <p class="open-call">
-        Don't see your role? Tell us what you'd build:
-        <a href="https://forms.gle/LmXvrgc22B9tRtZj7" target="_blank" rel="noopener noreferrer">apply here</a>
-      </p>
-
-      <div class="back-link">
-        <a href="/">back to autolab</a>
-        <a href="/manifesto.html">our vision</a>
-      </div>
-    </div>
-  </main>
-</body>
-</html>
+<header class="topbar"><nav class="nav" aria-label="Main"><a class="wordlink" href="index.html"><div class="wordmark">autolab<span class="caret2">▮</span></div></a><div class="navlinks"><a class="navbtn" href="index.html">← back to autolab</a></div></nav></header>
+<div class="inner">
+<section style="padding-top:70px">
+  <h1 class="pageh1">Work with Autolab</h1>
+  <div class="cintro">
+    <p class="body">Autolab builds autoresearch infrastructure: agents that accelerate model training by automating complex ML experiments and decision-making. We are hiring for our first roles.</p>
+    <p class="body" style="margin-top:12px">Every role offers competitive salary and meaningful equity.</p>
+  </div>
+  <div class="roles">
+<details class="role" id="infrastructure-engineer">
+  <summary><div><h3>Infrastructure Engineer</h3><div class="rmeta">San Francisco, California · Full-time</div></div><span class="rtoggle"><span class="plus">+</span><span class="minus">−</span></span></summary>
+  <div class="rbody">
+    <p class="body">Build the distributed systems that run thousands of concurrent ML experiments: job orchestration, GPU scheduling, artifact storage, observability.</p>
+    <div class="rlabel">WHAT YOU&#8217;LL DO</div><ul class="rlist"><li>Design and operate the orchestration layer that schedules thousands of concurrent experiments across heterogeneous GPU fleets.</li><li>Build GPU scheduling that keeps clusters near full utilization, from a single lab 3090 to multi-node H100 clusters.</li><li>Own artifact storage for checkpoints, datasets, and logs: versioned, deduplicated, and fast to fetch.</li><li>Build the observability pipeline that ingests training telemetry at high volume without slowing runs down.</li><li>Make experiment launches reproducible: environments, dependencies, and data pinned by default.</li><li>Set the engineering practices, CI, deployment, on-call, that the team grows into.</li></ul>
+    <div class="rlabel">WHAT WE&#8217;RE LOOKING FOR</div><ul class="rlist"><li>You have built and operated distributed systems in production: schedulers, queues, or storage.</li><li>Strong Python plus a systems language (Go, Rust, or C++).</li><li>Hands-on experience with cluster tooling such as Kubernetes, Slurm, or Ray.</li><li>You have run GPU or HPC workloads and know where they break.</li><li>Pragmatic by default: ship the simple version, measure, then harden.</li><li>Comfortable owning large areas with little process in an early-stage team.</li></ul>
+    <div class="rapply"><a class="btn" href="https://forms.gle/LmXvrgc22B9tRtZj7" target="_blank" rel="noopener noreferrer">Apply</a></div>
+  </div>
+</details>
+<details class="role" id="harness-and-agents-engineer">
+  <summary><div><h3>Harness &amp; Agents Engineer</h3><div class="rmeta">San Francisco, California · Full-time</div></div><span class="rtoggle"><span class="plus">+</span><span class="minus">−</span></span></summary>
+  <div class="rbody">
+    <p class="body">Design the agent harness: tool interfaces, sandboxing, evaluation loops, and the control logic that lets agents plan and execute research autonomously.</p>
+    <div class="rlabel">WHAT YOU&#8217;LL DO</div><ul class="rlist"><li>Design the tool interfaces agents use to write code, launch experiments, and read results.</li><li>Build sandboxing that lets agents execute generated code safely against real training infrastructure.</li><li>Implement evaluation loops that measure whether agents make good research decisions, not just whether code runs.</li><li>Develop the control logic for long-horizon work: when to branch an experiment, kill a run, or escalate to a human.</li><li>Instrument agent trajectories so failures are debuggable and successes are repeatable.</li><li>Iterate on prompts, context assembly, and memory alongside the post-training team.</li></ul>
+    <div class="rlabel">WHAT WE&#8217;RE LOOKING FOR</div><ul class="rlist"><li>You have built LLM agent systems or harnesses that ran against real workloads, not just demos.</li><li>Strong software engineering fundamentals and good taste in API design.</li><li>Experience with isolation and sandboxing: containers, VMs, or permission models.</li><li>You have written evals and know how easily they mislead.</li><li>Enough ML background to understand the experiments your agents are running.</li><li>You treat agent reliability as an engineering problem, not a prompting trick.</li></ul>
+    <div class="rapply"><a class="btn" href="https://forms.gle/LmXvrgc22B9tRtZj7" target="_blank" rel="noopener noreferrer">Apply</a></div>
+  </div>
+</details>
+<details class="role" id="post-training-ml-engineer">
+  <summary><div><h3>Post-training ML Engineer</h3><div class="rmeta">San Francisco, California · Full-time</div></div><span class="rtoggle"><span class="plus">+</span><span class="minus">−</span></span></summary>
+  <div class="rbody">
+    <p class="body">Own post-training for our agent models: RL and SFT pipelines, reward design, evals, and data engines built from experiment trajectories.</p>
+    <div class="rlabel">WHAT YOU&#8217;LL DO</div><ul class="rlist"><li>Own RL and SFT pipelines end to end: data, training, evaluation, and deployment.</li><li>Design reward signals for research decisions, where ground truth arrives hours or days after the action.</li><li>Build data engines that turn experiment trajectories into training data.</li><li>Run post-training experiments with proper baselines and ablations, and write up what you learn.</li><li>Build the eval suites that catch capability regressions before they ship.</li><li>Work with the harness team to close the loop between agent behavior and model updates.</li></ul>
+    <div class="rlabel">WHAT WE&#8217;RE LOOKING FOR</div><ul class="rlist"><li>Hands-on post-training experience with LLMs: SFT, RLHF/RLAIF, DPO, or similar.</li><li>Strong PyTorch or JAX, and comfort working inside distributed training stacks.</li><li>Empirical rigor: you reach for a baseline and an ablation before an opinion.</li><li>You have felt reward hacking and eval overfitting firsthand and design against them.</li><li>Able to build the data tooling around training, not just the training loop.</li><li>Publications or shipped models are both welcome; neither is required.</li></ul>
+    <div class="rapply"><a class="btn" href="https://forms.gle/LmXvrgc22B9tRtZj7" target="_blank" rel="noopener noreferrer">Apply</a></div>
+  </div>
+</details>
+<details class="role" id="forward-deployed-engineer">
+  <summary><div><h3>Forward Deployed Engineer</h3><div class="rmeta">San Francisco, California · Remote (US) · Full-time</div></div><span class="rtoggle"><span class="plus">+</span><span class="minus">−</span></span></summary>
+  <div class="rbody">
+    <p class="body">Embed with design partners (self-driving, robotics, CV teams), integrate Autolab into their training stacks, and feed what you learn back into the product.</p>
+    <div class="rlabel">WHAT YOU&#8217;LL DO</div><ul class="rlist"><li>Embed with design partners in self-driving, robotics, and computer vision, and get Autolab running in their training stacks.</li><li>Debug across the boundary: their training code, our agents, and the infrastructure in between.</li><li>Build the integrations, adapters, and examples that make the next deployment faster than the last.</li><li>Turn partner pain points into concrete, prioritized product feedback.</li><li>Be the partner&#8217;s technical point of contact from first call to production use.</li><li>Travel to partner sites when the problem is easier to solve in the same room.</li></ul>
+    <div class="rlabel">WHAT WE&#8217;RE LOOKING FOR</div><ul class="rlist"><li>A strong generalist engineer who is productive in an unfamiliar codebase within days.</li><li>Real ML training experience: you have trained models, not just called APIs.</li><li>You communicate clearly with customers, including when the news is bad.</li><li>Bias to ownership: when something is broken at a partner, you fix it or find who can.</li><li>Comfortable with ambiguity, context switching, and occasional travel.</li><li>You enjoy being the person the product gets judged by.</li></ul>
+    <div class="rapply"><a class="btn" href="https://forms.gle/LmXvrgc22B9tRtZj7" target="_blank" rel="noopener noreferrer">Apply</a></div>
+  </div>
+</details>
+<details class="role" id="chief-of-staff">
+  <summary><div><h3>Chief of Staff</h3><div class="rmeta">San Francisco, California · Full-time</div></div><span class="rtoggle"><span class="plus">+</span><span class="minus">−</span></span></summary>
+  <div class="rbody">
+    <p class="body">Work directly with the founders on operations, hiring, partner relationships, and everything that keeps a fast-moving research company running.</p>
+    <div class="rlabel">WHAT YOU&#8217;LL DO</div><ul class="rlist"><li>Run hiring end to end: sourcing, pipelines, scheduling, references, and closing.</li><li>Own day-to-day operations: legal, finance, vendors, and workspace.</li><li>Manage partner and investor relationships alongside the founders.</li><li>Build the lightweight internal processes the team needs, and kill the ones it doesn&#8217;t.</li><li>Take whole problems off the founders&#8217; plates and return them solved.</li><li>Keep the company&#8217;s commitments tracked and kept as the pace increases.</li></ul>
+    <div class="rlabel">WHAT WE&#8217;RE LOOKING FOR</div><ul class="rlist"><li>Experience at an early-stage startup or another environment where you owned outcomes, not tasks.</li><li>Excellent writing: you can turn a messy discussion into a clear one-pager.</li><li>Organized under load: many threads, none dropped.</li><li>Comfortable with contracts, budgets, and people in the same afternoon.</li><li>Enough technical fluency to follow what an ML research company builds and why.</li><li>Discretion and judgment: you will see everything.</li></ul>
+    <div class="rapply"><a class="btn" href="https://forms.gle/LmXvrgc22B9tRtZj7" target="_blank" rel="noopener noreferrer">Apply</a></div>
+  </div>
+</details>
+  </div>
+  <p class="opencall">Don&#8217;t see your role? Tell us what you&#8217;d build: <a href="https://forms.gle/LmXvrgc22B9tRtZj7" target="_blank" rel="noopener noreferrer">apply here</a>.</p>
+</section>
+</div>
+<div class="footer" style="margin-top:70px"><span>autolab▮ © 2026</span><div class="fl"><a class="wordlink" href="index.html">autolab</a><a class="wordlink" href="manifesto.html">vision</a></div></div>
+</body></html>
