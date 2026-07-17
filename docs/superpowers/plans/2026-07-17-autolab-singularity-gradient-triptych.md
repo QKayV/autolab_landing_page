@@ -24,7 +24,7 @@
 ### Task 1: Pure Motion Contract and Deterministic Experiment Population
 
 **Files:**
-- Create: `.superpowers/brainstorm/39694-1784238160/content/autolab-mog-a3-motion-v1.mjs`
+- Create: `.superpowers/brainstorm/39694-1784238160/content/autolab-mog-a3-motion-v1.js`
 - Create: `.superpowers/brainstorm/39694-1784238160/content/autolab-mog-a3-motion-v1.test.mjs`
 
 **Interfaces:**
@@ -43,7 +43,7 @@ import {
   createExperimentBlueprints,
   poseForExperiment,
   endingPose,
-} from './autolab-mog-a3-motion-v1.mjs';
+} from './autolab-mog-a3-motion-v1.js';
 
 test('phase boundaries match the approved shared timeline', () => {
   assert.equal(phaseFor(0.06), 'release');
@@ -86,7 +86,7 @@ test('the three endings produce distinct winning trajectories', () => {
 
 Run: `node --test .superpowers/brainstorm/39694-1784238160/content/autolab-mog-a3-motion-v1.test.mjs`
 
-Expected: FAIL with `ERR_MODULE_NOT_FOUND` for `autolab-mog-a3-motion-v1.mjs`.
+Expected: FAIL with `ERR_MODULE_NOT_FOUND` for `autolab-mog-a3-motion-v1.js`.
 
 - [ ] **Step 3: Implement the pure motion module**
 
@@ -156,7 +156,7 @@ Expected: 4 tests pass, 0 fail.
 - [ ] **Step 5: Commit the motion contract**
 
 ```bash
-git add .superpowers/brainstorm/39694-1784238160/content/autolab-mog-a3-motion-v1.mjs .superpowers/brainstorm/39694-1784238160/content/autolab-mog-a3-motion-v1.test.mjs
+git add .superpowers/brainstorm/39694-1784238160/content/autolab-mog-a3-motion-v1.js .superpowers/brainstorm/39694-1784238160/content/autolab-mog-a3-motion-v1.test.mjs
 git commit -m "feat: add deterministic A3 motion contract"
 ```
 
@@ -187,7 +187,7 @@ for(const variant of variants){
     const html=await readFile(new URL(`./autolab-mog-a3-${variant}-v1.html`,import.meta.url),'utf8');
     assert.match(html,new RegExp(`data-ending="${variant}"`));
     for(const id of ['topbar','brand-caret','research-run','research-canvas','flight-object','event-horizon','result-card'])assert.match(html,new RegExp(`id="${id}"`));
-    assert.match(html,/autolab-mog-a3-scene-v1\.js/);
+  assert.match(html,/autolab-mog-a3-scene-v1\.js/);
   });
 }
 ```
@@ -244,7 +244,7 @@ git commit -m "feat: add A3 triptych page shells"
 - Modify: `.superpowers/brainstorm/39694-1784238160/content/autolab-mog-a3-core-v1.css`
 
 **Interfaces:**
-- Imports Task 1 functions from `./autolab-mog-a3-motion-v1.mjs`.
+- Imports Task 1 functions from `./autolab-mog-a3-motion-v1.js`.
 - Produces read-only `window.__AUTOLAB_A3__.getState()` returning `{ending,progress,phase,particleCount,populationKey,dark,caretDetached,pointerMode,endingProgress,reducedMotion}`.
 
 - [ ] **Step 1: Run the page before the controller exists and verify RED**
@@ -263,7 +263,7 @@ Expected: FAIL with `A3 scene controller missing` and a module 404.
 - [ ] **Step 2: Implement exact caret handoff and orbit rendering**
 
 ```js
-import {TIMELINE,clamp,ease,phaseFor,createExperimentBlueprints,poseForExperiment,endingPose} from './autolab-mog-a3-motion-v1.mjs';
+import {TIMELINE,clamp,ease,phaseFor,createExperimentBlueprints,poseForExperiment,endingPose} from './autolab-mog-a3-motion-v1.js';
 const ending=document.body.dataset.ending;
 const count=innerWidth<760?112:240;
 const experiments=createExperimentBlueprints(count,0xA3701AB);
@@ -288,7 +288,7 @@ git commit -m "feat: add A3 singularity physics"
 ### Task 4: Continuous Orbit-to-Gradient Transformation and Compression
 
 **Files:**
-- Modify: `.superpowers/brainstorm/39694-1784238160/content/autolab-mog-a3-motion-v1.mjs`
+- Modify: `.superpowers/brainstorm/39694-1784238160/content/autolab-mog-a3-motion-v1.js`
 - Modify: `.superpowers/brainstorm/39694-1784238160/content/autolab-mog-a3-motion-v1.test.mjs`
 - Modify: `.superpowers/brainstorm/39694-1784238160/content/autolab-mog-a3-scene-v1.js`
 
@@ -344,14 +344,14 @@ Run the Node motion tests; expect 5 pass, 0 fail. In Chrome, capture `population
 - [ ] **Step 5: Commit the continuous transformation**
 
 ```bash
-git add .superpowers/brainstorm/39694-1784238160/content/autolab-mog-a3-motion-v1.mjs .superpowers/brainstorm/39694-1784238160/content/autolab-mog-a3-motion-v1.test.mjs .superpowers/brainstorm/39694-1784238160/content/autolab-mog-a3-scene-v1.js
+git add .superpowers/brainstorm/39694-1784238160/content/autolab-mog-a3-motion-v1.js .superpowers/brainstorm/39694-1784238160/content/autolab-mog-a3-motion-v1.test.mjs .superpowers/brainstorm/39694-1784238160/content/autolab-mog-a3-scene-v1.js
 git commit -m "feat: transform singularity into research gradient"
 ```
 
 ### Task 5: Slingshot, Rebirth, and Loop Endings
 
 **Files:**
-- Modify: `.superpowers/brainstorm/39694-1784238160/content/autolab-mog-a3-motion-v1.mjs`
+- Modify: `.superpowers/brainstorm/39694-1784238160/content/autolab-mog-a3-motion-v1.js`
 - Modify: `.superpowers/brainstorm/39694-1784238160/content/autolab-mog-a3-motion-v1.test.mjs`
 - Modify: `.superpowers/brainstorm/39694-1784238160/content/autolab-mog-a3-scene-v1.js`
 - Modify: `.superpowers/brainstorm/39694-1784238160/content/autolab-mog-a3-core-v1.css`
@@ -399,7 +399,7 @@ At `.93`, expect each page to report its own `ending`, `phase:'ending'`, and `en
 - [ ] **Step 5: Commit all three endings**
 
 ```bash
-git add .superpowers/brainstorm/39694-1784238160/content/autolab-mog-a3-motion-v1.mjs .superpowers/brainstorm/39694-1784238160/content/autolab-mog-a3-motion-v1.test.mjs .superpowers/brainstorm/39694-1784238160/content/autolab-mog-a3-scene-v1.js .superpowers/brainstorm/39694-1784238160/content/autolab-mog-a3-core-v1.css
+git add .superpowers/brainstorm/39694-1784238160/content/autolab-mog-a3-motion-v1.js .superpowers/brainstorm/39694-1784238160/content/autolab-mog-a3-motion-v1.test.mjs .superpowers/brainstorm/39694-1784238160/content/autolab-mog-a3-scene-v1.js .superpowers/brainstorm/39694-1784238160/content/autolab-mog-a3-core-v1.css
 git commit -m "feat: add three A3 collapse endings"
 ```
 

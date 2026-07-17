@@ -6,7 +6,7 @@ import {
   createExperimentBlueprints,
   poseForExperiment,
   endingPose,
-} from './autolab-mog-a3-motion-v1.mjs';
+} from './autolab-mog-a3-motion-v1.js';
 
 const quietScene = progress => ({
   progress,
