@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autolab — Singularity Rebirth</title>
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="autolab-mog-core-v1.css">
+  <link rel="stylesheet" href="autolab-mog-a3-core-v1.css">
+</head>
+<body data-ending="rebirth">
+  <div class="grain" aria-hidden="true"></div>
+  <div class="scroll-meter" aria-hidden="true"></div>
+  <header class="topbar" id="topbar">
+    <div class="nav-shell">
+      <a href="#top" class="wordmark">autolab<span class="brand-caret" id="brand-caret"></span></a>
+      <nav class="nav-links" aria-label="Main navigation"><a href="#research-run">How it works</a><a href="#outro">Research</a><a href="#outro">Docs</a></nav>
+      <span class="nav-status"><i></i> 84 experiments active</span>
+      <a class="nav-cta" href="#outro">Book a demo <span>↗</span></a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="hero-pill">The autoresearch platform</div>
+        <h1>Supercharge your <em>research.</em></h1>
+        <p class="hero-sub">A thousand experiments in parallel, on your compute, scored against your evals. State of the art with the team and budget you already have.</p>
+        <div class="hero-actions"><a class="button primary" href="#research-run">Start researching <span>↗</span></a><a class="button" href="#outro">Book a demo <span>→</span></a></div>
+        <div class="hero-install">$ curl -fsSL app.autolab.ai/install.sh | sh</div>
+      </div>
+      <div>
+        <div class="terminal">
+          <div class="terminal-bar"><i></i><i></i><i></i><span>autolab · from goal to merge</span></div>
+          <div class="terminal-body">
+            <span class="terminal-line mint">$ autolab start --goal "beat baseline"</span>
+            <span class="terminal-line dim">reading repo · binding eval.py · finding 8×H100</span>
+            <span class="terminal-line">spawned 1,000 experiments across 84 live agents</span>
+            <span class="terminal-line">exp/021  rope θ 10k → 1m          +0.4%</span>
+            <span class="terminal-line">exp/084  reasoning mix v2          +1.1%</span>
+            <span class="terminal-line dim">exp/201  optimizer: muon          running</span>
+            <span class="terminal-line dim">exp/389  rejected: latency +31ms   pruned</span>
+            <span class="terminal-line mint">frontier updated · 17 non-dominated experiments</span>
+            <span class="terminal-line result">winner / exp-941c2<br>val_acc 93.5% · latency 38ms · Δ +2.3%</span>
+            <span class="terminal-line mint">ready to inspect <span class="terminal-caret"></span></span>
+          </div>
+        </div>
+        <div class="terminal-caption">a real session, compressed</div>
+      </div>
+    </section>
+
+    <section class="a3-handoff">
+      <h2>Throw one goal into a <em>research singularity.</em></h2>
+      <p><b>Follow the caret</b>One instruction becomes a thousand experiments, then the same swarm climbs a measurable gradient and collapses on evidence.</p>
+    </section>
+
+    <section class="research-run" id="research-run" data-stage="0">
+      <div class="research-sticky">
+        <div class="base-grid" aria-hidden="true"></div>
+        <div class="dark-field" aria-hidden="true"></div>
+        <div class="dark-grid" aria-hidden="true"></div>
+        <div class="light-return" aria-hidden="true"></div>
+        <div class="return-grid" aria-hidden="true"></div>
+        <div class="slingshot-tear" id="slingshot-tear" aria-hidden="true"></div>
+        <canvas id="research-canvas" aria-hidden="true"></canvas>
+
+        <div class="research-head"><span>Autolab / research singularity</span><span>▸ experiment · — lineage · ● winner</span><div class="research-progress"><i></i></div><b id="research-index">01—06</b></div>
+        <div class="research-story">
+          <article class="research-step active" data-step="0"><span class="step">Release / 01</span><h3>Drop the <em>goal.</em></h3><p>The blinking instruction leaves the interface and becomes the first testable experiment.</p><span class="research-key">▮ intent → ▸ experiment</span></article>
+          <article class="research-step" data-step="1"><span class="step">Ignition / 02</span><h3>Ignite the <em>search.</em></h3><p>A thousand experiments branch into orbit. Every arrow is a real trial carrying its lineage.</p><span class="research-key">move through the field · bend gravity</span></article>
+          <article class="research-step" data-step="2"><span class="step">Ascent / 03</span><h3>Turn chaos into a <em>gradient.</em></h3><p>The same orbiting experiments stretch into trajectories and climb the evaluated surface.</p><span class="research-key">altitude = evaluated performance</span></article>
+          <article class="research-step" data-step="3"><span class="step">Pressure / 04</span><h3>Kill every <em>bad idea.</em></h3><p>Dominated experiments lose altitude. Strong lineages earn compute and tighten around the frontier.</p><span class="research-key">742 pruned · every result retained</span></article>
+          <article class="research-step" data-step="4"><span class="step">Collapse / 05</span><h3>Compress on <em>evidence.</em></h3><p>The gradient folds inward. One bright lineage survives the pressure.</p><span class="research-key">1,000 experiments → 1 accountable result</span></article>
+          <article class="research-step" data-step="5"><span class="step">Resolution / 06</span><div class="variant-copy" data-for="slingshot"><h3>Launch the <em>winner.</em></h3><p>The winning vector escapes the singularity, tears the field back to light, and resolves into reviewable code.</p></div><div class="variant-copy" data-for="rebirth"><h3>Grow the <em>result.</em></h3><p>The singularity pinches into one seed of evidence, then unfolds into reviewable code.</p></div><div class="variant-copy" data-for="loop"><h3>Ready the <em>next run.</em></h3><p>The winner returns to the Autolab caret, docks its diff, and leaves the interface ready again.</p></div></article>
+        </div>
+
+        <div class="event-horizon" id="event-horizon" aria-hidden="true"><div class="accretion-ring r3"></div><div class="accretion-ring r2"></div><div class="accretion-ring"></div><div class="horizon-disc"></div></div>
+        <div class="impact-label" aria-hidden="true">EXP–0001 / FIELD ORIGIN</div>
+        <div class="semantic-legend" aria-hidden="true"><span>▸ one vector = one experiment</span><span>— line = experiment lineage</span><span>↑ altitude = eval performance</span><span>● mint = frontier candidate</span></div>
+        <div class="gravity-pointer" data-mode="gravity pull" aria-hidden="true"></div>
+        <div class="compression-reticle" aria-hidden="true"></div>
+        <div class="rebirth-seed" aria-hidden="true"></div>
+        <svg class="loop-path" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M70 58 C55 34 38 18 21 6"></path></svg>
+        <div class="loop-scan" aria-hidden="true"></div>
+
+        <aside class="research-metrics metric-strip" aria-label="Research metrics"><span class="metric"><small id="metric-a-label">ORBITING</small><strong id="metric-a">001</strong></span><span class="metric"><small id="metric-b-label">PRUNED</small><strong id="metric-b">000</strong></span><span class="metric"><small>BEST Δ</small><strong class="mint" id="metric-best">+0.0%</strong></span></aside>
+
+        <article class="result-card diff-card" id="result-card">
+          <div class="diff-head"><span>winner / exp-0138</span><b>ready for approval</b></div>
+          <div class="diff-title">reasoning-frontier ↗</div>
+          <div class="diff-metrics"><span>VAL_ACC<b>93.5%</b></span><span>Δ BASE<b>+2.3</b></span><span>RUNTIME<b>4:18h</b></span></div>
+          <pre class="diff-code">- rope_theta = 10_000<span class="add">+ rope_theta = 1_000_000</span><span class="add">+ data_mix = "reasoning_v2"</span></pre>
+          <div class="diff-foot"><span>lineage / 1,000 experiments</span><span>human approval required</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="a3-outro" id="outro"><div><span class="mono-label eyebrow-mint">Chaos in. Evidence out.</span><h2>Research that collapses into <em>proof.</em></h2><p>Every experiment stays reproducible. Every winning change stays reviewable. Every merge remains yours to approve.</p><a class="button primary" href="#top">Run Autolab <span>↗</span></a></div></section>
+  </main>
+
+  <div class="flight-object" id="flight-object" aria-hidden="true"><div class="flight-core"></div><div class="flight-head"></div></div>
+  <div class="flight-label" aria-hidden="true">EXP–0001 / RELEASED</div>
+  <nav class="comparison-links" aria-label="A3 endings"><a href="autolab-mog-a-impact-frontier-v2.html">A2</a><a href="autolab-mog-a3-slingshot-v1.html">S</a><a class="active" href="autolab-mog-a3-rebirth-v1.html">R</a><a href="autolab-mog-a3-loop-v1.html">L</a></nav>
+  <div class="concept-label variant-label"><strong>A3-R</strong> IMPLODE → REBIRTH</div>
+
+  <script type="module" src="autolab-mog-a3-scene-v1.js"></script>
+</body>
+</html>
