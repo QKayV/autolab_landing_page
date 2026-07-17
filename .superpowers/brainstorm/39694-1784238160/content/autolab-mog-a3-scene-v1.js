@@ -6,6 +6,7 @@ import {
   createExperimentBlueprints,
   surfaceHeight,
   poseForExperiment,
+  endingPose,
 } from './autolab-mog-a3-motion-v1.js';
 
 const ending = document.body.dataset.ending;
@@ -41,6 +42,11 @@ const metricBest = document.querySelector('#metric-best');
 const metricALabel = document.querySelector('#metric-a-label');
 const metricBLabel = document.querySelector('#metric-b-label');
 const resultCard = document.querySelector('#result-card');
+const slingshotTear = document.querySelector('#slingshot-tear');
+const rebirthSeed = run.querySelector('.rebirth-seed');
+const loopPath = run.querySelector('.loop-path');
+const loopScan = run.querySelector('.loop-scan');
+const metricsPanel = run.querySelector('.research-metrics');
 
 let width = innerWidth;
 let height = innerHeight;
@@ -52,6 +58,7 @@ let dark = false;
 let caretDetached = false;
 let pointerMode = 'none';
 let endingProgress = 0;
+let variantState = {};
 let launch = { x: 0, y: 0 };
 let origin = { x: width * 0.7, y: height * 0.58 };
 let result = { x: width * 0.62, y: height * 0.54 };
@@ -146,6 +153,106 @@ function projectFrontier(u, v, z) {
   };
 }
 
+function slingshotPath(amount) {
+  return cubicBezier(
+    amount,
+    origin,
+    { x: width * 1.06, y: height * 0.1 },
+    { x: width * 0.93, y: height * 0.72 },
+    result,
+  );
+}
+
+function currentVariantState() {
+  const winner = blueprints.find(experiment => experiment.winner);
+  return endingPose(ending, winner, endingProgress, { origin, launch, result });
+}
+
+function resolveResult(amount, rotation = -4) {
+  const resolved = amount > 0.985 ? 1 : amount;
+  const inset = mix(49, 0, resolved);
+  const horizontalShift = width < 760 ? '0' : '-50%';
+  resultCard.style.opacity = String(resolved);
+  resultCard.style.transform = `translate(${horizontalShift},-50%) scale(${mix(0.06, 1, resolved)}) rotate(${mix(rotation, 0, resolved)}deg)`;
+  resultCard.style.clipPath = `inset(${inset}% ${inset}% ${inset}% ${inset}%)`;
+  resultCard.classList.toggle('ready', resolved === 1);
+  metricsPanel.style.opacity = String(1 - resolved);
+}
+
+function setCaretDetached(detached) {
+  caretDetached = detached;
+  topbar.classList.toggle('detached', detached);
+}
+
+function updateEndingLayers() {
+  variantState = currentVariantState();
+  slingshotTear.style.opacity = '0';
+  slingshotTear.style.clipPath = 'polygon(100% 45%,100% 45%,0 92%,0 92%)';
+  rebirthSeed.style.opacity = '0';
+  loopPath.style.opacity = '0';
+  loopScan.style.opacity = '0';
+  lightReturn.style.clipPath = `circle(0 at ${result.x}px ${result.y}px)`;
+  returnGrid.style.opacity = '0';
+  topbar.classList.remove('reattached');
+  run.classList.remove('ending-light-story');
+  resolveResult(0);
+
+  if (phase !== 'ending') return;
+
+  pointer.inside = false;
+  pointer.strength = 0;
+  pointerEl.classList.remove('visible');
+  const horizonFade = ease((endingProgress - 0.04) / 0.38);
+  eventHorizon.style.opacity = String(1 - horizonFade);
+
+  if (ending === 'slingshot') {
+    const tear = variantState.tear;
+    slingshotTear.style.opacity = String(tear > 0 ? 1 : 0);
+    slingshotTear.style.clipPath = `polygon(100% ${mix(45, 0, tear)}%,100% ${mix(45, 100, tear)}%,0 ${mix(92, 100, tear)}%,0 ${mix(92, 0, tear)}%)`;
+    run.classList.toggle('ending-light-story', tear > 0.42);
+    returnGrid.style.opacity = String(variantState.light * 0.7);
+    dark = variantState.light < 0.72;
+    run.classList.toggle('is-dark', dark);
+    resolveResult(variantState.unfold);
+    if (variantState.unfold > 0.98) setCaretDetached(false);
+    return;
+  }
+
+  if (ending === 'rebirth') {
+    const position = variantState.position;
+    const pulseWave = Math.sin(clamp((endingProgress - 0.27) / 0.52) * Math.PI);
+    rebirthSeed.style.left = `${position.x}px`;
+    rebirthSeed.style.top = `${position.y}px`;
+    rebirthSeed.style.opacity = String(variantState.seed * (1 - variantState.unfold * 0.82));
+    rebirthSeed.style.transform = `translate(-50%,-50%) scale(${mix(0.18, 1.2, variantState.seed) * mix(1, 0.72, variantState.unfold)})`;
+    rebirthSeed.style.setProperty('--pulse-a', String(1 + pulseWave * 8));
+    rebirthSeed.style.setProperty('--pulse-b', String(1 + pulseWave * 14));
+    rebirthSeed.style.setProperty('--pulse-opacity', String(pulseWave * 0.72));
+    lightReturn.style.clipPath = `circle(${variantState.light * 160}vmax at ${position.x}px ${position.y}px)`;
+    returnGrid.style.opacity = String(variantState.light * 0.68);
+    dark = variantState.light < 0.42;
+    run.classList.toggle('is-dark', dark);
+    resolveResult(variantState.unfold, 0);
+    if (variantState.unfold > 0.98) setCaretDetached(false);
+    return;
+  }
+
+  updateLoopPathGeometry();
+  loopPath.style.opacity = String(Math.sin(clamp(endingProgress / 0.72) * Math.PI) * 0.82);
+  loopPath.querySelector('path').style.strokeDashoffset = String((1 - variantState.flight) * 86);
+  loopScan.style.top = `${variantState.scan * 100}%`;
+  loopScan.style.opacity = String(Math.sin(variantState.scan * Math.PI) * 0.88);
+  lightReturn.style.clipPath = `inset(0 0 ${(1 - variantState.scan) * 100}% 0)`;
+  returnGrid.style.opacity = String(variantState.scan * 0.66);
+  dark = variantState.scan < 0.44;
+  run.classList.toggle('is-dark', dark);
+  resolveResult(variantState.unfold, -1.5);
+  if (variantState.reattach > 0.52) {
+    setCaretDetached(false);
+    topbar.classList.add('reattached');
+  }
+}
+
 function stageFor(currentPhase) {
   return ['release', 'orbit', 'gradient', 'pressure', 'compression', 'ending']
     .indexOf(currentPhase);
@@ -161,12 +268,34 @@ function updateStory(nextStage) {
   indexEl.textContent = `0${stage + 1}—06`;
 }
 
-function updateFlight(inRun) {
+function syncLaunchPoint() {
   const caretRect = brandCaret.getBoundingClientRect();
   launch = {
     x: caretRect.left + caretRect.width / 2,
     y: caretRect.top + caretRect.height / 2,
   };
+  return caretRect;
+}
+
+function updateLoopPathGeometry() {
+  const mobile = width < 760;
+  const firstControl = {
+    x: launch.x + (mobile ? 22 : 66),
+    y: launch.y + height * 0.2,
+  };
+  const secondControl = {
+    x: origin.x - (mobile ? 72 : 240),
+    y: origin.y - height * 0.16,
+  };
+  loopPath.setAttribute('viewBox', `0 0 ${width} ${height}`);
+  loopPath.querySelector('path').setAttribute(
+    'd',
+    `M ${origin.x} ${origin.y} C ${secondControl.x} ${secondControl.y} ${firstControl.x} ${firstControl.y} ${launch.x} ${launch.y}`,
+  );
+}
+
+function updateFlight(inRun) {
+  const caretRect = syncLaunchPoint();
   const local = clamp(progress / TIMELINE.release);
   const eased = ease(local);
   const point = launchPath(eased);
@@ -287,7 +416,7 @@ function updateScroll() {
   const inRun = rect.top <= 0 && rect.bottom >= innerHeight;
   progress = clamp(-rect.top / Math.max(1, run.offsetHeight - innerHeight));
   phase = phaseFor(progress);
-  endingProgress = ease((progress - TIMELINE.compression) / (1 - TIMELINE.compression));
+  endingProgress = clamp((progress - TIMELINE.compression) / (1 - TIMELINE.compression));
   origin = { x: width * (width < 760 ? 0.55 : 0.7), y: height * (width < 760 ? 0.62 : 0.58) };
   result = { x: width * (width < 760 ? 0.5 : 0.62), y: height * (width < 760 ? 0.64 : 0.54) };
 
@@ -299,7 +428,6 @@ function updateScroll() {
   progressEl.style.width = `${progress * 100}%`;
 
   updatePointer();
-  resultCard.style.opacity = '0';
   const compression = ease(
     (progress - TIMELINE.pressure) / (TIMELINE.compression - TIMELINE.pressure),
   );
@@ -307,6 +435,7 @@ function updateScroll() {
   reticle.style.top = `${origin.y}px`;
   reticle.style.opacity = String(Math.sin(compression * Math.PI) * 0.9);
   reticle.style.transform = `translate(-50%,-50%) scale(${mix(2.2, 0.22, compression)}) rotate(${compression * 190}deg)`;
+  updateEndingLayers();
 }
 
 function drawArrow(particle, alpha, color, scale = 1) {
@@ -548,6 +677,106 @@ function drawCompressionVortex(now) {
   context.restore();
 }
 
+function drawGhostVector(point, angle, alpha, length) {
+  context.save();
+  context.translate(point.x, point.y);
+  context.rotate(angle);
+  context.globalAlpha = alpha;
+  context.strokeStyle = '#2fce96';
+  context.lineWidth = 1.25;
+  context.shadowColor = '#2fce96';
+  context.shadowBlur = 14;
+  context.beginPath();
+  context.moveTo(-length, 0);
+  context.lineTo(0, 0);
+  context.moveTo(-length * 0.34, -length * 0.22);
+  context.lineTo(0, 0);
+  context.lineTo(-length * 0.34, length * 0.22);
+  context.stroke();
+  context.restore();
+}
+
+function drawEndingEffects(now) {
+  if (phase !== 'ending') return;
+  context.save();
+  context.globalCompositeOperation = 'screen';
+
+  if (ending === 'slingshot') {
+    context.beginPath();
+    for (let index = 0; index <= 42; index += 1) {
+      const point = slingshotPath(variantState.flight * index / 42);
+      if (index) context.lineTo(point.x, point.y);
+      else context.moveTo(point.x, point.y);
+    }
+    context.globalAlpha = variantState.afterimage * 0.42;
+    context.strokeStyle = '#2fce96';
+    context.lineWidth = 1.25;
+    context.setLineDash([2, 8]);
+    context.stroke();
+    context.setLineDash([]);
+
+    [0.045, 0.09, 0.145].forEach((offset, index) => {
+      const amount = clamp(variantState.flight - offset);
+      const point = slingshotPath(amount);
+      const ahead = slingshotPath(clamp(amount + 0.008));
+      drawGhostVector(
+        point,
+        Math.atan2(ahead.y - point.y, ahead.x - point.x),
+        variantState.afterimage * (0.48 - index * 0.11),
+        38 - index * 7,
+      );
+    });
+
+    const shock = Math.sin(clamp((endingProgress - 0.2) / 0.56) * Math.PI);
+    const impact = slingshotPath(clamp(variantState.flight));
+    context.globalAlpha = shock * 0.66;
+    context.strokeStyle = '#f7f5f0';
+    context.lineWidth = 1;
+    context.beginPath();
+    context.ellipse(impact.x, impact.y, 16 + shock * 82, 5 + shock * 25, -0.65, 0, Math.PI * 2);
+    context.stroke();
+  } else if (ending === 'rebirth') {
+    const pulse = Math.sin(clamp((endingProgress - 0.27) / 0.52) * Math.PI);
+    const position = variantState.position;
+    for (let index = 0; index < 5; index += 1) {
+      const radius = 18 + pulse * (58 + index * 27);
+      context.beginPath();
+      context.arc(position.x, position.y, radius, 0, Math.PI * 2);
+      context.globalAlpha = pulse * (0.44 - index * 0.065);
+      context.strokeStyle = index % 2 ? '#dff5ec' : '#2fce96';
+      context.lineWidth = index === 0 ? 1.4 : 0.7;
+      context.setLineDash(index % 2 ? [2, 8] : []);
+      context.stroke();
+    }
+    context.setLineDash([]);
+    for (let index = 0; index < 18; index += 1) {
+      const angle = index / 18 * Math.PI * 2 + (reducedMotion ? 0 : now * 0.00022);
+      const inner = 10 + pulse * 18;
+      const outer = inner + 5 + index % 4 * 4;
+      context.globalAlpha = pulse * (index % 3 ? 0.34 : 0.68);
+      context.strokeStyle = '#2fce96';
+      context.beginPath();
+      context.moveTo(position.x + Math.cos(angle) * inner, position.y + Math.sin(angle) * inner);
+      context.lineTo(position.x + Math.cos(angle) * outer, position.y + Math.sin(angle) * outer);
+      context.stroke();
+    }
+  } else {
+    context.beginPath();
+    for (let index = 0; index <= 42; index += 1) {
+      const point = launchPath(1 - variantState.flight * index / 42);
+      if (index) context.lineTo(point.x, point.y);
+      else context.moveTo(point.x, point.y);
+    }
+    context.globalAlpha = Math.sin(clamp(endingProgress / 0.74) * Math.PI) * 0.58;
+    context.strokeStyle = '#2fce96';
+    context.lineWidth = 1;
+    context.setLineDash([3, 7]);
+    context.stroke();
+    context.setLineDash([]);
+  }
+  context.restore();
+}
+
 function targetForParticle(particle, now) {
   const scene = {
     progress,
@@ -574,11 +803,38 @@ function targetForParticle(particle, now) {
     y = mix(y, pointer.y, pull);
   }
 
+  let alpha = born * (0.28 + particle.blueprint.score * 0.72) * pose.alpha;
+  let endingScale = pose.scale;
+  if (phase === 'ending') {
+    if (!particle.blueprint.winner) {
+      const disappear = ease(endingProgress / 0.2);
+      x = mix(x, origin.x, disappear);
+      y = mix(y, origin.y, disappear);
+      alpha *= 1 - disappear;
+    } else if (ending === 'slingshot') {
+      const point = slingshotPath(variantState.flight);
+      x = point.x;
+      y = point.y;
+      endingScale = mix(1.6, 2.25, variantState.afterimage);
+    } else if (ending === 'rebirth') {
+      x = variantState.position.x;
+      y = variantState.position.y;
+      alpha *= 1 - variantState.seed;
+      endingScale = 1.7;
+    } else {
+      const point = launchPath(1 - variantState.flight);
+      x = point.x;
+      y = point.y;
+      alpha *= 1 - variantState.reattach;
+      endingScale = 1.8;
+    }
+  }
+
   return {
     x: mix(origin.x, x, born),
     y: mix(origin.y, y, born),
-    alpha: born * (0.28 + particle.blueprint.score * 0.72) * pose.alpha,
-    pose,
+    alpha,
+    pose: { ...pose, trail: phase === 'ending' ? 0 : pose.trail, scale: endingScale },
   };
 }
 
@@ -636,6 +892,11 @@ function drawParticle(particle, target) {
 }
 
 function frame(now) {
+  if (ending === 'loop' && phase === 'ending') {
+    syncLaunchPoint();
+    updateLoopPathGeometry();
+    variantState = currentVariantState();
+  }
   context.clearRect(0, 0, width, height);
   drawLaunchTrail();
   drawIgnitionBurst();
@@ -650,6 +911,7 @@ function frame(now) {
     drawFrontierSurface(surfaceIn * surfaceOut);
   }
   drawCompressionVortex(now);
+  drawEndingEffects(now);
   if (progress > 0.095) {
     for (const particle of particles) {
       drawParticle(particle, targetForParticle(particle, now));
@@ -669,6 +931,11 @@ function getState() {
     caretDetached,
     pointerMode,
     endingProgress,
+    endingState: variantState,
+    tear: variantState.tear || 0,
+    seed: variantState.seed || 0,
+    reattach: variantState.reattach || 0,
+    scan: variantState.scan || 0,
     frontierAmount: frontierAmount(),
     prunedCount: progress < TIMELINE.gradient
       ? 0

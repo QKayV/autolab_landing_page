@@ -90,3 +90,21 @@ test('the three endings produce distinct winning trajectories', () => {
   assert.deepEqual(endingPose('loop', winner, 1, context).position, context.launch);
   assert.throws(() => endingPose('unknown', winner, 1, context), TypeError);
 });
+
+test('ending choreography exposes the authored transition beats', () => {
+  const context = {
+    origin: { x: 0, y: 0 },
+    launch: { x: -0.8, y: -0.9 },
+    result: { x: 0.2, y: 0.1 },
+  };
+  const winner = { id: 'EXP-0138', winner: true, score: 1 };
+  const slingshot = endingPose('slingshot', winner, 0.45, context);
+  const rebirthHold = endingPose('rebirth', winner, 0.08, context);
+  const rebirthFinal = endingPose('rebirth', winner, 1, context);
+  const loopFinal = endingPose('loop', winner, 1, context);
+
+  assert.ok(slingshot.afterimage > 0.5);
+  assert.equal(rebirthHold.seed, 0);
+  assert.ok(rebirthFinal.unfold > 0.99);
+  assert.ok(loopFinal.reattach > 0.99 && loopFinal.scan > 0.99);
+});
