@@ -69,27 +69,67 @@ function orbitPose(blueprint, scene) {
   };
 }
 
+export function surfaceHeight(u, v, pointer = { x: 0, y: 0, strength: 0 }) {
+  const peak = Math.exp(-((u - 0.28) ** 2 * 2.55 + (v + 0.12) ** 2 * 1.85));
+  const shoulder = 0.25 * Math.exp(-((u + 0.5) ** 2 * 5 + (v - 0.42) ** 2 * 4));
+  const ridge = 0.19 * Math.sin((u + v) * 2.4) + 0.2 * u - 0.1 * v;
+  const distanceX = u - (pointer.x || 0);
+  const distanceY = v - (pointer.y || 0);
+  const bend = (pointer.strength || 0) *
+    Math.exp(-(distanceX ** 2 + distanceY ** 2) * 4.5) * 0.45;
+  return 0.14 + peak * 0.82 + shoulder + ridge + bend;
+}
+
+function frontierPose(blueprint, scene) {
+  return {
+    x: blueprint.u,
+    y: blueprint.v,
+    z: surfaceHeight(blueprint.u, blueprint.v, scene.pointer) + blueprint.score * 0.08,
+  };
+}
+
 export function poseForExperiment(blueprint, scene) {
-  let pose = orbitPose(blueprint, scene);
+  const orbit = orbitPose(blueprint, scene);
+  const frontier = frontierPose(blueprint, scene);
+  const frontierAmount = ease(
+    (scene.progress - TIMELINE.orbit) /
+      (TIMELINE.gradient - TIMELINE.orbit),
+  );
+  let pose = {
+    x: mix(orbit.x, frontier.x, frontierAmount),
+    y: mix(orbit.y, frontier.y, frontierAmount),
+    z: mix(orbit.z, frontier.z, frontierAmount),
+  };
+  const pressure = ease(
+    (scene.progress - TIMELINE.gradient) /
+      (TIMELINE.pressure - TIMELINE.gradient),
+  );
+  pose.z -= pressure * (1 - blueprint.score) * 0.3;
+
   const compression = ease(
     (scene.progress - TIMELINE.pressure) /
       (TIMELINE.compression - TIMELINE.pressure),
   );
-  const helix = blueprint.lineage * 0.12 + compression * TAU * 1.5;
-  const radius = Math.hypot(pose.x, pose.y) * (1 - compression * 0.95);
+  const initialAngle = Math.atan2(pose.y, pose.x);
+  const helix = initialAngle + compression * TAU * (1.2 + blueprint.lineage % 5 * 0.08);
+  const radius = Math.hypot(pose.x, pose.y) * (1 - compression * 0.965);
   pose = {
     x: Math.cos(helix) * radius,
     y: Math.sin(helix) * radius,
-    z: pose.z * (1 - compression * 0.94),
+    z: pose.z * (1 - compression * 0.97) +
+      Math.sin(helix * 2) * compression * (1 - compression) * 0.04,
   };
+
+  const dominated = 1 - blueprint.score;
+  const alpha = blueprint.winner ? 1 : 1 - pressure * (0.2 + dominated * 0.68);
 
   return {
     id: blueprint.id,
     ...pose,
-    alpha: 1,
+    alpha,
     angle: helix,
-    trail: 1 - compression,
-    scale: blueprint.winner ? 1.4 : 1,
+    trail: (1 - pressure * 0.64) * (1 - compression),
+    scale: blueprint.winner ? 1.4 + pressure * 0.18 : 1,
   };
 }
 

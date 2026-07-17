@@ -46,6 +46,29 @@ test('experiment identity survives every shared phase', () => {
   }
 });
 
+test('orbit resolves continuously into each experiment’s frontier coordinate', () => {
+  const experiment = createExperimentBlueprints(240, 0xA3701AB)[40];
+  const before = poseForExperiment(experiment, quietScene(TIMELINE.orbit - 0.0001));
+  const after = poseForExperiment(experiment, quietScene(TIMELINE.orbit + 0.0001));
+  const surface = poseForExperiment(experiment, quietScene(TIMELINE.gradient));
+
+  assert.ok(Math.hypot(after.x - before.x, after.y - before.y, after.z - before.z) < 0.02);
+  assert.ok(Math.abs(surface.x - experiment.u) < 0.001);
+  assert.ok(Math.abs(surface.y - experiment.v) < 0.001);
+});
+
+test('frontier surface responds to pointer pressure without changing identity', () => {
+  const experiment = createExperimentBlueprints(240, 0xA3701AB)[80];
+  const quiet = poseForExperiment(experiment, quietScene(0.52));
+  const bent = poseForExperiment(experiment, {
+    ...quietScene(0.52),
+    pointer: { x: experiment.u, y: experiment.v, strength: 1 },
+  });
+
+  assert.equal(bent.id, quiet.id);
+  assert.ok(bent.z > quiet.z + 0.08);
+});
+
 test('compression moves experiments toward the origin', () => {
   const experiment = createExperimentBlueprints(240, 0xA3701AB)[40];
   const early = poseForExperiment(experiment, quietScene(0.77));

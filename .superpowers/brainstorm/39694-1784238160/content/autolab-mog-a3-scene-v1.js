@@ -4,6 +4,7 @@ import {
   ease,
   phaseFor,
   createExperimentBlueprints,
+  surfaceHeight,
   poseForExperiment,
 } from './autolab-mog-a3-motion-v1.js';
 
@@ -61,6 +62,7 @@ const pointer = {
   ny: 0,
   strength: 0,
   inside: false,
+  moved: false,
 };
 
 const experimentCount = innerWidth < 760 ? 112 : 240;
@@ -114,6 +116,36 @@ function launchPath(amount) {
   );
 }
 
+function frontierAmount() {
+  return ease(
+    (progress - TIMELINE.orbit) / (TIMELINE.gradient - TIMELINE.orbit),
+  );
+}
+
+function frontierCamera() {
+  const amount = frontierAmount();
+  const pressure = ease(
+    (progress - TIMELINE.gradient) / (TIMELINE.pressure - TIMELINE.gradient),
+  );
+  return {
+    zoom: 0.78 + amount * 0.34 - pressure * 0.08,
+    yaw: -0.2 + amount * 0.28 + (pointer.inside ? pointer.nx * 0.07 : 0),
+  };
+}
+
+function projectFrontier(u, v, z) {
+  const camera = frontierCamera();
+  const scale = Math.min(width, height) * (width < 760 ? 0.34 : 0.36) * camera.zoom;
+  const cosine = Math.cos(camera.yaw);
+  const sine = Math.sin(camera.yaw);
+  const rotatedU = u * cosine - v * sine;
+  const rotatedV = u * sine + v * cosine;
+  return {
+    x: origin.x + (rotatedU - rotatedV) * scale * 0.65,
+    y: origin.y + (rotatedU + rotatedV) * scale * 0.25 - z * scale * 0.64,
+  };
+}
+
 function stageFor(currentPhase) {
   return ['release', 'orbit', 'gradient', 'pressure', 'compression', 'ending']
     .indexOf(currentPhase);
@@ -162,6 +194,12 @@ function updateFlight(inRun) {
 function updateField() {
   const darkIn = ease((progress - 0.105) / 0.14);
   const radius = mix(0, 150, darkIn);
+  const surfaceAmount = ease(
+    (progress - TIMELINE.orbit) / (TIMELINE.gradient - TIMELINE.orbit),
+  );
+  const compression = ease(
+    (progress - TIMELINE.pressure) / (TIMELINE.compression - TIMELINE.pressure),
+  );
   dark = darkIn > 0.28;
   run.classList.toggle('is-dark', dark);
   sticky.style.setProperty('--origin-x', `${origin.x}px`);
@@ -175,10 +213,11 @@ function updateField() {
 
   const horizonIn = ease((progress - 0.105) / 0.1);
   const horizonBreath = 1 + Math.sin(performance.now() * 0.002) * 0.045;
+  const horizonScale = (1 - surfaceAmount * 0.34 + compression * 0.92) * horizonBreath;
   eventHorizon.style.left = `${origin.x}px`;
   eventHorizon.style.top = `${origin.y}px`;
   eventHorizon.style.opacity = String(horizonIn);
-  eventHorizon.style.transform = `translate(-50%,-50%) scale(${horizonIn * horizonBreath})`;
+  eventHorizon.style.transform = `translate(-50%,-50%) scale(${horizonIn * horizonScale})`;
   impactLabel.style.left = `${origin.x + (width < 760 ? 0 : 92)}px`;
   impactLabel.style.top = `${origin.y + (width < 760 ? 92 : 62)}px`;
   impactLabel.style.opacity = String(
@@ -188,11 +227,55 @@ function updateField() {
 
 function updateMetrics() {
   const orbitLocal = ease((progress - 0.1) / 0.24);
-  metricALabel.textContent = 'ORBITING';
-  metricBLabel.textContent = 'PRUNED';
-  metricA.textContent = String(Math.round(mix(1, 1000, orbitLocal))).padStart(3, '0');
-  metricB.textContent = '000';
-  metricBest.textContent = '+0.0%';
+  const surfaceLocal = ease(
+    (progress - TIMELINE.orbit) / (TIMELINE.gradient - TIMELINE.orbit),
+  );
+  const pressureLocal = ease(
+    (progress - TIMELINE.gradient) / (TIMELINE.pressure - TIMELINE.gradient),
+  );
+  const compressionLocal = ease(
+    (progress - TIMELINE.pressure) / (TIMELINE.compression - TIMELINE.pressure),
+  );
+
+  if (progress < TIMELINE.orbit) {
+    metricALabel.textContent = 'ORBITING';
+    metricBLabel.textContent = 'PRUNED';
+    metricA.textContent = String(Math.round(mix(1, 1000, orbitLocal))).padStart(3, '0');
+    metricB.textContent = '000';
+  } else if (progress < TIMELINE.gradient) {
+    metricALabel.textContent = 'EXPERIMENTS';
+    metricBLabel.textContent = 'FRONTIER';
+    metricA.textContent = '1,000';
+    metricB.textContent = String(Math.round(mix(1, 17, surfaceLocal))).padStart(2, '0');
+  } else if (progress < TIMELINE.pressure) {
+    const pruned = Math.round(742 * pressureLocal);
+    metricALabel.textContent = 'ACTIVE';
+    metricBLabel.textContent = 'PRUNED';
+    metricA.textContent = String(1000 - pruned);
+    metricB.textContent = String(pruned).padStart(3, '0');
+  } else {
+    metricALabel.textContent = 'SURVIVORS';
+    metricBLabel.textContent = 'COLLAPSED';
+    metricA.textContent = String(Math.max(1, Math.round(mix(258, 1, compressionLocal))));
+    metricB.textContent = String(Math.min(999, Math.round(mix(742, 999, compressionLocal))));
+  }
+
+  metricBest.textContent = `+${mix(0, 2.3, ease((progress - 0.38) / 0.38)).toFixed(1)}%`;
+}
+
+function updatePointer() {
+  const rect = run.getBoundingClientRect();
+  const inRun = rect.top <= 0 && rect.bottom >= innerHeight;
+  pointerMode = phase === 'orbit'
+    ? 'gravity'
+    : ['gradient', 'pressure'].includes(phase) ? 'surface' : 'none';
+  pointer.inside = pointer.moved && inRun && pointerMode !== 'none' &&
+    pointer.x > (width < 760 ? 0 : width * 0.36);
+  pointer.strength = pointer.inside && !reducedMotion ? 1 : 0;
+  pointer.nx = pointer.x / width * 2 - 1;
+  pointer.ny = pointer.y / height * 2 - 1;
+  pointerEl.classList.toggle('visible', pointer.inside);
+  pointerEl.dataset.mode = pointerMode === 'gravity' ? 'secondary gravity' : 'gradient pull';
 }
 
 function updateScroll() {
@@ -215,17 +298,15 @@ function updateScroll() {
   updateMetrics();
   progressEl.style.width = `${progress * 100}%`;
 
-  pointerMode = phase === 'orbit'
-    ? 'gravity'
-    : ['gradient', 'pressure'].includes(phase) ? 'surface' : 'none';
-  pointer.inside = inRun && pointerMode !== 'none' && pointer.x > (width < 760 ? 0 : width * 0.36);
-  pointer.strength = pointer.inside && !reducedMotion ? 1 : 0;
-  pointer.nx = pointer.x / width * 2 - 1;
-  pointer.ny = pointer.y / height * 2 - 1;
-  pointerEl.classList.toggle('visible', pointer.inside);
-  pointerEl.dataset.mode = pointerMode === 'gravity' ? 'secondary gravity' : 'gradient pull';
+  updatePointer();
   resultCard.style.opacity = '0';
-  reticle.style.opacity = '0';
+  const compression = ease(
+    (progress - TIMELINE.pressure) / (TIMELINE.compression - TIMELINE.pressure),
+  );
+  reticle.style.left = `${origin.x}px`;
+  reticle.style.top = `${origin.y}px`;
+  reticle.style.opacity = String(Math.sin(compression * Math.PI) * 0.9);
+  reticle.style.transform = `translate(-50%,-50%) scale(${mix(2.2, 0.22, compression)}) rotate(${compression * 190}deg)`;
 }
 
 function drawArrow(particle, alpha, color, scale = 1) {
@@ -268,6 +349,27 @@ function drawLaunchTrail() {
   context.restore();
 }
 
+function drawIgnitionBurst() {
+  const local = clamp((progress - 0.105) / 0.19);
+  if (local <= 0 || local >= 1) return;
+  const amount = ease(local);
+  context.save();
+  context.translate(origin.x, origin.y);
+  context.globalAlpha = Math.sin(local * Math.PI) * 0.82;
+  for (let index = 0; index < 38; index += 1) {
+    const angle = index / 38 * Math.PI * 2 + (index % 4) * 0.07;
+    const radius = amount * (42 + index % 9 * 18);
+    const length = 5 + index % 6 * 2.4;
+    context.strokeStyle = index % 5 === 0 ? '#f7f5f0' : '#2fce96';
+    context.lineWidth = index % 7 === 0 ? 1.5 : 0.75;
+    context.beginPath();
+    context.moveTo(Math.cos(angle) * (radius - length), Math.sin(angle) * (radius - length));
+    context.lineTo(Math.cos(angle) * radius, Math.sin(angle) * radius);
+    context.stroke();
+  }
+  context.restore();
+}
+
 function drawOrbitGuides() {
   if (progress < 0.12 || progress > 0.54) return;
   const alpha = ease((progress - 0.12) / 0.12) * (1 - ease((progress - 0.42) / 0.12));
@@ -286,6 +388,166 @@ function drawOrbitGuides() {
   context.restore();
 }
 
+function drawFrontierAxes(alpha) {
+  const originPoint = projectFrontier(-0.96, -0.9, 0);
+  const experimentAxis = projectFrontier(1.02, -0.9, 0);
+  const evalAxis = projectFrontier(-0.96, 0.96, 0);
+  const performanceAxis = projectFrontier(-0.96, -0.9, 1.36);
+  context.save();
+  context.globalAlpha = alpha;
+  context.strokeStyle = '#81968d';
+  context.fillStyle = '#8ca198';
+  context.lineWidth = 0.8;
+  context.setLineDash([3, 7]);
+  [[originPoint, experimentAxis], [originPoint, evalAxis], [originPoint, performanceAxis]]
+    .forEach(([start, end]) => {
+      context.beginPath();
+      context.moveTo(start.x, start.y);
+      context.lineTo(end.x, end.y);
+      context.stroke();
+    });
+  context.setLineDash([]);
+  context.font = '500 7px "IBM Plex Mono", monospace';
+  context.letterSpacing = '0.1em';
+  context.fillText('EXPERIMENT SPACE', experimentAxis.x - 66, experimentAxis.y + 18);
+  context.fillText('EVAL MIX', evalAxis.x - 8, evalAxis.y + 18);
+  context.fillText('PERFORMANCE', performanceAxis.x - 24, performanceAxis.y - 12);
+  context.restore();
+}
+
+function drawFrontierSurface(alpha) {
+  const pointerState = {
+    x: pointer.nx,
+    y: pointer.ny,
+    strength: pointer.strength,
+  };
+  const rows = width < 760 ? 9 : 13;
+  const columns = width < 760 ? 11 : 16;
+  context.save();
+  context.globalAlpha = alpha;
+  context.globalCompositeOperation = 'screen';
+
+  for (let row = 0; row < rows; row += 1) {
+    for (let column = 0; column < columns; column += 1) {
+      const u0 = -1 + column / columns * 2;
+      const u1 = -1 + (column + 1) / columns * 2;
+      const v0 = -1 + row / rows * 2;
+      const v1 = -1 + (row + 1) / rows * 2;
+      const z = surfaceHeight((u0 + u1) / 2, (v0 + v1) / 2, pointerState);
+      const points = [
+        projectFrontier(u0, v0, surfaceHeight(u0, v0, pointerState)),
+        projectFrontier(u1, v0, surfaceHeight(u1, v0, pointerState)),
+        projectFrontier(u1, v1, surfaceHeight(u1, v1, pointerState)),
+        projectFrontier(u0, v1, surfaceHeight(u0, v1, pointerState)),
+      ];
+      context.beginPath();
+      context.moveTo(points[0].x, points[0].y);
+      points.slice(1).forEach(point => context.lineTo(point.x, point.y));
+      context.closePath();
+      context.fillStyle = `rgba(47,206,150,${0.014 + clamp(z) * 0.042})`;
+      context.fill();
+    }
+  }
+
+  context.lineWidth = 0.68;
+  for (let row = 0; row <= rows; row += 1) {
+    context.beginPath();
+    for (let column = 0; column <= columns; column += 1) {
+      const u = -1 + column / columns * 2;
+      const v = -1 + row / rows * 2;
+      const point = projectFrontier(u, v, surfaceHeight(u, v, pointerState));
+      if (column) context.lineTo(point.x, point.y);
+      else context.moveTo(point.x, point.y);
+    }
+    context.strokeStyle = row % 3 === 0 ? 'rgba(47,206,150,.48)' : 'rgba(208,229,220,.17)';
+    context.stroke();
+  }
+  for (let column = 0; column <= columns; column += 1) {
+    context.beginPath();
+    for (let row = 0; row <= rows; row += 1) {
+      const u = -1 + column / columns * 2;
+      const v = -1 + row / rows * 2;
+      const point = projectFrontier(u, v, surfaceHeight(u, v, pointerState));
+      if (row) context.lineTo(point.x, point.y);
+      else context.moveTo(point.x, point.y);
+    }
+    context.strokeStyle = column % 4 === 0 ? 'rgba(47,206,150,.4)' : 'rgba(208,229,220,.14)';
+    context.stroke();
+  }
+
+  context.lineWidth = 2.2;
+  context.strokeStyle = '#2fce96';
+  context.shadowColor = 'rgba(47,206,150,.68)';
+  context.shadowBlur = 15;
+  context.beginPath();
+  for (let index = 0; index <= 34; index += 1) {
+    const u = -0.92 + index / 34 * 1.84;
+    const v = -0.12 + 0.16 * Math.sin(index * 0.38);
+    const point = projectFrontier(
+      u,
+      v,
+      surfaceHeight(u, v, pointerState) + 0.018,
+    );
+    if (index) context.lineTo(point.x, point.y);
+    else context.moveTo(point.x, point.y);
+  }
+  context.stroke();
+  context.restore();
+}
+
+function drawCompressionVortex(now) {
+  const raw = clamp(
+    (progress - TIMELINE.pressure) / (TIMELINE.compression - TIMELINE.pressure),
+  );
+  if (raw <= 0 || raw >= 1) return;
+  const amount = ease(raw);
+  const energy = Math.sin(raw * Math.PI);
+  const outerRadius = mix(Math.min(width, height) * 0.52, 38, raw);
+  const rotation = (reducedMotion ? raw * 2.4 : now * 0.00042) + amount * 2.8;
+  context.save();
+  context.translate(origin.x, origin.y);
+  context.globalCompositeOperation = 'screen';
+
+  const glow = context.createRadialGradient(0, 0, 2, 0, 0, outerRadius * 0.88);
+  glow.addColorStop(0, `rgba(47,206,150,${energy * 0.24})`);
+  glow.addColorStop(0.28, `rgba(47,206,150,${energy * 0.08})`);
+  glow.addColorStop(1, 'rgba(47,206,150,0)');
+  context.fillStyle = glow;
+  context.beginPath();
+  context.arc(0, 0, outerRadius, 0, Math.PI * 2);
+  context.fill();
+
+  for (let index = 0; index < 46; index += 1) {
+    const angle = index * 2.399963 + rotation + (index % 4) * 0.04;
+    const radius = outerRadius * (0.44 + index / 46 * 0.62);
+    const inward = radius * (0.14 + amount * 0.07);
+    context.beginPath();
+    context.moveTo(Math.cos(angle) * radius, Math.sin(angle) * radius * 0.64);
+    context.quadraticCurveTo(
+      Math.cos(angle + 0.55) * radius * 0.58,
+      Math.sin(angle + 0.55) * radius * 0.34,
+      Math.cos(angle + 1.08) * inward,
+      Math.sin(angle + 1.08) * inward * 0.5,
+    );
+    context.globalAlpha = energy * (index % 5 === 0 ? 0.62 : 0.25);
+    context.strokeStyle = index % 6 === 0 ? '#f7f5f0' : '#2fce96';
+    context.lineWidth = index % 7 === 0 ? 1.25 : 0.62;
+    context.stroke();
+  }
+
+  for (let index = 0; index < 5; index += 1) {
+    const radius = outerRadius * (0.24 + index * 0.17);
+    context.beginPath();
+    context.ellipse(0, 0, radius, radius * (0.18 + index * 0.028), rotation * (index % 2 ? -1 : 1) + index * 0.45, 0, Math.PI * 2);
+    context.globalAlpha = energy * (0.34 - index * 0.045);
+    context.strokeStyle = index % 2 ? '#80968c' : '#2fce96';
+    context.lineWidth = index === 0 ? 1.4 : 0.7;
+    context.setLineDash(index % 2 ? [2, 7] : []);
+    context.stroke();
+  }
+  context.restore();
+}
+
 function targetForParticle(particle, now) {
   const scene = {
     progress,
@@ -296,8 +558,14 @@ function targetForParticle(particle, now) {
   const pose = poseForExperiment(particle.blueprint, scene);
   const radius = Math.min(width, height) * (width < 760 ? 0.41 : 0.48);
   const born = ease((progress - 0.105) / 0.17);
-  let x = origin.x + pose.x * radius;
-  let y = origin.y + pose.y * radius * 0.72 - pose.z * radius * 0.35;
+  const surfaceMix = frontierAmount();
+  const orbitPoint = {
+    x: origin.x + pose.x * radius,
+    y: origin.y + pose.y * radius * 0.72 - pose.z * radius * 0.35,
+  };
+  const frontierPoint = projectFrontier(pose.x, pose.y, pose.z);
+  let x = mix(orbitPoint.x, frontierPoint.x, surfaceMix);
+  let y = mix(orbitPoint.y, frontierPoint.y, surfaceMix);
 
   if (pointerMode === 'gravity' && pointer.strength) {
     const distance = Math.max(55, Math.hypot(pointer.x - x, pointer.y - y));
@@ -309,7 +577,7 @@ function targetForParticle(particle, now) {
   return {
     x: mix(origin.x, x, born),
     y: mix(origin.y, y, born),
-    alpha: born * (0.28 + particle.blueprint.score * 0.72),
+    alpha: born * (0.28 + particle.blueprint.score * 0.72) * pose.alpha,
     pose,
   };
 }
@@ -335,7 +603,7 @@ function drawParticle(particle, target) {
     particle.angle += delta * 0.18;
   }
 
-  if (!reducedMotion && particle.blueprint.index % 3 === 0 && target.alpha > 0.04) {
+  if (!reducedMotion && particle.blueprint.index % 3 === 0 && target.alpha > 0.04 && target.pose.trail > 0.02) {
     particle.trail.push([particle.x, particle.y]);
     if (particle.trail.length > 12) particle.trail.shift();
     context.beginPath();
@@ -343,7 +611,7 @@ function drawParticle(particle, target) {
       if (index) context.lineTo(point[0], point[1]);
       else context.moveTo(point[0], point[1]);
     });
-    context.globalAlpha = target.alpha * 0.2;
+    context.globalAlpha = target.alpha * target.pose.trail * 0.24;
     context.strokeStyle = particle.blueprint.score > 0.72 ? '#2fce96' : '#72877e';
     context.lineWidth = 0.7;
     context.stroke();
@@ -370,7 +638,18 @@ function drawParticle(particle, target) {
 function frame(now) {
   context.clearRect(0, 0, width, height);
   drawLaunchTrail();
+  drawIgnitionBurst();
   drawOrbitGuides();
+  const surfaceIn = frontierAmount();
+  const surfaceOut = 1 - ease(
+    (progress - (TIMELINE.pressure - 0.025)) /
+      (TIMELINE.compression - TIMELINE.pressure + 0.025),
+  );
+  if (surfaceIn > 0 && surfaceOut > 0) {
+    drawFrontierAxes(surfaceIn * surfaceOut * 0.7);
+    drawFrontierSurface(surfaceIn * surfaceOut);
+  }
+  drawCompressionVortex(now);
   if (progress > 0.095) {
     for (const particle of particles) {
       drawParticle(particle, targetForParticle(particle, now));
@@ -390,6 +669,12 @@ function getState() {
     caretDetached,
     pointerMode,
     endingProgress,
+    frontierAmount: frontierAmount(),
+    prunedCount: progress < TIMELINE.gradient
+      ? 0
+      : Math.round(742 * ease(
+        (progress - TIMELINE.gradient) / (TIMELINE.pressure - TIMELINE.gradient),
+      )),
     reducedMotion,
   };
 }
@@ -404,8 +689,10 @@ addEventListener('scroll', updateScroll, { passive: true });
 addEventListener('pointermove', event => {
   pointer.x = event.clientX;
   pointer.y = event.clientY;
+  pointer.moved = true;
   pointerEl.style.left = `${pointer.x}px`;
   pointerEl.style.top = `${pointer.y}px`;
+  updatePointer();
 }, { passive: true });
 
 resize();
