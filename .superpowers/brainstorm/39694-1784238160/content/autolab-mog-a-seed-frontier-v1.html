@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autolab — Seed → Frontier → Diff</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="autolab-mog-core-v1.css">
+  <style>
+    .handoff {
+      position: relative;
+      z-index: 3;
+      min-height: 62vh;
+      padding: 13vh clamp(24px,5vw,78px);
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      border-top: 1px solid var(--line);
+      background: var(--paper);
+    }
+    .handoff h2 { max-width: 950px; font: 500 clamp(44px,6.5vw,98px)/.97 "IBM Plex Serif",serif; letter-spacing: -.045em; }
+    .handoff h2 em { color: var(--mint-deep); font-weight: 400; }
+    .handoff-note { max-width: 280px; color: var(--muted); font: 400 11px/1.65 "IBM Plex Mono",monospace; }
+
+    .frontier-run { position: relative; height: 540vh; background: var(--paper); }
+    .frontier-sticky { position: sticky; top: 0; height: 100svh; overflow: hidden; background: var(--paper); }
+    #frontier-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 1; }
+    .field-grid {
+      position: absolute;
+      z-index: 0;
+      inset: 0;
+      opacity: .55;
+      background-image: linear-gradient(rgba(20,20,20,.035) 1px,transparent 1px), linear-gradient(90deg,rgba(20,20,20,.035) 1px,transparent 1px);
+      background-size: 42px 42px;
+      mask-image: linear-gradient(90deg,transparent 0,#000 42%,#000 100%);
+    }
+    .run-head {
+      position: absolute;
+      z-index: 8;
+      top: 96px;
+      left: clamp(24px,4.2vw,64px);
+      right: clamp(24px,4.2vw,64px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 13px;
+      border-bottom: 1px solid var(--line);
+      color: var(--muted);
+      font: 500 8px/1 "IBM Plex Mono",monospace;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+    .run-head b { color: var(--mint-deep); }
+    .run-progress { width: min(250px,28vw); height: 2px; background: rgba(20,20,20,.09); }
+    .run-progress i { display: block; width: 0; height: 100%; background: var(--mint); }
+
+    .story { position: absolute; z-index: 7; left: clamp(24px,4.2vw,64px); top: 154px; bottom: 50px; width: min(400px,31vw); pointer-events: none; }
+    .story-step { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; opacity: 0; transform: translateY(28px); transition: opacity .35s, transform .55s cubic-bezier(.2,.8,.2,1); }
+    .story-step.active { opacity: 1; transform: none; }
+    .story-step .step { margin-bottom: 18px; color: var(--mint-deep); font: 500 9px/1 "IBM Plex Mono",monospace; letter-spacing: .16em; text-transform: uppercase; }
+    .story-step h3 { max-width: 420px; font: 500 clamp(44px,4.8vw,76px)/.94 "IBM Plex Serif",serif; letter-spacing: -.045em; }
+    .story-step h3 em { color: var(--mint-deep); font-weight: 400; }
+    .story-step p { max-width: 355px; margin-top: 22px; color: var(--muted); font: 400 15px/1.58 "IBM Plex Sans",sans-serif; }
+    .story-key { display: inline-flex; width: max-content; gap: 13px; margin-top: 24px; padding: 10px 12px; border: 1px solid rgba(12,138,95,.28); background: rgba(223,245,236,.66); color: var(--mint-deep); font: 500 8px/1 "IBM Plex Mono",monospace; letter-spacing: .08em; }
+
+    .seed-caret {
+      position: absolute;
+      z-index: 9;
+      width: 12px;
+      height: 23px;
+      left: 0;
+      top: 0;
+      opacity: 0;
+      background: var(--mint);
+      box-shadow: 0 0 0 9px rgba(47,206,150,.12), 0 13px 35px rgba(12,138,95,.32);
+      transform-origin: center;
+      pointer-events: none;
+    }
+    .seed-caption { position: absolute; z-index: 9; opacity: 0; color: var(--mint-deep); font: 500 8px/1 "IBM Plex Mono",monospace; letter-spacing: .1em; text-transform: uppercase; pointer-events: none; }
+
+    .axis-label { position: absolute; z-index: 5; opacity: 0; padding: 6px 8px; border: 1px solid rgba(20,20,20,.12); background: rgba(247,245,240,.76); color: var(--muted); font: 500 7px/1 "IBM Plex Mono",monospace; letter-spacing: .09em; text-transform: uppercase; transition: opacity .4s; }
+    .frontier-run[data-stage="2"] .axis-label, .frontier-run[data-stage="3"] .axis-label { opacity: 1; }
+    .axis-quality { right: 6vw; top: 27%; }
+    .axis-latency { right: 30%; bottom: 11%; }
+    .axis-cost { left: 46%; bottom: 16%; }
+    .play-note { position: absolute; z-index: 6; right: 5vw; top: 155px; color: var(--mint-deep); font: 500 8px/1 "IBM Plex Mono",monospace; letter-spacing: .1em; text-transform: uppercase; opacity: 0; transition: opacity .3s; }
+    .frontier-run[data-stage="2"] .play-note { opacity: 1; }
+
+    .frontier-metrics { position: absolute; z-index: 8; right: clamp(24px,4.2vw,64px); bottom: 34px; width: min(430px,34vw); }
+    .frontier-metrics .metric strong { transition: color .25s; }
+    .field-pointer { position: absolute; z-index: 10; width: 44px; height: 44px; margin: -22px 0 0 -22px; border: 1px solid var(--mint-deep); border-radius: 50%; opacity: 0; pointer-events: none; transition: opacity .2s; }
+    .field-pointer::after { content: "gradient pull"; position: absolute; left: 50px; top: 17px; white-space: nowrap; color: var(--mint-deep); font: 500 7px/1 "IBM Plex Mono",monospace; letter-spacing: .1em; text-transform: uppercase; }
+    .field-pointer.visible { opacity: .8; }
+
+    .frontier-diff { position: absolute; z-index: 8; left: 58%; top: 52%; width: min(560px,38vw); opacity: 0; transform: translate(-50%,-42%) scale(.15) rotate(-7deg); clip-path: inset(47% 47% 47% 47%); transition: opacity .35s, transform .8s cubic-bezier(.15,.9,.2,1), clip-path .75s cubic-bezier(.15,.9,.2,1); pointer-events: none; }
+    .frontier-run[data-stage="3"] .frontier-diff { opacity: 1; transform: translate(-50%,-50%) scale(1) rotate(0); clip-path: inset(0 0 0 0); pointer-events: auto; }
+
+    .result-section { position: relative; z-index: 3; min-height: 100svh; display: grid; place-items: center; padding: 110px 24px; background: var(--ink); color: var(--paper); text-align: center; }
+    .result-section h2 { max-width: 1000px; font: 400 clamp(54px,7vw,106px)/.94 "IBM Plex Serif",serif; letter-spacing: -.05em; }
+    .result-section h2 em { color: var(--mint); }
+    .result-section p { max-width: 590px; margin: 28px auto; color: #a8a49a; font: 400 16px/1.6 "IBM Plex Sans",sans-serif; }
+    .result-section .button { margin: 0 auto; border-color: var(--mint); background: var(--mint); color: #06301f; }
+
+    @media (max-width: 900px) {
+      .handoff { min-height: 70vh; padding: 110px 18px 70px; display: block; }
+      .handoff h2 { font-size: 54px; }
+      .handoff-note { margin-top: 35px; }
+      .run-head { top: 78px; left: 16px; right: 16px; }
+      .run-head > span:nth-child(2) { display: none; }
+      .story { left: 18px; right: 18px; top: 105px; width: auto; height: 36%; bottom: auto; }
+      .story-step { justify-content: center; padding-right: 12px; }
+      .story-step h3 { max-width: 330px; font-size: 47px; }
+      .story-step p { max-width: 335px; margin-top: 14px; font-size: 13px; }
+      .story-key { margin-top: 14px; }
+      .frontier-metrics { right: 12px; bottom: 44px; width: calc(100% - 24px); }
+      .frontier-diff { left: 50%; top: 65%; width: calc(100% - 34px); }
+      .axis-label { display: none; }
+      .play-note { right: 18px; top: 44%; }
+      .field-grid { mask-image: linear-gradient(180deg,transparent 0,#000 38%,#000 100%); }
+    }
+  </style>
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="scroll-meter" aria-hidden="true"></div>
+  <header class="topbar" id="topbar">
+    <div class="nav-shell">
+      <a href="#top" class="wordmark">autolab<span class="brand-caret" id="brand-caret"></span></a>
+      <nav class="nav-links" aria-label="Main navigation"><a href="#frontier">How it works</a><a href="#result">Research</a><a href="#result">Docs</a></nav>
+      <span class="nav-status"><i></i> 84 experiments active</span>
+      <a class="nav-cta" href="#result">Book a demo <span>↗</span></a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-copy">
+        <div class="hero-pill">The autoresearch platform</div>
+        <h1>Supercharge your <em>research.</em></h1>
+        <p class="hero-sub">A thousand experiments in parallel, on your compute, scored against your evals. State of the art with the team and budget you already have.</p>
+        <div class="hero-actions"><a class="button primary" href="#frontier">Start researching <span>↗</span></a><a class="button" href="#result">Book a demo <span>→</span></a></div>
+        <div class="hero-install">$ curl -fsSL app.autolab.ai/install.sh | sh</div>
+      </div>
+      <div>
+        <div class="terminal">
+          <div class="terminal-bar"><i></i><i></i><i></i><span>autolab · from goal to merge</span></div>
+          <div class="terminal-body">
+            <span class="terminal-line mint">$ autolab start --goal "beat baseline"</span>
+            <span class="terminal-line dim">reading repo · binding eval.py · finding 8×H100</span>
+            <span class="terminal-line">spawned 1,000 experiments across 84 live agents</span>
+            <span class="terminal-line">exp/021  rope θ 10k → 1m          +0.4%</span>
+            <span class="terminal-line">exp/084  reasoning mix v2          +1.1%</span>
+            <span class="terminal-line dim">exp/201  optimizer: muon          running</span>
+            <span class="terminal-line dim">exp/389  rejected: latency +31ms   pruned</span>
+            <span class="terminal-line mint">frontier updated · 17 non-dominated experiments</span>
+            <span class="terminal-line result">winner / exp-941c2<br>val_acc 93.5% · latency 38ms · Δ +2.3%</span>
+            <span class="terminal-line mint">ready to inspect <span class="terminal-caret"></span></span>
+          </div>
+        </div>
+        <div class="terminal-caption">a real session, compressed</div>
+      </div>
+    </section>
+
+    <section class="handoff">
+      <h2>Every run begins with <em>one instruction.</em></h2>
+      <p class="handoff-note">Keep scrolling. The blinking Autolab caret becomes the first experiment, then opens the search space around it.</p>
+    </section>
+
+    <section class="frontier-run" id="frontier" data-stage="0">
+      <div class="frontier-sticky">
+        <div class="field-grid" aria-hidden="true"></div>
+        <canvas id="frontier-canvas" aria-hidden="true"></canvas>
+        <div class="run-head"><span>Autolab / live search surface</span><span>one vector = one experiment</span><div class="run-progress"><i></i></div><b id="run-index">01—04</b></div>
+        <div class="story">
+          <article class="story-step active" data-step="0"><span class="step">Seed / 01</span><h3>The cursor becomes an <em>experiment.</em></h3><p>Your goal leaves the interface and enters the search space as a measurable hypothesis.</p><span class="story-key">▮ instruction → ▸ experiment</span></article>
+          <article class="story-step" data-step="1"><span class="step">Branch / 02</span><h3>One instruction becomes <em>a thousand trials.</em></h3><p>Agents branch the seed across your code, compute, and hypotheses. Every vector keeps its lineage.</p><span class="story-key">▸ experiment &nbsp; — commit lineage</span></article>
+          <article class="story-step" data-step="2"><span class="step">Frontier / 03</span><h3>Play the edge of the <em>possible.</em></h3><p>Your eval turns the swarm into a live Pareto frontier. Pull the field to inspect tradeoffs between quality, latency, and cost.</p><span class="story-key">move through the frontier to bend it</span></article>
+          <article class="story-step" data-step="3"><span class="step">Merge / 04</span><h3>The best point becomes <em>accountable code.</em></h3><p>The winning experiment flies out of the frontier with its metrics, lineage, and exact diff attached.</p></article>
+        </div>
+        <div class="seed-caret" id="seed-caret" aria-hidden="true"></div>
+        <div class="seed-caption" id="seed-caption">instruction released</div>
+        <span class="axis-label axis-quality">↑ eval quality</span><span class="axis-label axis-latency">latency →</span><span class="axis-label axis-cost">compute ↗</span>
+        <span class="play-note">○ live frontier · move pointer</span>
+        <div class="field-pointer" aria-hidden="true"></div>
+        <aside class="frontier-metrics metric-strip" aria-label="Research metrics"><span class="metric"><small>EXPERIMENTS</small><strong id="metric-exp">001</strong></span><span class="metric"><small>FRONTIER</small><strong id="metric-frontier">01</strong></span><span class="metric"><small>BEST Δ</small><strong class="mint" id="metric-best">+0.0%</strong></span></aside>
+        <article class="frontier-diff diff-card">
+          <div class="diff-head"><span>winner / 9f41c2</span><b>ready for approval</b></div>
+          <div class="diff-title">full-scale-8xh100 ↗</div>
+          <div class="diff-metrics"><span>VAL_ACC<b>93.5%</b></span><span>Δ BASE<b>+2.3</b></span><span>RUNTIME<b>4:18h</b></span></div>
+          <pre class="diff-code">- rope_theta = 10_000<span class="add">+ rope_theta = 1_000_000</span><span class="add">+ data_mix = "reasoning_v2"</span></pre>
+          <div class="diff-foot"><span>human approval required</span><span>inspect commit ↗</span></div>
+        </article>
+      </div>
+    </section>
+
+    <section class="result-section" id="result">
+      <div><span class="mono-label eyebrow-mint">From intent to evidence</span><h2>Research that ends in a <em>merge.</em></h2><p>Start on one workstation or run across your secured cluster. The same inspectable loop holds at both scales.</p><a class="button" href="#top">Run Autolab <span>↗</span></a></div>
+    </section>
+  </main>
+
+  <nav class="comparison-links" aria-label="Concepts"><a class="active" href="autolab-mog-a-seed-frontier-v1.html">A</a><a href="autolab-mog-b-research-singularity-v1.html">B</a><a href="autolab-mog-c-infinite-bench-v1.html">C</a></nav>
+  <div class="concept-label"><b>A</b> Seed → Frontier → Diff</div>
+
+  <script>
+    (() => {
+      const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const clamp = (v,a=0,b=1) => Math.max(a,Math.min(b,v));
+      const lerp = (a,b,t) => a+(b-a)*t;
+      const ease = t => 1-Math.pow(1-clamp(t),3);
+      const topbar = document.querySelector('#topbar');
+      const meter = document.querySelector('.scroll-meter');
+      const run = document.querySelector('.frontier-run');
+      const sticky = document.querySelector('.frontier-sticky');
+      const steps = [...document.querySelectorAll('.story-step')];
+      const progressBar = document.querySelector('.run-progress i');
+      const index = document.querySelector('#run-index');
+      const brandCaret = document.querySelector('#brand-caret');
+      const seed = document.querySelector('#seed-caret');
+      const seedCaption = document.querySelector('#seed-caption');
+      const cursor = document.querySelector('.field-pointer');
+      const canvas = document.querySelector('#frontier-canvas');
+      const ctx = canvas.getContext('2d');
+      const metrics = { exp:document.querySelector('#metric-exp'), frontier:document.querySelector('#metric-frontier'), best:document.querySelector('#metric-best') };
+      let w=innerWidth,h=innerHeight,dpr=1,progress=0,stage=0;
+      let pointer={x:innerWidth*.72,y:innerHeight*.55,active:false,inside:false};
+
+      const particles = Array.from({length: innerWidth<760?110:230},(_,i)=>({
+        i,
+        u:Math.random()*2-1,
+        v:Math.random()*2-1,
+        seed:Math.random(),
+        score:((i*47)%233)/233,
+        x:innerWidth*.6,
+        y:innerHeight*.5,
+        px:innerWidth*.6,
+        py:innerHeight*.5,
+        vx:0,vy:0,
+        angle:Math.random()*Math.PI*2,
+        winner:i===137,
+        trail:[]
+      }));
+
+      function resize(){
+        w=innerWidth;h=innerHeight;dpr=Math.min(devicePixelRatio||1,2);
+        canvas.width=Math.round(w*dpr);canvas.height=Math.round(h*dpr);
+        ctx.setTransform(dpr,0,0,dpr,0,0);
+      }
+      resize();addEventListener('resize',resize);
+
+      function surface(u,v,bulge=0){
+        const peak=Math.exp(-((u-.22)**2*2.4+(v+.1)**2*1.8));
+        const ridge=.22*Math.sin((u+v)*2.3)+.22*u-.12*v;
+        const dx=u-(pointer.x/w*2-1),dy=v-(pointer.y/h*2-1);
+        return .22+peak*.76+ridge+bulge*Math.exp(-(dx*dx+dy*dy)*4.2)*.48;
+      }
+      function project(u,v,z){
+        const mobile=w<760;
+        const scale=Math.min(w,h)*(mobile?.39:.42);
+        const originX=mobile?w*.54:w*.72;
+        const originY=mobile?h*.69:h*.61;
+        const yaw=(pointer.active?(pointer.x/w-.5)*.22:0)+Math.sin(progress*Math.PI)*.08;
+        const cu=Math.cos(yaw),su=Math.sin(yaw);
+        const x=u*cu-v*su,y=u*su+v*cu;
+        return {x:originX+(x-y)*scale*.62,y:originY+(x+y)*scale*.25-z*scale*.58};
+      }
+
+      function updateScroll(){
+        const max=document.documentElement.scrollHeight-innerHeight;
+        meter.style.width=`${max?scrollY/max*100:0}%`;
+        topbar.classList.toggle('island',scrollY>80);
+        const rect=run.getBoundingClientRect();
+        progress=clamp(-rect.top/Math.max(1,run.offsetHeight-innerHeight));
+        const next=Math.min(3,Math.floor(progress*4));
+        if(next!==stage){stage=next;run.dataset.stage=String(stage);steps.forEach((s,i)=>s.classList.toggle('active',i===stage));index.textContent=`0${stage+1}—04`;}
+        progressBar.style.width=`${progress*100}%`;
+        const release=clamp(progress/.16);
+        const r=brandCaret.getBoundingClientRect();
+        const sx=r.left,sy=r.top;
+        const tx=w<760?w*.55:w*.62,ty=h*(w<760?.58:.48);
+        const fall=ease(release);
+        const arc=Math.sin(fall*Math.PI)*Math.min(150,w*.12);
+        seed.style.left=`${lerp(sx,tx,fall)+arc}px`;
+        seed.style.top=`${lerp(sy,ty,fall)-arc*.25}px`;
+        seed.style.transform=`rotate(${fall*92}deg) scale(${lerp(1,.62,fall)})`;
+        seed.style.opacity=rect.top<innerHeight&&rect.bottom>0&&progress<.2?String(1-clamp((progress-.14)/.05)):0;
+        seedCaption.style.left=`${lerp(sx,tx,fall)+arc+22}px`;
+        seedCaption.style.top=`${lerp(sy,ty,fall)-arc*.25+8}px`;
+        seedCaption.style.opacity=progress>.035&&progress<.14?String(Math.sin(clamp((progress-.035)/.105)*Math.PI)):0;
+        brandCaret.style.opacity=progress>0&&rect.top<=0?String(clamp(1-progress/.055)):1;
+        const ex=Math.round(lerp(1,1000,ease(clamp((progress-.1)/.32))));
+        const fr=Math.round(lerp(1,17,ease(clamp((progress-.46)/.24))));
+        const best=lerp(0,2.3,ease(clamp((progress-.54)/.34)));
+        metrics.exp.textContent=String(ex).padStart(3,'0');metrics.frontier.textContent=String(fr).padStart(2,'0');metrics.best.textContent=`+${best.toFixed(1)}%`;
+      }
+      addEventListener('scroll',updateScroll,{passive:true});updateScroll();
+
+      addEventListener('pointermove',e=>{
+        pointer.x=e.clientX;pointer.y=e.clientY;pointer.active=true;
+        pointer.inside=run.getBoundingClientRect().top<=0&&run.getBoundingClientRect().bottom>=innerHeight&&e.clientX>(w<760?0:w*.4)&&progress>.47&&progress<.78;
+        cursor.style.left=`${e.clientX}px`;cursor.style.top=`${e.clientY}px`;cursor.classList.toggle('visible',pointer.inside);
+      },{passive:true});
+
+      function drawArrow(p,alpha,color){
+        const len=p.winner?10:6;
+        ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.angle);ctx.globalAlpha=alpha;ctx.strokeStyle=color;ctx.lineWidth=p.winner?1.8:1;ctx.lineCap='round';
+        ctx.beginPath();ctx.moveTo(-len*1.7,0);ctx.lineTo(0,0);ctx.stroke();ctx.beginPath();ctx.moveTo(-len*.62,-len*.42);ctx.lineTo(0,0);ctx.lineTo(-len*.62,len*.42);ctx.stroke();ctx.restore();
+      }
+      function drawAxes(alpha){
+        const o=project(-.9,-.85,0),a=project(.95,-.85,0),b=project(-.9,.9,0),c=project(-.9,-.85,1.3);
+        ctx.save();ctx.globalAlpha=alpha;ctx.strokeStyle='#777268';ctx.lineWidth=1;ctx.setLineDash([4,6]);
+        [[o,a],[o,b],[o,c]].forEach(([s,e])=>{ctx.beginPath();ctx.moveTo(s.x,s.y);ctx.lineTo(e.x,e.y);ctx.stroke()});ctx.restore();
+      }
+      function drawSurface(alpha){
+        const bulge=pointer.inside?.75:0;
+        ctx.save();ctx.globalAlpha=alpha;ctx.lineWidth=.7;
+        for(let row=0;row<=11;row++){
+          ctx.beginPath();
+          for(let col=0;col<=14;col++){
+            const u=-1+col/14*2,v=-1+row/11*2,z=surface(u,v,bulge);
+            const q=project(u,v,z);col?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y);
+          }
+          ctx.strokeStyle=row%2?'rgba(12,138,95,.18)':'rgba(20,20,20,.13)';ctx.stroke();
+        }
+        for(let col=0;col<=14;col++){
+          ctx.beginPath();
+          for(let row=0;row<=11;row++){
+            const u=-1+col/14*2,v=-1+row/11*2,z=surface(u,v,bulge);
+            const q=project(u,v,z);row?ctx.lineTo(q.x,q.y):ctx.moveTo(q.x,q.y);
+          }
+          ctx.strokeStyle=col%3===0?'rgba(12,138,95,.2)':'rgba(20,20,20,.1)';ctx.stroke();
+        }
+        ctx.restore();
+      }
+      function targetFor(p,now){
+        const mobile=w<760,seedX=mobile?w*.55:w*.62,seedY=h*(mobile?.58:.48);
+        if(progress<.25){
+          const t=ease(clamp((progress-.08)/.17));
+          const angle=p.i*.38+p.seed*2.5,r=(28+p.seed*(mobile?180:330))*t;
+          return {x:seedX+Math.cos(angle)*r*(mobile?.75:1),y:seedY+Math.sin(angle)*r*.56,alpha:t*(.35+p.score*.6)};
+        }
+        const z=surface(p.u,p.v,pointer.inside?.75:0)+p.score*.08;
+        const q=project(p.u,p.v,z);
+        if(progress<.77)return {x:q.x,y:q.y,alpha:.26+p.score*.68};
+        const t=ease((progress-.77)/.2);
+        const wx=mobile?w*.5:w*.58,wy=mobile?h*.65:h*.5;
+        if(p.winner)return {x:lerp(q.x,wx,t),y:lerp(q.y,wy,t),alpha:1};
+        return {x:lerp(q.x,w*.78,t),y:lerp(q.y,h*.5,t),alpha:lerp(.3,0,t)};
+      }
+      function frame(now){
+        ctx.clearRect(0,0,w,h);
+        if(progress>.3){drawAxes(ease((progress-.34)/.16)*clamp((.9-progress)/.12));drawSurface(ease((progress-.35)/.2)*clamp((.88-progress)/.11));}
+        particles.forEach(p=>{
+          const t=targetFor(p,now);p.px=p.x;p.py=p.y;p.vx+=(t.x-p.x)*.028;p.vy+=(t.y-p.y)*.028;p.vx*=.8;p.vy*=.8;p.x+=p.vx;p.y+=p.vy;
+          if(Math.hypot(p.vx,p.vy)>.04){const desired=Math.atan2(p.vy,p.vx);const diff=((desired-p.angle+Math.PI*3)%(Math.PI*2))-Math.PI;p.angle+=diff*.16;}
+          if(!reduced&&p.i%4===0){p.trail.push([p.x,p.y]);if(p.trail.length>9)p.trail.shift();ctx.beginPath();p.trail.forEach((point,i)=>i?ctx.lineTo(point[0],point[1]):ctx.moveTo(point[0],point[1]));ctx.globalAlpha=t.alpha*.13;ctx.strokeStyle=p.score>.72?'#0c8a5f':'#777268';ctx.stroke();}
+          drawArrow(p,t.alpha,p.winner&&progress>.7?'#2fce96':p.score>.7?'#0c8a5f':'#777268');
+        });
+        requestAnimationFrame(frame);
+      }
+      requestAnimationFrame(frame);
+    })();
+  </script>
+</body>
+</html>

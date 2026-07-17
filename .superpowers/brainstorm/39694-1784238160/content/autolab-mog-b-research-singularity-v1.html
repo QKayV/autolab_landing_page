@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autolab — Research Singularity</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="autolab-mog-core-v1.css">
+  <style>
+    .singularity-intro {
+      position: relative;
+      z-index: 3;
+      min-height: 78svh;
+      padding: 15vh clamp(24px,5vw,78px) 10vh;
+      display: grid;
+      grid-template-columns: 1fr .5fr;
+      align-items: end;
+      gap: 8vw;
+      border-top: 1px solid var(--line);
+      background: var(--paper);
+    }
+    .singularity-intro h2 { max-width: 1020px; font: 500 clamp(52px,7vw,108px)/.92 "IBM Plex Serif",serif; letter-spacing: -.052em; }
+    .singularity-intro h2 em { color: var(--mint-deep); font-weight: 400; }
+    .singularity-intro p { max-width: 350px; padding-bottom: 10px; color: var(--muted); font: 400 13px/1.65 "IBM Plex Mono",monospace; }
+
+    .singularity-run { position: relative; height: 560vh; background: var(--paper); }
+    .singularity-sticky { position: sticky; top: 0; height: 100svh; overflow: hidden; background: var(--paper); isolation: isolate; }
+    .void-wash {
+      position: absolute;
+      z-index: 0;
+      left: 68%;
+      top: 52%;
+      width: 160vmax;
+      height: 160vmax;
+      border-radius: 50%;
+      background: var(--ink);
+      transform: translate(-50%,-50%) scale(var(--void-scale,0));
+      will-change: transform;
+    }
+    .void-grid {
+      position: absolute;
+      z-index: 1;
+      inset: 0;
+      opacity: var(--grid-opacity,.16);
+      background-image: radial-gradient(circle at 68% 52%,transparent 0 15%,rgba(47,206,150,.18) 15.1% 15.25%,transparent 15.35% 22%,rgba(247,245,240,.13) 22.1% 22.2%,transparent 22.3%), linear-gradient(rgba(247,245,240,.055) 1px,transparent 1px), linear-gradient(90deg,rgba(247,245,240,.055) 1px,transparent 1px);
+      background-size: auto, 48px 48px, 48px 48px;
+      mask-image: radial-gradient(circle at 68% 52%,#000,transparent 68%);
+      pointer-events: none;
+    }
+    #singularity-canvas { position: absolute; z-index: 2; inset: 0; width: 100%; height: 100%; }
+    .singularity-head {
+      position: absolute;
+      z-index: 8;
+      top: 96px;
+      left: clamp(24px,4.2vw,64px);
+      right: clamp(24px,4.2vw,64px);
+      padding-bottom: 13px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid color-mix(in srgb,var(--head-color,#6e6a5e) 30%,transparent);
+      color: var(--head-color,#6e6a5e);
+      font: 500 8px/1 "IBM Plex Mono",monospace;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      transition: color .45s;
+    }
+    .singularity-head b { color: var(--mint); }
+    .singularity-run.dark-stage { --head-color:#a8a49a; }
+    .singularity-progress { width: min(270px,26vw); height: 2px; background: color-mix(in srgb,var(--head-color,#6e6a5e) 20%,transparent); }
+    .singularity-progress i { display: block; height: 100%; width: 0; background: var(--mint); }
+
+    .singularity-story { position: absolute; z-index: 7; left: clamp(24px,4.2vw,64px); top: 145px; bottom: 60px; width: min(420px,32vw); pointer-events: none; }
+    .singularity-step { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; opacity: 0; transform: translateY(34px) rotate(-1.5deg); transition: opacity .34s,transform .6s cubic-bezier(.15,.85,.15,1),color .4s; }
+    .singularity-step.active { opacity: 1; transform: none; }
+    .singularity-step .step { margin-bottom: 20px; color: var(--mint-deep); font: 500 9px/1 "IBM Plex Mono",monospace; letter-spacing: .16em; text-transform: uppercase; }
+    .dark-stage .singularity-step .step { color: var(--mint); }
+    .singularity-step h3 { max-width: 430px; font: 500 clamp(46px,5.1vw,80px)/.92 "IBM Plex Serif",serif; letter-spacing: -.05em; }
+    .dark-stage .singularity-step h3 { color: var(--paper); }
+    .singularity-step h3 em { color: var(--mint-deep); font-weight: 400; }
+    .dark-stage .singularity-step h3 em { color: var(--mint); }
+    .singularity-step p { max-width: 360px; margin-top: 23px; color: var(--muted); font: 400 15px/1.58 "IBM Plex Sans",sans-serif; }
+    .dark-stage .singularity-step p { color: #a8a49a; }
+    .physics-note { display: inline-flex; width: max-content; margin-top: 25px; padding: 10px 12px; border: 1px solid rgba(47,206,150,.35); color: var(--mint-deep); background: rgba(223,245,236,.55); font: 500 8px/1 "IBM Plex Mono",monospace; letter-spacing: .08em; }
+    .dark-stage .physics-note { color: var(--mint); background: rgba(47,206,150,.06); }
+
+    .impact-caret { position: absolute; z-index: 10; left: 0; top: 0; width: 12px; height: 23px; opacity: 0; background: var(--mint); box-shadow: 0 0 0 12px rgba(47,206,150,.12),0 0 50px rgba(47,206,150,.5); transform-origin: center; pointer-events: none; }
+    .event-horizon {
+      position: absolute;
+      z-index: 4;
+      left: 68%;
+      top: 52%;
+      width: 88px;
+      height: 88px;
+      margin: -44px;
+      border: 1px solid rgba(47,206,150,.6);
+      border-radius: 50%;
+      opacity: 0;
+      transform: scale(.2);
+      box-shadow: 0 0 0 22px rgba(47,206,150,.04),0 0 90px rgba(47,206,150,.22);
+      transition: opacity .45s,transform .65s cubic-bezier(.2,.8,.2,1);
+      pointer-events: none;
+    }
+    .event-horizon::before,.event-horizon::after { content:""; position:absolute; inset:-18px; border:1px dashed rgba(47,206,150,.24); border-radius:50%; animation:spin 12s linear infinite; }
+    .event-horizon::after { inset:-38px; animation-direction:reverse; animation-duration:18s; }
+    @keyframes spin { to { transform:rotate(360deg); } }
+    .singularity-run[data-stage="1"] .event-horizon,.singularity-run[data-stage="2"] .event-horizon { opacity:1; transform:scale(1); }
+
+    .gravity-pointer { position:absolute;z-index:9;width:64px;height:64px;margin:-32px 0 0 -32px;border:1px solid rgba(47,206,150,.7);border-radius:50%;opacity:0;pointer-events:none;transition:opacity .18s;box-shadow:inset 0 0 30px rgba(47,206,150,.08); }
+    .gravity-pointer::before,.gravity-pointer::after { content:"";position:absolute;inset:9px;border:1px dashed rgba(47,206,150,.35);border-radius:50%; }
+    .gravity-pointer::after { inset:27px;background:var(--mint);border:0; }
+    .gravity-pointer.visible { opacity:1; }
+    .gravity-label { position:absolute;z-index:7;right:5vw;top:154px;color:var(--mint);font:500 8px/1 "IBM Plex Mono",monospace;letter-spacing:.12em;text-transform:uppercase;opacity:0;transition:opacity .3s; }
+    .singularity-run[data-stage="1"] .gravity-label,.singularity-run[data-stage="2"] .gravity-label { opacity:1; }
+
+    .singularity-metrics { position:absolute;z-index:8;right:clamp(24px,4.2vw,64px);bottom:34px;width:min(450px,35vw);transition:filter .4s; }
+    .dark-stage .singularity-metrics { filter:invert(1) hue-rotate(160deg) brightness(.9); }
+    .singularity-diff { position:absolute;z-index:9;left:67%;top:52%;width:min(590px,40vw);opacity:0;transform:translate(-50%,-50%) scale(.06) rotate(14deg);clip-path:circle(3% at 50% 50%);transition:opacity .3s,transform .9s cubic-bezier(.13,.9,.17,1),clip-path .85s cubic-bezier(.13,.9,.17,1);pointer-events:none; }
+    .singularity-run[data-stage="3"] .singularity-diff { opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0);clip-path:circle(75% at 50% 50%);pointer-events:auto; }
+    .resolution-ring { position:absolute;z-index:3;left:67%;top:52%;width:64vmin;height:64vmin;margin:-32vmin;border:1px solid rgba(47,206,150,.25);border-radius:50%;opacity:0;transform:scale(.1);transition:opacity .3s,transform 1s cubic-bezier(.12,.9,.2,1); }
+    .singularity-run[data-stage="3"] .resolution-ring { opacity:1;transform:scale(1.9); }
+
+    .singularity-outro { position:relative;z-index:3;min-height:100svh;padding:110px 24px;display:grid;place-items:center;background:var(--paper);text-align:center; }
+    .singularity-outro h2 { max-width:1050px;font:500 clamp(52px,7vw,105px)/.94 "IBM Plex Serif",serif;letter-spacing:-.05em; }
+    .singularity-outro h2 em { color:var(--mint-deep);font-weight:400; }
+    .singularity-outro p { max-width:560px;margin:28px auto;color:var(--muted);font:400 16px/1.6 "IBM Plex Sans",sans-serif; }
+    .singularity-outro .button { margin:0 auto; }
+
+    @media(max-width:900px){
+      .singularity-intro{min-height:72vh;grid-template-columns:1fr;padding:120px 18px 70px}.singularity-intro h2{font-size:54px}.singularity-intro p{padding:0}
+      .singularity-head{top:78px;left:16px;right:16px}.singularity-head>span:nth-child(2){display:none}
+      .singularity-story{left:18px;right:18px;top:106px;width:auto;height:36%;bottom:auto}.singularity-step{justify-content:center}.singularity-step h3{font-size:47px;max-width:350px}.singularity-step p{font-size:13px;margin-top:14px}.physics-note{margin-top:14px}
+      .void-wash,.event-horizon{left:57%;top:64%}.void-grid{background-position:center;mask-image:radial-gradient(circle at 57% 64%,#000,transparent 70%)}
+      .singularity-metrics{right:12px;bottom:44px;width:calc(100% - 24px)}.singularity-diff{left:50%;top:66%;width:calc(100% - 32px)}.resolution-ring{left:50%;top:65%}.gravity-label{top:43%;right:18px}
+    }
+  </style>
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div><div class="scroll-meter" aria-hidden="true"></div>
+  <header class="topbar" id="topbar"><div class="nav-shell"><a href="#top" class="wordmark">autolab<span class="brand-caret" id="brand-caret"></span></a><nav class="nav-links" aria-label="Main navigation"><a href="#singularity">How it works</a><a href="#outro">Research</a><a href="#outro">Docs</a></nav><span class="nav-status"><i></i> 84 experiments active</span><a class="nav-cta" href="#outro">Book a demo <span>↗</span></a></div></header>
+  <main id="top">
+    <section class="hero">
+      <div class="hero-copy"><div class="hero-pill">The autoresearch platform</div><h1>Supercharge your <em>research.</em></h1><p class="hero-sub">A thousand experiments in parallel, on your compute, scored against your evals. State of the art with the team and budget you already have.</p><div class="hero-actions"><a class="button primary" href="#singularity">Start researching <span>↗</span></a><a class="button" href="#outro">Book a demo <span>→</span></a></div><div class="hero-install">$ curl -fsSL app.autolab.ai/install.sh | sh</div></div>
+      <div><div class="terminal"><div class="terminal-bar"><i></i><i></i><i></i><span>autolab · research loop</span></div><div class="terminal-body"><span class="terminal-line mint">$ autolab start --eval eval.py</span><span class="terminal-line dim">goal bound · maximize val_acc · latency ≤ 42ms</span><span class="terminal-line">agent-001 branched optimizer / muon</span><span class="terminal-line">agent-084 branched data / reasoning_v2</span><span class="terminal-line">agent-137 branched rope / theta_1m</span><span class="terminal-line dim">✕ 742 dominated experiments pruned</span><span class="terminal-line mint">search pressure increased around exp-137</span><span class="terminal-line result">evidence converged / 9f41c2<br>+2.3% · no regressions · commit ready</span><span class="terminal-line mint">awaiting human approval <span class="terminal-caret"></span></span></div></div><div class="terminal-caption">the entire search remains inspectable</div></div>
+    </section>
+
+    <section class="singularity-intro"><h2>Throw one goal into a <em>thousand minds.</em></h2><p>The swarm is not decoration. Every vector is an experiment competing for evidence. Move through its gravity while Autolab prunes the weak.</p></section>
+
+    <section class="singularity-run" id="singularity" data-stage="0">
+      <div class="singularity-sticky">
+        <div class="void-wash" aria-hidden="true"></div><div class="void-grid" aria-hidden="true"></div><canvas id="singularity-canvas" aria-hidden="true"></canvas>
+        <div class="singularity-head"><span>Autolab / research singularity</span><span>▸ experiment &nbsp; — lineage &nbsp; ● winner</span><div class="singularity-progress"><i></i></div><b id="singularity-index">01—04</b></div>
+        <div class="singularity-story">
+          <article class="singularity-step active" data-step="0"><span class="step">Impact / 01</span><h3>Drop the <em>goal.</em></h3><p>The blinking instruction leaves the interface and becomes the first testable hypothesis.</p><span class="physics-note">▮ instruction → ▸ experiment</span></article>
+          <article class="singularity-step" data-step="1"><span class="step">Ignition / 02</span><h3>Ignite the <em>search.</em></h3><p>A thousand experiments branch into orbit. Move your pointer to create a second gravity well and disturb their paths.</p><span class="physics-note">move through the field</span></article>
+          <article class="singularity-step" data-step="2"><span class="step">Pressure / 03</span><h3>Kill every <em>bad idea.</em></h3><p>Your eval applies pressure. Dominated experiments collapse; promising lineages earn more compute and tighter exploration.</p><span class="physics-note">742 pruned · every result retained</span></article>
+          <article class="singularity-step" data-step="3"><span class="step">Resolution / 04</span><h3>Collapse on <em>evidence.</em></h3><p>The last non-dominated experiment resolves from motion into a reviewable commit.</p></article>
+        </div>
+        <div class="impact-caret" id="impact-caret" aria-hidden="true"></div><div class="event-horizon" aria-hidden="true"></div><div class="gravity-pointer" aria-hidden="true"></div><span class="gravity-label">secondary gravity · pointer active</span><div class="resolution-ring" aria-hidden="true"></div>
+        <aside class="singularity-metrics metric-strip"><span class="metric"><small>ORBITING</small><strong id="orbiting">001</strong></span><span class="metric"><small>PRUNED</small><strong id="pruned">000</strong></span><span class="metric"><small>BEST Δ</small><strong class="mint" id="singularity-best">+0.0%</strong></span></aside>
+        <article class="singularity-diff diff-card"><div class="diff-head"><span>resolved / exp-137</span><b>one accountable merge</b></div><div class="diff-title">reasoning-frontier ↗</div><div class="diff-metrics"><span>VAL_ACC<b>93.5%</b></span><span>LATENCY<b>38ms</b></span><span>Δ BASE<b>+2.3</b></span></div><pre class="diff-code">- rope_theta = 10_000<span class="add">+ rope_theta = 1_000_000</span><span class="add">+ data_mix = "reasoning_v2"</span></pre><div class="diff-foot"><span>lineage / 1,000 experiments</span><span>inspect commit ↗</span></div></article>
+      </div>
+    </section>
+
+    <section class="singularity-outro" id="outro"><div><span class="mono-label eyebrow-mint">The autoresearch platform</span><h2>Chaos in. <em>Evidence out.</em></h2><p>Autolab keeps every experiment reproducible, every winning change reviewable, and every merge yours to approve.</p><a class="button primary" href="#top">Run Autolab <span>↗</span></a></div></section>
+  </main>
+  <nav class="comparison-links" aria-label="Concepts"><a href="autolab-mog-a-seed-frontier-v1.html">A</a><a class="active" href="autolab-mog-b-research-singularity-v1.html">B</a><a href="autolab-mog-c-infinite-bench-v1.html">C</a></nav><div class="concept-label"><b>B</b> Research Singularity</div>
+
+  <script>
+    (()=>{
+      const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v)),lerp=(a,b,t)=>a+(b-a)*t,ease=t=>1-Math.pow(1-clamp(t),3);
+      const run=document.querySelector('.singularity-run'),sticky=document.querySelector('.singularity-sticky'),topbar=document.querySelector('#topbar'),meter=document.querySelector('.scroll-meter'),canvas=document.querySelector('#singularity-canvas'),ctx=canvas.getContext('2d');
+      const steps=[...document.querySelectorAll('.singularity-step')],progressEl=document.querySelector('.singularity-progress i'),index=document.querySelector('#singularity-index'),brandCaret=document.querySelector('#brand-caret'),impact=document.querySelector('#impact-caret'),gravity=document.querySelector('.gravity-pointer');
+      const metric={orbit:document.querySelector('#orbiting'),pruned:document.querySelector('#pruned'),best:document.querySelector('#singularity-best')};
+      let w=innerWidth,h=innerHeight,dpr=1,progress=0,stage=0,pointer={x:innerWidth*.75,y:innerHeight*.5,inside:false,active:false};
+      const count=innerWidth<760?125:260;
+      const particles=Array.from({length:count},(_,i)=>({i,a:Math.random()*Math.PI*2,r:.18+Math.random()*.78,ecc:.45+Math.random()*.55,spin:(Math.random()>.5?1:-1)*(.35+Math.random()*.9),score:((i*59)%count)/count,x:w*.68,y:h*.52,vx:0,vy:0,angle:0,winner:i===Math.floor(count*.69),trail:[]}));
+      function resize(){w=innerWidth;h=innerHeight;dpr=Math.min(devicePixelRatio||1,2);canvas.width=w*dpr;canvas.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0)}resize();addEventListener('resize',resize);
+      function center(){return{x:w<760?w*.57:w*.68,y:w<760?h*.64:h*.52}}
+      function update(){
+        const max=document.documentElement.scrollHeight-innerHeight;meter.style.width=`${max?scrollY/max*100:0}%`;topbar.classList.toggle('island',scrollY>80);
+        const rect=run.getBoundingClientRect();progress=clamp(-rect.top/Math.max(1,run.offsetHeight-innerHeight));const next=Math.min(3,Math.floor(progress*4));
+        if(next!==stage){stage=next;run.dataset.stage=String(stage);run.classList.toggle('dark-stage',stage===1||stage===2);steps.forEach((s,i)=>s.classList.toggle('active',i===stage));index.textContent=`0${stage+1}—04`;}
+        progressEl.style.width=`${progress*100}%`;
+        const c=center(),release=ease(clamp(progress/.16)),r=brandCaret.getBoundingClientRect(),arc=Math.sin(release*Math.PI)*Math.min(210,w*.16);
+        impact.style.left=`${lerp(r.left,c.x,release)+arc}px`;impact.style.top=`${lerp(r.top,c.y,release)-arc*.2}px`;impact.style.transform=`rotate(${release*140}deg) scale(${lerp(1,.5,release)})`;impact.style.opacity=rect.top<=0&&progress<.18?String(1-clamp((progress-.14)/.04)):0;brandCaret.style.opacity=progress>0&&rect.top<=0?String(clamp(1-progress/.05)):1;
+        const voidIn=ease(clamp((progress-.105)/.16)),voidOut=ease(clamp((progress-.72)/.2));sticky.style.setProperty('--void-scale',String(voidIn*(1-voidOut*.94)));sticky.style.setProperty('--grid-opacity',String(.07+voidIn*.5));
+        const orbit=Math.round(lerp(1,1000,ease(clamp((progress-.1)/.24)))*(1-ease(clamp((progress-.52)/.28))));const pruned=Math.round(lerp(0,999,ease(clamp((progress-.43)/.34))));const best=lerp(0,2.3,ease(clamp((progress-.5)/.35)));metric.orbit.textContent=String(Math.max(1,orbit)).padStart(3,'0');metric.pruned.textContent=String(pruned).padStart(3,'0');metric.best.textContent=`+${best.toFixed(1)}%`;
+      }addEventListener('scroll',update,{passive:true});update();
+      addEventListener('pointermove',e=>{pointer.x=e.clientX;pointer.y=e.clientY;pointer.active=true;const rect=run.getBoundingClientRect();pointer.inside=rect.top<=0&&rect.bottom>=innerHeight&&progress>.25&&progress<.75&&e.clientX>(w<760?0:w*.38);gravity.style.left=`${e.clientX}px`;gravity.style.top=`${e.clientY}px`;gravity.classList.toggle('visible',pointer.inside)},{passive:true});
+      function target(p,now){
+        const c=center();
+        if(progress<.26){const t=ease(clamp((progress-.09)/.17)),a=p.a+p.i*.13,r=t*(35+p.r*Math.min(w,h)*.5);return{x:c.x+Math.cos(a)*r,y:c.y+Math.sin(a)*r*.62,alpha:t*(.3+p.score*.7)}}
+        const orbitT=(now*.00018*p.spin)+(p.a*2.2),rad=p.r*Math.min(w,h)*(w<760?.42:.48),breath=1+Math.sin(now*.001+p.i)*.035;
+        let x=c.x+Math.cos(orbitT)*rad*breath,y=c.y+Math.sin(orbitT)*rad*p.ecc*.55*breath;
+        if(pointer.inside){const dx=pointer.x-x,dy=pointer.y-y,d=Math.hypot(dx,dy)||1;if(d<240){const force=(1-d/240)*70;x+=dx/d*force;y+=dy/d*force}}
+        if(progress>.48){const prune=ease((progress-.48)/.3);if(!p.winner&&p.score<.78){x=lerp(x,c.x,prune);y=lerp(y,c.y,prune)}}
+        if(progress>.75){const resolve=ease((progress-.75)/.22);if(p.winner){x=lerp(x,w<760?w*.5:w*.67,resolve);y=lerp(y,w<760?h*.66:h*.52,resolve)}else{x=lerp(x,c.x,resolve);y=lerp(y,c.y,resolve)}}
+        const visible=p.winner?1:(progress>.48&&p.score<.78?1-ease((progress-.48)/.29):progress>.75?1-ease((progress-.75)/.18):.35+p.score*.65);
+        return{x,y,alpha:visible};
+      }
+      function arrow(p,alpha,color){const len=p.winner?11:6;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.angle);ctx.globalAlpha=alpha;ctx.strokeStyle=color;ctx.lineWidth=p.winner?1.8:1;ctx.beginPath();ctx.moveTo(-len*1.6,0);ctx.lineTo(0,0);ctx.stroke();ctx.beginPath();ctx.moveTo(-len*.7,-len*.45);ctx.lineTo(0,0);ctx.lineTo(-len*.7,len*.45);ctx.stroke();ctx.restore()}
+      function frame(now){ctx.clearRect(0,0,w,h);const dark=stage===1||stage===2;const c=center();if(progress>.18&&progress<.8){ctx.save();ctx.translate(c.x,c.y);ctx.globalAlpha=.18;for(let i=0;i<7;i++){ctx.beginPath();ctx.ellipse(0,0,55+i*37,(55+i*37)*.55,(i%2?-.12:.1),0,Math.PI*2);ctx.strokeStyle=dark?'#2fce96':'#0c8a5f';ctx.setLineDash([3+i,8]);ctx.stroke()}ctx.restore()}
+        particles.forEach(p=>{const t=target(p,now),ox=p.x,oy=p.y;p.vx+=(t.x-p.x)*.024;p.vy+=(t.y-p.y)*.024;p.vx*=.84;p.vy*=.84;p.x+=p.vx;p.y+=p.vy;const dx=p.x-ox,dy=p.y-oy;if(Math.hypot(dx,dy)>.03){const wanted=Math.atan2(dy,dx),diff=((wanted-p.angle+Math.PI*3)%(Math.PI*2))-Math.PI;p.angle+=diff*.22}if(!reduced&&p.i%3===0){p.trail.push([p.x,p.y]);if(p.trail.length>13)p.trail.shift();ctx.beginPath();p.trail.forEach((q,i)=>i?ctx.lineTo(q[0],q[1]):ctx.moveTo(q[0],q[1]));ctx.globalAlpha=t.alpha*.16;ctx.strokeStyle=p.score>.78?'#2fce96':dark?'#f7f5f0':'#777268';ctx.stroke()}arrow(p,t.alpha,p.winner?'#2fce96':p.score>.78?'#2fce96':dark?'#cbc7bb':'#777268')});requestAnimationFrame(frame)}requestAnimationFrame(frame);
+    })();
+  </script>
+</body>
+</html>

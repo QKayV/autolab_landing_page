@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autolab — Infinite Neolab Bench</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="autolab-mog-core-v1.css">
+  <style>
+    .bench-intro { position:relative;z-index:3;min-height:76svh;padding:14vh clamp(24px,5vw,78px) 9vh;display:grid;grid-template-columns:1fr .42fr;align-items:end;gap:8vw;border-top:1px solid var(--line);background:var(--paper); }
+    .bench-intro h2 { max-width:1050px;font:500 clamp(54px,7vw,108px)/.92 "IBM Plex Serif",serif;letter-spacing:-.052em; }
+    .bench-intro h2 em { color:var(--mint-deep);font-weight:400; }
+    .bench-intro p { max-width:340px;padding-bottom:10px;color:var(--muted);font:400 13px/1.65 "IBM Plex Mono",monospace; }
+
+    .bench-run { position:relative;height:620vh;background:var(--paper); }
+    .bench-sticky { position:sticky;top:0;height:100svh;overflow:hidden;background:var(--paper);perspective:1400px;isolation:isolate; }
+    .bench-floor { position:absolute;z-index:0;inset:45% -20% -55%;transform:rotateX(67deg);transform-origin:50% 0;background-image:linear-gradient(rgba(20,20,20,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(20,20,20,.08) 1px,transparent 1px);background-size:64px 64px;mask-image:linear-gradient(#000,transparent 75%); }
+    .bench-horizon { position:absolute;z-index:0;left:0;right:0;top:45%;border-top:1px solid rgba(20,20,20,.1);box-shadow:0 -70px 120px rgba(47,206,150,.08); }
+    .bench-world { position:absolute;z-index:2;left:0;top:0;width:5000px;height:100%;transform-style:preserve-3d;will-change:transform; }
+    #bench-canvas { position:absolute;z-index:5;inset:0;width:100%;height:100%;pointer-events:none; }
+    .bench-head { position:absolute;z-index:12;top:96px;left:clamp(24px,4.2vw,64px);right:clamp(24px,4.2vw,64px);padding-bottom:13px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);color:var(--muted);font:500 8px/1 "IBM Plex Mono",monospace;letter-spacing:.12em;text-transform:uppercase; }
+    .bench-head b { color:var(--mint-deep); }
+    .bench-progress { width:min(300px,28vw);height:2px;background:rgba(20,20,20,.09); }
+    .bench-progress i { display:block;width:0;height:100%;background:var(--mint); }
+
+    .bench-copy { position:absolute;z-index:11;left:clamp(24px,4.2vw,64px);top:142px;width:min(390px,29vw);height:230px;pointer-events:none;isolation:isolate; }
+    .bench-copy::before { content:"";position:absolute;z-index:0;inset:-28px -110px -52px -64px;background:linear-gradient(90deg,var(--paper) 0 72%,rgba(247,245,240,.9) 82%,rgba(247,245,240,0) 100%); }
+    .bench-step { position:absolute;z-index:1;inset:0;opacity:0;transform:translateY(24px);transition:opacity .3s,transform .55s cubic-bezier(.15,.85,.2,1); }
+    .bench-step.active { opacity:1;transform:none; }
+    .bench-step .step { display:block;margin-bottom:16px;color:var(--mint-deep);font:500 9px/1 "IBM Plex Mono",monospace;letter-spacing:.16em;text-transform:uppercase; }
+    .bench-step h3 { font:500 clamp(40px,4.2vw,67px)/.93 "IBM Plex Serif",serif;letter-spacing:-.045em; }
+    .bench-step h3 em { color:var(--mint-deep);font-weight:400; }
+    .bench-step p { max-width:340px;margin-top:17px;color:var(--muted);font:400 14px/1.55 "IBM Plex Sans",sans-serif; }
+
+    .lab-panel { position:absolute;overflow:hidden;border:1px solid #c9c5b8;border-radius:10px;background:rgba(252,251,247,.94);box-shadow:0 34px 80px rgba(20,20,20,.14),14px 16px 0 rgba(20,20,20,.035);backdrop-filter:blur(14px);transform-style:preserve-3d;transition:border-color .4s,box-shadow .4s,filter .4s,opacity .4s; }
+    .lab-panel::after { content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(115deg,transparent 35%,rgba(47,206,150,.09),transparent 65%);transform:translateX(-120%);transition:transform 1s; }
+    .lab-panel.active { border-color:var(--mint-deep);box-shadow:0 44px 100px rgba(20,20,20,.17),18px 19px 0 rgba(12,138,95,.09); }
+    .lab-panel.active::after { transform:translateX(120%); }
+    .panel-head { height:39px;padding:0 13px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);background:var(--paper-low);color:var(--muted);font:500 8px/1 "IBM Plex Mono",monospace;letter-spacing:.1em;text-transform:uppercase; }
+    .panel-head b { color:var(--mint-deep); }
+    .panel-port { width:7px;height:7px;border:1px solid var(--mint-deep);border-radius:50%;box-shadow:0 0 0 5px rgba(47,206,150,.08); }
+
+    .goal-panel { left:510px;top:34%;width:490px;transform:rotateY(7deg) translateZ(30px); }
+    .goal-body { padding:24px 25px 27px;font:400 11px/1.9 "IBM Plex Mono",monospace;color:var(--muted); }
+    .goal-body strong { display:block;margin-bottom:14px;color:var(--ink);font-size:17px;font-weight:500; }
+    .goal-body .mint { color:var(--mint-deep); }
+    .goal-constraints { display:grid;grid-template-columns:repeat(3,1fr);margin-top:18px;border:1px solid var(--line); }
+    .goal-constraints span { padding:10px;border-right:1px solid var(--line);color:var(--faint);font-size:8px;line-height:1.6; }
+    .goal-constraints span:last-child { border:0; }
+
+    .agents-panel { left:1540px;top:25%;width:700px;transform:rotateY(-6deg) translateZ(-80px); }
+    .agent-grid { display:grid;grid-template-columns:repeat(4,1fr);gap:8px;padding:13px; }
+    .agent-tile { position:relative;min-height:88px;padding:11px;border:1px solid var(--line);border-radius:5px;background:var(--paper);font-family:"IBM Plex Mono",monospace; }
+    .agent-tile .a-name { display:flex;align-items:center;gap:6px;color:var(--ink);font-size:8px;font-weight:500; }
+    .agent-tile .a-name i { width:5px;height:5px;border-radius:50%;background:var(--mint); }
+    .agent-tile p { margin-top:10px;color:var(--muted);font-size:8px;line-height:1.45; }
+    .agent-tile b { position:absolute;right:9px;bottom:8px;color:var(--mint-deep);font-size:9px;font-weight:500; }
+
+    .compute-panel { left:2600px;top:37%;width:590px;transform:rotateY(7deg) translateZ(90px); }
+    .compute-body { padding:16px; }
+    .compute-grid { display:grid;grid-template-columns:repeat(10,1fr);gap:5px; }
+    .compute-cell { aspect-ratio:1;border:1px solid #c7c3b6;border-radius:3px;background:#f0eee7;transition:background .25s,border-color .25s,transform .25s; }
+    .compute-cell.live { border-color:var(--mint-deep);background:#bfe8d7;box-shadow:0 0 12px rgba(47,206,150,.24); }
+    .compute-cell.scale { transform:scale(1.13);background:var(--mint); }
+    .compute-caption { display:flex;justify-content:space-between;margin-top:13px;color:var(--faint);font:400 8px/1 "IBM Plex Mono",monospace;text-transform:uppercase;letter-spacing:.08em; }
+
+    .eval-panel { left:3460px;top:22%;width:600px;transform:rotateY(-6deg) translateZ(-20px); }
+    .eval-body { padding:16px 18px 18px; }
+    .eval-row { display:grid;grid-template-columns:68px 1fr 52px;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid #e5e1d6;color:var(--muted);font:400 8px/1 "IBM Plex Mono",monospace; }
+    .eval-row:last-child { border:0; }
+    .eval-bar { height:7px;background:#e8e4d9;overflow:hidden; }
+    .eval-bar i { display:block;height:100%;width:var(--score);background:#aaa698;transform-origin:left; }
+    .eval-row.good { color:var(--mint-deep);font-weight:500; }
+    .eval-row.good .eval-bar i { background:var(--mint); }
+    .eval-row.winner { margin:0 -8px;padding:9px 8px;background:rgba(47,206,150,.1); }
+    .eval-row.winner .eval-bar i { box-shadow:0 0 12px rgba(47,206,150,.5); }
+
+    .merge-panel { left:4360px;top:31%;width:620px;opacity:.45;transform:rotateY(5deg) translateZ(110px) scale(.9);transition:opacity .5s,transform .8s cubic-bezier(.15,.85,.15,1),box-shadow .4s; }
+    .merge-panel.active { opacity:1;transform:rotateY(0) translateZ(130px) scale(1); }
+    .merge-panel .diff-card { border:0;box-shadow:none;background:transparent; }
+
+    .bench-rail { position:absolute;z-index:8;left:clamp(24px,4.2vw,64px);right:clamp(24px,4.2vw,64px);bottom:30px;display:grid;grid-template-columns:repeat(4,1fr);align-items:center; }
+    .bench-rail::before { content:"";position:absolute;left:0;right:0;top:5px;border-top:1px solid #c8c4b7; }
+    .bench-node { position:relative;color:var(--faint);font:500 7px/1 "IBM Plex Mono",monospace;letter-spacing:.08em;text-transform:uppercase;text-align:center;transition:color .3s; }
+    .bench-node::before { content:"";display:block;width:9px;height:9px;margin:0 auto 10px;border:1px solid #aaa698;border-radius:50%;background:var(--paper);transition:background .3s,border-color .3s,box-shadow .3s; }
+    .bench-node.active { color:var(--mint-deep); }
+    .bench-node.active::before { border-color:var(--mint-deep);background:var(--mint);box-shadow:0 0 0 6px rgba(47,206,150,.1); }
+    .bench-pointer { position:absolute;z-index:13;width:48px;height:48px;margin:-24px 0 0 -24px;border:1px solid var(--mint-deep);border-radius:50%;opacity:0;pointer-events:none;transition:opacity .2s; }
+    .bench-pointer.visible { opacity:.75; }
+    .bench-pointer::after { content:"camera parallax";position:absolute;left:54px;top:18px;white-space:nowrap;color:var(--mint-deep);font:500 7px/1 "IBM Plex Mono",monospace;letter-spacing:.1em;text-transform:uppercase; }
+
+    .bench-outro { position:relative;z-index:3;min-height:100svh;display:grid;place-items:center;padding:110px 24px;background:var(--ink);color:var(--paper);text-align:center; }
+    .bench-outro h2 { max-width:1080px;font:400 clamp(54px,7.3vw,112px)/.92 "IBM Plex Serif",serif;letter-spacing:-.052em; }
+    .bench-outro h2 em { color:var(--mint); }
+    .bench-outro p { max-width:580px;margin:28px auto;color:#aaa69b;font:400 16px/1.6 "IBM Plex Sans",sans-serif; }
+    .bench-outro .button { margin:0 auto;border-color:var(--mint);background:var(--mint);color:#06301f; }
+
+    @media(max-width:900px){
+      .bench-intro{min-height:72vh;grid-template-columns:1fr;padding:120px 18px 70px}.bench-intro h2{font-size:54px}.bench-intro p{padding:0}
+      .bench-head{top:78px;left:16px;right:16px}.bench-head>span:nth-child(2){display:none}
+      .bench-copy{left:18px;right:18px;top:108px;width:auto;height:230px}.bench-step h3{font-size:45px;max-width:340px}.bench-step p{font-size:13px;margin-top:12px}
+      .bench-world{width:4100px;top:8%}.goal-panel{left:390px;top:39%;width:330px}.agents-panel{left:1250px;top:34%;width:420px}.agent-grid{grid-template-columns:repeat(2,1fr)}.agent-tile:nth-child(n+7){display:none}.compute-panel{left:2150px;top:42%;width:350px}.compute-grid{grid-template-columns:repeat(8,1fr)}.compute-cell:nth-child(n+41){display:none}.eval-panel{left:2920px;top:35%;width:370px}.merge-panel{left:3690px;top:40%;width:360px}
+      .bench-rail{left:16px;right:16px;bottom:38px}.bench-node{font-size:6px}.bench-node span{display:none}
+    }
+  </style>
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div><div class="scroll-meter" aria-hidden="true"></div>
+  <header class="topbar" id="topbar"><div class="nav-shell"><a href="#top" class="wordmark">autolab<span class="brand-caret"></span></a><nav class="nav-links" aria-label="Main navigation"><a href="#bench">How it works</a><a href="#outro">Research</a><a href="#outro">Docs</a></nav><span class="nav-status"><i></i> 84 experiments active</span><a class="nav-cta" href="#outro">Book a demo <span>↗</span></a></div></header>
+  <main id="top">
+    <section class="hero"><div class="hero-copy"><div class="hero-pill">The autoresearch platform</div><h1>Supercharge your <em>research.</em></h1><p class="hero-sub">A thousand experiments in parallel, on your compute, scored against your evals. State of the art with the team and budget you already have.</p><div class="hero-actions"><a class="button primary" href="#bench">Enter the lab <span>↗</span></a><a class="button" href="#outro">Book a demo <span>→</span></a></div><div class="hero-install">$ curl -fsSL app.autolab.ai/install.sh | sh</div></div><div><div class="terminal"><div class="terminal-bar"><i></i><i></i><i></i><span>autolab · your-repo/frontier-model</span></div><div class="terminal-body"><span class="terminal-line mint">$ autolab start</span><span class="terminal-line dim">goal.md loaded · eval.py bound · cluster online</span><span class="terminal-line">agent wall / 84 active · 916 evaluated</span><span class="terminal-line">compute / 64×H100 · 96% saturated</span><span class="terminal-line">eval / 17 experiments on frontier</span><span class="terminal-line dim">lineage / 1,000 commits retained</span><span class="terminal-line result">winner docking / exp-941c2<br>val_acc 93.5% · Δ +2.3%</span><span class="terminal-line mint">walk the complete run <span class="terminal-caret"></span></span></div></div><div class="terminal-caption">every instrument is connected</div></div></section>
+
+    <section class="bench-intro"><h2>Walk through the entire <em>research machine.</em></h2><p>One continuous lab bench. The swarm carries hypotheses from goal to agents to compute to eval—and the winning experiment docks as code.</p></section>
+
+    <section class="bench-run" id="bench" data-stage="0"><div class="bench-sticky">
+      <div class="bench-floor" aria-hidden="true"></div><div class="bench-horizon" aria-hidden="true"></div>
+      <div class="bench-head"><span>Autolab / infinite neolab bench</span><span>move pointer to shift camera depth</span><div class="bench-progress"><i></i></div><b id="bench-index">01—04</b></div>
+      <div class="bench-copy">
+        <article class="bench-step active"><span class="step">Goal deck / 01</span><h3>Bind one <em>measurable goal.</em></h3><p>Your repo, eval, constraints, and compute budget become the governing instrument for every experiment downstream.</p></article>
+        <article class="bench-step"><span class="step">Agent wall / 02</span><h3>Fill every machine with <em>useful work.</em></h3><p>Agents branch distinct experiments while the scheduler continuously refills your cluster with the next-best hypothesis.</p></article>
+        <article class="bench-step"><span class="step">Eval chamber / 03</span><h3>Make the evidence <em>compete.</em></h3><p>Every result crosses the eval chamber. Dominated work stays recorded; the frontier keeps moving.</p></article>
+        <article class="bench-step"><span class="step">Merge dock / 04</span><h3>Dock one <em>accountable diff.</em></h3><p>The winning vector leaves the swarm and arrives with its lineage, metrics, runtime, and exact code change.</p></article>
+      </div>
+      <div class="bench-world">
+        <section class="lab-panel goal-panel active" data-panel="0"><div class="panel-head"><span>goal.md / bound</span><span class="panel-port"></span></div><div class="goal-body"><strong>beat baseline without regressions</strong><span class="mint">&gt; maximize val_acc</span><br>latency ≤ 42ms<br>budget 8×H100 / 8h<div class="goal-constraints"><span>EVAL<br>eval.py</span><span>REPO<br>a13f09</span><span>MODE<br>autonomous</span></div></div></section>
+        <section class="lab-panel agents-panel" data-panel="1"><div class="panel-head"><span>agent wall / your-repo</span><b>84 live</b></div><div class="agent-grid">
+          <div class="agent-tile"><span class="a-name"><i></i>agent-01</span><p>lr sweep<br>seed 3/6</p><b>+0.4%</b></div><div class="agent-tile"><span class="a-name"><i></i>agent-02</span><p>reasoning mix<br>pass 4</p><b>+0.8%</b></div><div class="agent-tile"><span class="a-name"><i></i>agent-03</span><p>rope θ 1m<br>scaling</p><b>+1.1%</b></div><div class="agent-tile"><span class="a-name"><i></i>agent-04</span><p>tokenizer<br>pruned</p><b>−0.1%</b></div><div class="agent-tile"><span class="a-name"><i></i>agent-05</span><p>muon opt<br>step 3800</p><b>live</b></div><div class="agent-tile"><span class="a-name"><i></i>agent-06</span><p>int8 quant<br>calibrating</p><b>live</b></div><div class="agent-tile"><span class="a-name"><i></i>agent-07</span><p>gqa heads<br>8 → 4</p><b>+0.2%</b></div><div class="agent-tile"><span class="a-name"><i></i>agent-08</span><p>distill 7b<br>warming</p><b>queued</b></div>
+        </div></section>
+        <section class="lab-panel compute-panel" data-panel="1"><div class="panel-head"><span>compute fabric / cluster-01</span><b>96% saturated</b></div><div class="compute-body"><div class="compute-grid" id="compute-grid"></div><div class="compute-caption"><span>64×H100 online</span><span>winner scaling →</span></div></div></section>
+        <section class="lab-panel eval-panel" data-panel="2"><div class="panel-head"><span>eval chamber / rank</span><b>17 on frontier</b></div><div class="eval-body"><div class="eval-row"><span>exp-201</span><span class="eval-bar"><i style="--score:42%"></i></span><span>+0.4</span></div><div class="eval-row"><span>exp-084</span><span class="eval-bar"><i style="--score:58%"></i></span><span>+0.8</span></div><div class="eval-row good"><span>exp-566</span><span class="eval-bar"><i style="--score:72%"></i></span><span>+1.4</span></div><div class="eval-row good"><span>exp-809</span><span class="eval-bar"><i style="--score:84%"></i></span><span>+1.9</span></div><div class="eval-row good winner"><span>exp-941</span><span class="eval-bar"><i style="--score:96%"></i></span><span>+2.3</span></div></div></section>
+        <section class="lab-panel merge-panel" data-panel="3"><article class="diff-card"><div class="diff-head"><span>merge dock / 9f41c2</span><b>ready for approval</b></div><div class="diff-title">full-scale-8xh100 ↗</div><div class="diff-metrics"><span>VAL_ACC<b>93.5%</b></span><span>Δ BASE<b>+2.3</b></span><span>RUNTIME<b>4:18h</b></span></div><pre class="diff-code">- rope_theta = 10_000<span class="add">+ rope_theta = 1_000_000</span><span class="add">+ data_mix = "reasoning_v2"</span></pre><div class="diff-foot"><span>human approval required</span><span>inspect commit ↗</span></div></article></section>
+      </div>
+      <canvas id="bench-canvas" aria-hidden="true"></canvas><div class="bench-pointer" aria-hidden="true"></div>
+      <div class="bench-rail"><span class="bench-node active"><span>Goal deck</span></span><span class="bench-node"><span>Agents + compute</span></span><span class="bench-node"><span>Eval chamber</span></span><span class="bench-node"><span>Merge dock</span></span></div>
+    </div></section>
+
+    <section class="bench-outro" id="outro"><div><span class="mono-label eyebrow-mint">One continuous system</span><h2>Your lab, running at <em>machine speed.</em></h2><p>Start with one workstation or bring Autolab across your secured cluster. Watch every experiment or walk away until the evidence is ready.</p><a class="button" href="#top">Enter Autolab <span>↗</span></a></div></section>
+  </main>
+  <nav class="comparison-links" aria-label="Concepts"><a href="autolab-mog-a-seed-frontier-v1.html">A</a><a href="autolab-mog-b-research-singularity-v1.html">B</a><a class="active" href="autolab-mog-c-infinite-bench-v1.html">C</a></nav><div class="concept-label"><b>C</b> Infinite Neolab Bench</div>
+
+  <script>
+    (()=>{
+      const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const clamp=(v,a=0,b=1)=>Math.max(a,Math.min(b,v)),lerp=(a,b,t)=>a+(b-a)*t,ease=t=>1-Math.pow(1-clamp(t),3);
+      const topbar=document.querySelector('#topbar'),meter=document.querySelector('.scroll-meter'),run=document.querySelector('.bench-run'),world=document.querySelector('.bench-world'),canvas=document.querySelector('#bench-canvas'),ctx=canvas.getContext('2d'),steps=[...document.querySelectorAll('.bench-step')],panels=[...document.querySelectorAll('.lab-panel')],nodes=[...document.querySelectorAll('.bench-node')],progressEl=document.querySelector('.bench-progress i'),index=document.querySelector('#bench-index'),pointerEl=document.querySelector('.bench-pointer');
+      const compute=document.querySelector('#compute-grid');
+      for(let i=0;i<60;i++){const cell=document.createElement('i');cell.className='compute-cell'+(i<43?' live':'')+(i>48?' scale':'');compute.appendChild(cell)}
+      let w=innerWidth,h=innerHeight,dpr=1,progress=0,stage=0,travel=0,pointer={x:w*.6,y:h*.5,nx:0,ny:0,inside:false};
+      const count=innerWidth<760?100:190;
+      const particles=Array.from({length:count},(_,i)=>({i,x:w*.5,y:h*.55,vx:0,vy:0,angle:0,seed:Math.random(),lane:(i%17)/16,score:((i*43)%count)/count,winner:i===Math.floor(count*.73),trail:[]}));
+      function resize(){w=innerWidth;h=innerHeight;dpr=Math.min(devicePixelRatio||1,2);canvas.width=w*dpr;canvas.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0)}resize();addEventListener('resize',resize);
+      function activeCenter(){const candidates=stage===1?[document.querySelector('.agents-panel'),document.querySelector('.compute-panel')]:[panels.find(p=>Number(p.dataset.panel)===stage)];const rects=candidates.filter(Boolean).map(p=>p.getBoundingClientRect());return{x:rects.reduce((s,r)=>s+r.left+r.width/2,0)/rects.length,y:rects.reduce((s,r)=>s+r.top+r.height/2,0)/rects.length}}
+      function update(){
+        const max=document.documentElement.scrollHeight-innerHeight;meter.style.width=`${max?scrollY/max*100:0}%`;topbar.classList.toggle('island',scrollY>80);
+        const rect=run.getBoundingClientRect();progress=clamp(-rect.top/Math.max(1,run.offsetHeight-innerHeight));const next=Math.min(3,Math.floor(progress*4));
+        if(next!==stage){stage=next;run.dataset.stage=String(stage);steps.forEach((s,i)=>s.classList.toggle('active',i===stage));panels.forEach(p=>p.classList.toggle('active',Number(p.dataset.panel)===stage));nodes.forEach((n,i)=>n.classList.toggle('active',i===stage));index.textContent=`0${stage+1}—04`;}
+        progressEl.style.width=`${progress*100}%`;const stops=w<760?[250,1220,2220,3020,3720]:[-160,1000,2000,2850,3750];const cameraSegment=Math.min(3,Math.floor(progress*4));const cameraLocal=clamp(progress*4-cameraSegment);const cameraT=cameraSegment===0?Math.pow(cameraLocal,3):ease(cameraLocal);travel=lerp(stops[cameraSegment],stops[cameraSegment+1],cameraT);const px=pointer.inside?pointer.nx*18:0,py=pointer.inside?pointer.ny*10:0;world.style.transform=`translate3d(${-travel+px}px,${py}px,0) rotateX(${pointer.inside?-pointer.ny*1.2:0}deg) rotateY(${pointer.inside?pointer.nx*.8:0}deg)`;
+      }addEventListener('scroll',update,{passive:true});update();
+      addEventListener('pointermove',e=>{pointer.x=e.clientX;pointer.y=e.clientY;pointer.nx=e.clientX/w-.5;pointer.ny=e.clientY/h-.5;const r=run.getBoundingClientRect();pointer.inside=r.top<=0&&r.bottom>=innerHeight;pointerEl.style.left=`${e.clientX}px`;pointerEl.style.top=`${e.clientY}px`;pointerEl.classList.toggle('visible',pointer.inside);if(pointer.inside)update()},{passive:true});
+      function target(p,now){const c=activeCenter(),spreadX=w<760?125:230,spreadY=w<760?115:185;let x=c.x+(p.seed-.5)*spreadX*2+Math.sin(now*.0005+p.i)*12,y=c.y+(p.lane-.5)*spreadY*1.5+Math.cos(now*.0004+p.i*.4)*9;let alpha=.3+p.score*.68;
+        if(stage===0){x=c.x+(p.seed-.5)*spreadX*1.4;y=c.y+(p.lane-.5)*spreadY*.8;alpha=p.i<count*.22?.55+p.score*.3:.035}
+        if(stage===1){x=c.x+(p.seed-.5)*spreadX*2.4;y=c.y+(p.lane-.5)*spreadY*1.55}
+        if(stage===2){const rank=p.score;x=c.x+(p.seed-.5)*spreadX*1.4;y=c.y+spreadY*(.65-rank*1.3);alpha=p.score>.55?.9:.23}
+        if(stage===3){const t=ease((progress-.75)/.22);if(p.winner){x=lerp(c.x-w*.22,c.x,t);y=lerp(c.y+h*.18,c.y,t);alpha=1}else{x=lerp(c.x-w*.25,c.x-w*.05,t);y=lerp(c.y+(p.lane-.5)*spreadY,c.y,t);alpha=1-t*.94}}
+        if(pointer.inside){const dx=x-pointer.x,dy=y-pointer.y,d=Math.hypot(dx,dy)||1;if(d<115){const push=(1-d/115)*32;x+=dx/d*push;y+=dy/d*push}}
+        return{x,y,alpha};}
+      function arrow(p,alpha,color){const len=p.winner?10:6;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.angle);ctx.globalAlpha=alpha;ctx.strokeStyle=color;ctx.lineWidth=p.winner?1.8:1;ctx.beginPath();ctx.moveTo(-len*1.65,0);ctx.lineTo(0,0);ctx.stroke();ctx.beginPath();ctx.moveTo(-len*.68,-len*.43);ctx.lineTo(0,0);ctx.lineTo(-len*.68,len*.43);ctx.stroke();ctx.restore()}
+      function frame(now){ctx.clearRect(0,0,w,h);particles.forEach(p=>{const t=target(p,now),ox=p.x,oy=p.y;p.vx+=(t.x-p.x)*.026;p.vy+=(t.y-p.y)*.026;p.vx*=.82;p.vy*=.82;p.x+=p.vx;p.y+=p.vy;const dx=p.x-ox,dy=p.y-oy;if(Math.hypot(dx,dy)>.03){const wanted=Math.atan2(dy,dx),diff=((wanted-p.angle+Math.PI*3)%(Math.PI*2))-Math.PI;p.angle+=diff*.18}if(!reduced&&p.i%3===0){p.trail.push([p.x,p.y]);if(p.trail.length>10)p.trail.shift();ctx.beginPath();p.trail.forEach((q,i)=>i?ctx.lineTo(q[0],q[1]):ctx.moveTo(q[0],q[1]));ctx.globalAlpha=t.alpha*.12;ctx.strokeStyle=p.score>.65?'#0c8a5f':'#777268';ctx.stroke()}arrow(p,t.alpha,p.winner&&stage===3?'#2fce96':p.score>.65?'#0c8a5f':'#777268')});requestAnimationFrame(frame)}requestAnimationFrame(frame);
+    })();
+  </script>
+</body>
+</html>
