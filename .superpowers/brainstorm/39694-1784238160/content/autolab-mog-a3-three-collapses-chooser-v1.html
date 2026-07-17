@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Autolab — Three Singularity Collapses</title>
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="autolab-mog-core-v1.css">
+  <style>
+    body { min-height: 100svh; background: var(--paper); }
+    .chooser-topbar .nav-shell { position: relative; top: 14px; width: min(760px,calc(100% - 28px)); height: 58px; padding: 0 16px 0 20px; border-color: rgba(20,20,20,.25); border-radius: 17px; box-shadow: 0 18px 45px rgba(20,20,20,.12),0 2px 8px rgba(20,20,20,.05); }
+    .chooser-kicker { color: var(--muted); font: 500 9px/1 "IBM Plex Mono",monospace; letter-spacing: .12em; text-transform: uppercase; }
+    .chooser-back { display: inline-flex; align-items: center; gap: 13px; padding: 11px 14px; border-radius: 9px; background: var(--ink); color: var(--paper); font: 500 9px/1 "IBM Plex Mono",monospace; }
+    .triptych-chooser { position: relative; min-height: 100svh; padding: 142px clamp(20px,4.2vw,64px) 52px; overflow: hidden; }
+    .triptych-chooser::before { content: ""; position: absolute; inset: 0; pointer-events: none; background-image: linear-gradient(rgba(20,20,20,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(20,20,20,.035) 1px,transparent 1px); background-size: 42px 42px; mask-image: linear-gradient(#000,transparent 58%); }
+    .chooser-intro { position: relative; display: grid; grid-template-columns: minmax(0,1fr) minmax(260px,370px); align-items: end; gap: 60px; padding-bottom: 52px; }
+    .chooser-intro h1 { max-width: 940px; font-size: clamp(58px,7.4vw,112px); line-height: .88; }
+    .chooser-intro h1 em { display: block; }
+    .chooser-note { max-width: 360px; padding: 4px 0 4px 20px; border-left: 1px solid var(--mint); color: var(--muted); font: 400 12px/1.7 "IBM Plex Mono",monospace; }
+    .chooser-note b { display: block; margin-bottom: 10px; color: var(--mint-deep); font: 500 9px/1 "IBM Plex Mono",monospace; letter-spacing: .13em; text-transform: uppercase; }
+    .chooser-grid { position: relative; display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); border: 1px solid var(--ink); background: var(--ink); gap: 1px; }
+    .study { min-width: 0; background: var(--paper); transition: transform .5s cubic-bezier(.16,.84,.16,1),background .25s; }
+    .study:hover { position: relative; z-index: 2; transform: translateY(-10px); background: var(--paper-high); box-shadow: 0 30px 70px rgba(20,20,20,.18); }
+    .study-visual { position: relative; height: clamp(245px,26vw,380px); overflow: hidden; background: #070b09; }
+    .study-visual svg { display: block; width: 100%; height: 100%; }
+    .study-copy { min-height: 178px; display: grid; grid-template-columns: 54px 1fr auto; align-items: start; gap: 16px; padding: 24px; }
+    .study-code { display: grid; place-items: center; width: 42px; height: 42px; border: 1px solid var(--ink); border-radius: 50%; font: 500 9px/1 "IBM Plex Mono",monospace; }
+    .study h2 { margin-bottom: 10px; font: 500 clamp(28px,2.5vw,42px)/.96 "IBM Plex Serif",serif; letter-spacing: -.045em; }
+    .study h2 em { color: var(--mint-deep); font-weight: 400; }
+    .study p { max-width: 330px; color: var(--muted); font: 400 12px/1.55 "IBM Plex Sans",sans-serif; }
+    .study-arrow { padding-top: 11px; color: var(--mint-deep); font: 500 18px/1 "IBM Plex Mono",monospace; transition: transform .3s; }
+    .study:hover .study-arrow { transform: translate(4px,-4px); }
+    .visual-meta { position: absolute; z-index: 4; left: 18px; top: 16px; color: rgba(223,245,236,.7); font: 500 7px/1 "IBM Plex Mono",monospace; letter-spacing: .13em; text-transform: uppercase; }
+    .visual-stage { position: absolute; z-index: 4; right: 16px; bottom: 15px; color: var(--mint); font: 500 7px/1 "IBM Plex Mono",monospace; letter-spacing: .12em; text-transform: uppercase; }
+    .orbit { transform-origin: 70% 56%; animation: orbit-turn 10s linear infinite; }
+    .flight-line { stroke-dasharray: 5 9; animation: line-run 1.8s linear infinite; }
+    .tear-line { filter: drop-shadow(0 0 8px rgba(47,206,150,.9)); animation: tear-breathe 3.4s ease-in-out infinite; }
+    .seed-rings { transform-origin: 54% 55%; animation: seed-pulse 3.2s cubic-bezier(.2,.8,.2,1) infinite; }
+    .loop-vector { offset-path: path("M 346 226 C 274 162 216 96 118 44"); offset-rotate: auto; animation: vector-loop 3.4s cubic-bezier(.5,.05,.2,1) infinite; }
+    .scan-line { animation: scan 3.4s cubic-bezier(.5,.05,.2,1) infinite; }
+    @keyframes orbit-turn { to { transform: rotate(360deg); } }
+    @keyframes line-run { to { stroke-dashoffset: -28; } }
+    @keyframes tear-breathe { 0%,100% { opacity: .5; } 50% { opacity: 1; } }
+    @keyframes seed-pulse { 0%,28% { transform: scale(.12); opacity: 0; } 48% { opacity: 1; } 82%,100% { transform: scale(1.65); opacity: 0; } }
+    @keyframes vector-loop { 0%,12% { offset-distance: 0%; opacity: 0; } 22% { opacity: 1; } 70%,100% { offset-distance: 100%; opacity: 1; } }
+    @keyframes scan { 0%,67% { transform: translateY(-120px); opacity: 0; } 72% { opacity: 1; } 100% { transform: translateY(260px); opacity: 0; } }
+    .chooser-footer { position: relative; display: flex; align-items: center; justify-content: space-between; gap: 24px; padding: 24px 0 0; color: var(--muted); font: 400 9px/1.5 "IBM Plex Mono",monospace; letter-spacing: .08em; text-transform: uppercase; }
+    .a2-backup { display: inline-flex; align-items: center; gap: 14px; color: var(--ink); }
+    .a2-backup b { color: var(--mint-deep); font-weight: 500; }
+    .a2-backup::after { content: "→"; color: var(--mint-deep); }
+    @media (max-width: 900px) {
+      .chooser-topbar .nav-status,.chooser-kicker { display: none; }
+      .chooser-intro { display: block; padding-bottom: 36px; }
+      .chooser-intro h1 { font-size: clamp(54px,15vw,78px); }
+      .chooser-note { margin-top: 30px; }
+      .chooser-grid { grid-template-columns: 1fr; }
+      .study-visual { height: min(78vw,390px); }
+      .study-copy { min-height: 0; }
+      .chooser-footer { align-items: flex-start; flex-direction: column; }
+    }
+    @media (max-width: 520px) {
+      .chooser-topbar .nav-shell { justify-content: space-between; }
+      .chooser-back { padding: 10px 12px; }
+      .triptych-chooser { padding: 118px 14px 36px; }
+      .study-copy { grid-template-columns: 46px 1fr auto; padding: 20px 16px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .orbit,.flight-line,.tear-line,.seed-rings,.loop-vector,.scan-line { animation: none; }
+      .study { transition: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="grain" aria-hidden="true"></div>
+  <header class="topbar chooser-topbar">
+    <div class="nav-shell">
+      <a class="wordmark" href="autolab-mog-a3-slingshot-v1.html">autolab<span class="brand-caret"></span></a>
+      <span class="chooser-kicker">A3 / singularity collapse study</span>
+      <span class="nav-status"><i></i> same 240 experiments</span>
+      <a class="chooser-back" href="autolab-mog-a-impact-frontier-v2.html">A2 backup <span>↗</span></a>
+    </div>
+  </header>
+
+  <main class="triptych-chooser">
+    <section class="chooser-intro">
+      <h1>One singularity.<em>Three ways out.</em></h1>
+      <p class="chooser-note"><b>The controlled comparison</b>Every page shares the same caret launch, experiment swarm, 3D eval frontier, and implosion. Only the final collapse changes.</p>
+    </section>
+
+    <section class="chooser-grid" aria-label="Choose a singularity ending">
+      <a class="study study-s" href="autolab-mog-a3-slingshot-v1.html">
+        <div class="study-visual">
+          <span class="visual-meta">fast / aggressive</span><span class="visual-stage">implode → slingshot</span>
+          <svg viewBox="0 0 420 300" role="img" aria-label="A winner vector tears the dark field back to light">
+            <defs><radialGradient id="sg" cx="70%" cy="56%"><stop stop-color="#2fce96" stop-opacity=".24"/><stop offset="1" stop-color="#070b09" stop-opacity="0"/></radialGradient></defs>
+            <rect width="420" height="300" fill="#070b09"/><rect width="420" height="300" fill="url(#sg)"/>
+            <g class="orbit" fill="none" stroke="#2fce96" stroke-opacity=".28"><ellipse cx="294" cy="168" rx="90" ry="24" transform="rotate(18 294 168)"/><ellipse cx="294" cy="168" rx="116" ry="31" transform="rotate(-26 294 168)"/><ellipse cx="294" cy="168" rx="62" ry="18" transform="rotate(52 294 168)"/></g>
+            <circle cx="294" cy="168" r="24" fill="#020403" stroke="#2fce96"/><path d="M294 168 C376 112 370 54 418 20" fill="none" stroke="#2fce96" stroke-width="2" class="flight-line"/>
+            <path d="M0 260 L420 25 L420 118 L0 300 Z" fill="#f7f5f0" fill-opacity=".96"/><path d="M0 260 L420 25" fill="none" stroke="#2fce96" stroke-width="3" class="tear-line"/>
+            <path d="M370 51 l16 -9 l-7 17" fill="none" stroke="#2fce96" stroke-width="2"/>
+          </svg>
+        </div>
+        <div class="study-copy"><span class="study-code">A3-S</span><div><h2>Implode → <em>Slingshot</em></h2><p>The winning vector escapes on a tangent and rips a high-contrast paper shockwave through the field.</p></div><span class="study-arrow">↗</span></div>
+      </a>
+
+      <a class="study study-r" href="autolab-mog-a3-rebirth-v1.html">
+        <div class="study-visual">
+          <span class="visual-meta">sculptural / premium</span><span class="visual-stage">implode → rebirth</span>
+          <svg viewBox="0 0 420 300" role="img" aria-label="A compressed seed unfolds through concentric rings">
+            <defs><radialGradient id="rg"><stop stop-color="#dff5ec" stop-opacity=".23"/><stop offset="1" stop-color="#070b09" stop-opacity="0"/></radialGradient></defs>
+            <rect width="420" height="300" fill="#070b09"/><circle cx="226" cy="165" r="140" fill="url(#rg)"/>
+            <g class="seed-rings" fill="none" stroke="#2fce96"><circle cx="226" cy="165" r="28" stroke-width="2"/><circle cx="226" cy="165" r="58" stroke-opacity=".68"/><circle cx="226" cy="165" r="90" stroke-opacity=".34"/><circle cx="226" cy="165" r="124" stroke-opacity=".15"/></g>
+            <circle cx="226" cy="165" r="11" fill="#2fce96" filter="drop-shadow(0 0 12px #2fce96)"/>
+            <g stroke="#2fce96" stroke-opacity=".55"><path d="M226 137v-13M226 193v13M198 165h-13M254 165h13M206 145l-9-9M246 185l9 9M246 145l9-9M206 185l-9 9"/></g>
+          </svg>
+        </div>
+        <div class="study-copy"><span class="study-code">A3-R</span><div><h2>Implode → <em>Rebirth</em></h2><p>The singularity pinches into one evidence seed, emits a pulse, and germinates into the result.</p></div><span class="study-arrow">↗</span></div>
+      </a>
+
+      <a class="study study-l" href="autolab-mog-a3-loop-v1.html">
+        <div class="study-visual">
+          <span class="visual-meta">product / complete</span><span class="visual-stage">implode → loop</span>
+          <svg viewBox="0 0 420 300" role="img" aria-label="A winner vector returns to the Autolab caret">
+            <rect width="420" height="300" fill="#070b09"/>
+            <path d="M346 226 C274 162 216 96 118 44" fill="none" stroke="#2fce96" stroke-opacity=".62" class="flight-line"/>
+            <rect x="73" y="22" width="113" height="42" rx="12" fill="#f7f5f0"/><text x="91" y="48" fill="#141414" font-family="IBM Plex Mono" font-size="15">autolab</text><rect x="157" y="34" width="7" height="16" fill="#2fce96"/>
+            <g class="loop-vector"><path d="M0 0 l-19 0 M0 0 l-8 -6 M0 0 l-8 6" stroke="#2fce96" stroke-width="2" fill="none"/></g>
+            <line class="scan-line" x1="0" x2="420" y1="72" y2="72" stroke="#2fce96" stroke-width="2" filter="drop-shadow(0 0 8px #2fce96)"/>
+            <circle cx="346" cy="226" r="26" fill="#020403" stroke="#2fce96"/><ellipse cx="346" cy="226" rx="72" ry="18" fill="none" stroke="#2fce96" stroke-opacity=".35" transform="rotate(18 346 226)"/>
+          </svg>
+        </div>
+        <div class="study-copy"><span class="study-code">A3-L</span><div><h2>Implode → <em>Loop</em></h2><p>The winner retraces the launch curve, becomes the live caret again, then scans its diff into place.</p></div><span class="study-arrow">↗</span></div>
+      </a>
+    </section>
+
+    <footer class="chooser-footer"><span>Same engine · same population · same camera · scroll every version</span><a class="a2-backup" href="autolab-mog-a-impact-frontier-v2.html"><b>A2</b> preserved impact frontier backup</a></footer>
+  </main>
+</body>
+</html>

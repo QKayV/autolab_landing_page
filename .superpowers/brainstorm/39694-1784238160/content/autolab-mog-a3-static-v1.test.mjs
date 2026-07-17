@@ -29,3 +29,15 @@ for (const variant of variants) {
     assert.doesNotMatch(html, /<iframe/i);
   });
 }
+
+test('chooser links all endings and the preserved A2', async () => {
+  const html = await readFile(
+    new URL('./autolab-mog-a3-three-collapses-chooser-v1.html', import.meta.url),
+    'utf8',
+  );
+  for (const variant of variants) {
+    assert.match(html, new RegExp(`autolab-mog-a3-${variant}-v1\\.html`));
+  }
+  assert.match(html, /autolab-mog-a-impact-frontier-v2\.html/);
+  assert.doesNotMatch(html, /<iframe/i);
+});

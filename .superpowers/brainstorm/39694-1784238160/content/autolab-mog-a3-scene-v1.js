@@ -930,6 +930,7 @@ function getState() {
     dark,
     caretDetached,
     pointerMode,
+    pointerStrength: pointer.strength,
     endingProgress,
     endingState: variantState,
     tear: variantState.tear || 0,
