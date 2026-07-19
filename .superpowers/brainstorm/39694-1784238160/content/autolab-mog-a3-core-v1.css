@@ -26,6 +26,7 @@
 .a3-handoff p b { display: block; margin-bottom: 10px; color: var(--mint-deep); font-weight: 500; letter-spacing: .12em; text-transform: uppercase; }
 
 .research-run { position: relative; height: 680vh; background: var(--paper); }
+.ending-preview-anchor { position: absolute; top: 78%; left: 0; width: 1px; height: 1px; pointer-events: none; }
 .research-sticky { position: sticky; top: 0; height: 100svh; overflow: hidden; isolation: isolate; background: var(--paper); }
 .base-grid,.dark-grid,.return-grid {
   position: absolute;
