@@ -28,6 +28,10 @@ for (const variant of variants) {
     assert.match(html, /autolab-mog-core-v1\.css/);
     assert.match(html, /autolab-mog-a3-core-v1\.css/);
     assert.match(html, /autolab-mog-a3-scene-v1\.js/);
+    assert.match(
+      html,
+      /class="nav-status" aria-hidden="true"><i><\/i><span class="nav-status-copy"><\/span><\/span>/,
+    );
     assert.doesNotMatch(html, /<iframe/i);
     for (const linkedVariant of variants) {
       assert.match(
@@ -51,6 +55,30 @@ test('chooser links all endings and the preserved A2', async () => {
   }
   assert.match(html, /autolab-mog-a-impact-frontier-v2\.html/);
   assert.doesNotMatch(html, /<iframe/i);
+});
+
+test('navigation telemetry is hidden by default and driven by the motion timeline', async () => {
+  const [css, scene] = await Promise.all([
+    readFile(new URL('./autolab-mog-core-v1.css', import.meta.url), 'utf8'),
+    readFile(new URL('./autolab-mog-a3-scene-v1.js', import.meta.url), 'utf8'),
+  ]);
+
+  assert.match(css, /\.nav-status\s*\{[^}]*opacity:\s*0/s);
+  assert.match(css, /\.nav-status\.is-live\s*\{[^}]*opacity:\s*1/s);
+  assert.match(scene, /navigationTelemetryFor\(progress\)/);
+  assert.match(scene, /classList\.toggle\('is-live', telemetry\.visible\)/);
+});
+
+test('settled vectors consume the topology gradient for their heading', async () => {
+  const scene = await readFile(
+    new URL('./autolab-mog-a3-scene-v1.js', import.meta.url),
+    'utf8',
+  );
+
+  assert.match(scene, /surfaceGradient\(/);
+  assert.match(scene, /surfaceAlignmentFor\(progress\)/);
+  assert.match(scene, /target\.surfaceAlignment/);
+  assert.match(scene, /target\.surfaceAngle/);
 });
 
 test('ending preview target enters the unique ending on desktop and mobile', async () => {

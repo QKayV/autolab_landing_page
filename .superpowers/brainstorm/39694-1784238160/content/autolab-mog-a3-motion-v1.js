@@ -32,6 +32,38 @@ export function phaseFor(progress) {
   return 'ending';
 }
 
+export function navigationTelemetryFor(progress) {
+  const phase = phaseFor(progress);
+  if (phase === 'release' || phase === 'ending') {
+    return { visible: false, text: '' };
+  }
+
+  let count = 1000;
+  if (phase === 'orbit') {
+    const orbit = ease(
+      (progress - TIMELINE.release) / (TIMELINE.orbit - TIMELINE.release),
+    );
+    count = Math.round(mix(1, 1000, orbit));
+  } else if (phase === 'pressure') {
+    const pressure = ease(
+      (progress - TIMELINE.gradient) /
+        (TIMELINE.pressure - TIMELINE.gradient),
+    );
+    count = 1000 - Math.round(742 * pressure);
+  } else if (phase === 'compression') {
+    const compression = ease(
+      (progress - TIMELINE.pressure) /
+        (TIMELINE.compression - TIMELINE.pressure),
+    );
+    count = Math.max(1, Math.round(mix(258, 1, compression)));
+  }
+
+  const formatted = count === 1000
+    ? '1,000'
+    : String(count).padStart(3, '0');
+  return { visible: true, text: `${formatted} experiments active` };
+}
+
 export function createExperimentBlueprints(count, seed = 0xA3701AB) {
   const random = mulberry32(seed);
   const winnerIndex = Math.min(137, count - 1);
@@ -78,6 +110,33 @@ export function surfaceHeight(u, v, pointer = { x: 0, y: 0, strength: 0 }) {
   const bend = (pointer.strength || 0) *
     Math.exp(-(distanceX ** 2 + distanceY ** 2) * 4.5) * 0.45;
   return 0.14 + peak * 0.82 + shoulder + ridge + bend;
+}
+
+export function surfaceGradient(
+  u,
+  v,
+  pointer = { x: 0, y: 0, strength: 0 },
+) {
+  const delta = 0.015;
+  const slopeU = surfaceHeight(u + delta, v, pointer) -
+    surfaceHeight(u - delta, v, pointer);
+  const slopeV = surfaceHeight(u, v + delta, pointer) -
+    surfaceHeight(u, v - delta, pointer);
+  const magnitude = Math.hypot(slopeU, slopeV);
+  if (magnitude < 0.000001) return { u: 1, v: 0 };
+  return { u: slopeU / magnitude, v: slopeV / magnitude };
+}
+
+export function surfaceAlignmentFor(progress) {
+  const settled = ease(
+    (progress - (TIMELINE.orbit + 0.03)) /
+      (TIMELINE.gradient - TIMELINE.orbit - 0.03),
+  );
+  const released = ease(
+    (progress - TIMELINE.pressure) /
+      (TIMELINE.compression - TIMELINE.pressure),
+  );
+  return settled * (1 - released);
 }
 
 function frontierPose(blueprint, scene) {

@@ -5,8 +5,11 @@ import {
   phaseFor,
   createExperimentBlueprints,
   surfaceHeight,
+  surfaceGradient,
+  surfaceAlignmentFor,
   poseForExperiment,
   endingPose,
+  navigationTelemetryFor,
 } from './autolab-mog-a3-motion-v1.js';
 
 const ending = document.body.dataset.ending;
@@ -41,6 +44,8 @@ const metricB = document.querySelector('#metric-b');
 const metricBest = document.querySelector('#metric-best');
 const metricALabel = document.querySelector('#metric-a-label');
 const metricBLabel = document.querySelector('#metric-b-label');
+const navStatus = topbar.querySelector('.nav-status');
+const navStatusCopy = navStatus.querySelector('.nav-status-copy');
 const resultCard = document.querySelector('#result-card');
 const slingshotTear = document.querySelector('#slingshot-tear');
 const rebirthSeed = run.querySelector('.rebirth-seed');
@@ -151,6 +156,32 @@ function projectFrontier(u, v, z) {
     x: origin.x + (rotatedU - rotatedV) * scale * 0.65,
     y: origin.y + (rotatedU + rotatedV) * scale * 0.25 - z * scale * 0.64,
   };
+}
+
+function projectedSurfaceAngle(blueprint) {
+  const surfacePointer = {
+    x: pointer.nx,
+    y: pointer.ny,
+    strength: pointer.strength,
+  };
+  const gradient = surfaceGradient(
+    blueprint.u,
+    blueprint.v,
+    surfacePointer,
+  );
+  const height = surfaceHeight(
+    blueprint.u,
+    blueprint.v,
+    surfacePointer,
+  ) + blueprint.score * 0.08;
+  const step = 0.08;
+  const aheadU = blueprint.u + gradient.u * step;
+  const aheadV = blueprint.v + gradient.v * step;
+  const aheadHeight = surfaceHeight(aheadU, aheadV, surfacePointer) +
+    blueprint.score * 0.08;
+  const point = projectFrontier(blueprint.u, blueprint.v, height);
+  const ahead = projectFrontier(aheadU, aheadV, aheadHeight);
+  return Math.atan2(ahead.y - point.y, ahead.x - point.x);
 }
 
 function slingshotPath(amount) {
@@ -392,6 +423,13 @@ function updateMetrics() {
   metricBest.textContent = `+${mix(0, 2.3, ease((progress - 0.38) / 0.38)).toFixed(1)}%`;
 }
 
+function updateNavigationTelemetry() {
+  const telemetry = navigationTelemetryFor(progress);
+  navStatus.classList.toggle('is-live', telemetry.visible);
+  navStatus.setAttribute('aria-hidden', String(!telemetry.visible));
+  navStatusCopy.textContent = telemetry.text;
+}
+
 function updatePointer() {
   const rect = run.getBoundingClientRect();
   const inRun = rect.top <= 0 && rect.bottom >= innerHeight;
@@ -425,6 +463,7 @@ function updateScroll() {
   updateField();
   updateStory(stageFor(phase));
   updateMetrics();
+  updateNavigationTelemetry();
   progressEl.style.width = `${progress * 100}%`;
 
   updatePointer();
@@ -830,10 +869,16 @@ function targetForParticle(particle, now) {
     }
   }
 
+  const surfaceAlignment = surfaceAlignmentFor(progress);
+
   return {
     x: mix(origin.x, x, born),
     y: mix(origin.y, y, born),
     alpha,
+    surfaceAlignment,
+    surfaceAngle: surfaceAlignment > 0
+      ? projectedSurfaceAngle(particle.blueprint)
+      : particle.angle,
     pose: { ...pose, trail: phase === 'ending' ? 0 : pose.trail, scale: endingScale },
   };
 }
@@ -853,11 +898,20 @@ function drawParticle(particle, target) {
     particle.y += particle.vy;
   }
 
-  if (Math.hypot(particle.vx, particle.vy) > 0.035) {
-    const desired = Math.atan2(particle.vy, particle.vx);
-    const delta = ((desired - particle.angle + Math.PI * 3) % (Math.PI * 2)) - Math.PI;
-    particle.angle += delta * 0.18;
+  const speed = Math.hypot(particle.vx, particle.vy);
+  let desired = speed > 0.035
+    ? Math.atan2(particle.vy, particle.vx)
+    : particle.angle;
+  if (target.surfaceAlignment > 0) {
+    const topologyDelta = (
+      (target.surfaceAngle - desired + Math.PI * 3) % (Math.PI * 2)
+    ) - Math.PI;
+    desired += topologyDelta * target.surfaceAlignment;
   }
+  const angleDelta = (
+    (desired - particle.angle + Math.PI * 3) % (Math.PI * 2)
+  ) - Math.PI;
+  particle.angle += angleDelta * (0.18 + target.surfaceAlignment * 0.12);
 
   if (!reducedMotion && particle.blueprint.index % 3 === 0 && target.alpha > 0.04 && target.pose.trail > 0.02) {
     particle.trail.push([particle.x, particle.y]);

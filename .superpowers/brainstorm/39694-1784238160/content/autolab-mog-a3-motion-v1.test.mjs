@@ -7,6 +7,7 @@ import {
   poseForExperiment,
   endingPose,
 } from './autolab-mog-a3-motion-v1.js';
+import * as motion from './autolab-mog-a3-motion-v1.js';
 
 const quietScene = progress => ({
   progress,
@@ -29,6 +30,21 @@ test('phase boundaries match the approved shared timeline', () => {
     pressure: 0.76,
     compression: 0.86,
   });
+});
+
+test('navigation telemetry stays hidden until the orbit begins', () => {
+  assert.equal(typeof motion.navigationTelemetryFor, 'function');
+
+  const opening = motion.navigationTelemetryFor(0);
+  const release = motion.navigationTelemetryFor(TIMELINE.release - 0.0001);
+  const orbit = motion.navigationTelemetryFor(TIMELINE.release);
+  const ending = motion.navigationTelemetryFor(TIMELINE.compression);
+
+  assert.deepEqual(opening, { visible: false, text: '' });
+  assert.deepEqual(release, { visible: false, text: '' });
+  assert.equal(orbit.visible, true);
+  assert.equal(orbit.text, '001 experiments active');
+  assert.deepEqual(ending, { visible: false, text: '' });
 });
 
 test('experiment identities are deterministic and unique', () => {
@@ -67,6 +83,31 @@ test('frontier surface responds to pointer pressure without changing identity', 
 
   assert.equal(bent.id, quiet.id);
   assert.ok(bent.z > quiet.z + 0.08);
+});
+
+test('surface gradient points every settled experiment uphill', () => {
+  assert.equal(typeof motion.surfaceGradient, 'function');
+
+  const u = -0.18;
+  const v = 0.31;
+  const gradient = motion.surfaceGradient(u, v);
+  const height = motion.surfaceHeight(u, v);
+  const uphill = motion.surfaceHeight(
+    u + gradient.u * 0.02,
+    v + gradient.v * 0.02,
+  );
+
+  assert.ok(Math.abs(Math.hypot(gradient.u, gradient.v) - 1) < 0.0001);
+  assert.ok(uphill > height);
+});
+
+test('surface alignment blends in on the topology and releases before collapse', () => {
+  assert.equal(typeof motion.surfaceAlignmentFor, 'function');
+  assert.equal(motion.surfaceAlignmentFor(0.2), 0);
+  assert.equal(motion.surfaceAlignmentFor(TIMELINE.orbit), 0);
+  assert.ok(motion.surfaceAlignmentFor(TIMELINE.gradient) > 0.99);
+  assert.ok(motion.surfaceAlignmentFor(TIMELINE.pressure) > 0.99);
+  assert.equal(motion.surfaceAlignmentFor(TIMELINE.compression), 0);
 });
 
 test('compression moves experiments toward the origin', () => {
