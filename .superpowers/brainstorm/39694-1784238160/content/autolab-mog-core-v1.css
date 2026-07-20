@@ -241,9 +241,9 @@ h1 em { color: var(--mint-deep); font-weight: 400; }
   min-height: 100svh;
   padding: clamp(110px,14vh,170px) clamp(24px,5vw,78px);
   display: grid;
-  grid-template-columns: minmax(0,.82fr) minmax(520px,1fr);
+  grid-template-columns: minmax(0,.72fr) minmax(520px,1.18fr);
   align-items: center;
-  gap: clamp(60px,9vw,150px);
+  gap: clamp(56px,6vw,96px);
   border-top: 1px solid var(--line);
   background: var(--paper);
 }
@@ -336,7 +336,7 @@ h1 em { color: var(--mint-deep); font-weight: 400; }
 .onboarding-panel pre {
   overflow-x: auto;
   color: #b8c1bc;
-  font: 400 11px/2.1 "IBM Plex Mono",monospace;
+  font: 400 13px/1.95 "IBM Plex Mono",monospace;
   white-space: pre;
 }
 .onboarding-panel pre span { color: var(--mint); }
@@ -458,7 +458,7 @@ a:focus-visible,button:focus-visible { outline: 2px solid var(--mint-deep); outl
   .get-started { min-height: auto; padding: 110px 18px 130px; grid-template-columns: 1fr; gap: 54px; }
   .get-started-copy h2 { font-size: clamp(52px,14vw,72px); }
   .onboarding-panel { min-height: 230px; padding: 26px 20px; }
-  .onboarding-panel pre { font-size: 9px; }
+  .onboarding-panel pre { font-size: 11px; }
   .concept-label { display: none; }
   .comparison-links { left: 50%; transform: translateX(-50%); }
 }

@@ -94,7 +94,19 @@ test('navigation uses one centered stage and onboarding has responsive styling',
   assert.match(css, /\.nav-center\s*\{[^}]*grid-area:/s);
   assert.match(css, /\.topbar\.has-telemetry\s+\.nav-links/s);
   assert.match(css, /\.get-started\s*\{[^}]*display:\s*grid/s);
+  assert.match(
+    css,
+    /\.get-started\s*\{[^}]*grid-template-columns:\s*minmax\(0,\.72fr\)\s+minmax\(520px,1\.18fr\)/s,
+  );
   assert.match(css, /\.onboarding-tabs\s*\{/s);
+  assert.match(
+    css,
+    /\.onboarding-panel pre\s*\{[^}]*font:\s*400 13px\/1\.95 "IBM Plex Mono",monospace/s,
+  );
+  assert.match(
+    css,
+    /@media \(max-width:\s*900px\)[\s\S]*\.onboarding-panel pre\s*\{\s*font-size:\s*11px;\s*\}/s,
+  );
   assert.match(css, /:focus-visible/s);
   assert.match(
     scene,
