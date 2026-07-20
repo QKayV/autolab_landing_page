@@ -17,9 +17,11 @@
   <header class="topbar" id="topbar">
     <div class="nav-shell">
       <a href="#top" class="wordmark">autolab<span class="brand-caret" id="brand-caret"></span></a>
-      <nav class="nav-links" aria-label="Main navigation"><a href="#research-run">How it works</a><a href="#outro">Research</a><a href="#outro">Docs</a></nav>
-      <span class="nav-status" aria-hidden="true"><i></i><span class="nav-status-copy"></span></span>
-      <a class="nav-cta" href="#outro">Book a demo <span>↗</span></a>
+      <div class="nav-center">
+        <nav class="nav-links" aria-label="Main navigation"><a href="#research-run">How it works</a><a href="#outro">Research</a><a href="#get-started">Docs</a></nav>
+        <span class="nav-status" aria-hidden="true"><i></i><span class="nav-status-copy"></span></span>
+      </div>
+      <a class="nav-cta" href="https://calendar.superhuman.com/book/11Wx5q95SPgTTclPo4/KrRGA" target="_blank" rel="noopener">Book a demo <span>↗</span></a>
     </div>
   </header>
 
@@ -29,8 +31,8 @@
         <div class="hero-pill">The autoresearch platform</div>
         <h1>Supercharge your <em>research.</em></h1>
         <p class="hero-sub">A thousand experiments in parallel, on your compute, scored against your evals. State of the art with the team and budget you already have.</p>
-        <div class="hero-actions"><a class="button primary" href="#research-run">Start researching <span>↗</span></a><a class="button" href="#outro">Book a demo <span>→</span></a></div>
-        <div class="hero-install">$ curl -fsSL app.autolab.ai/install.sh | sh</div>
+        <div class="hero-actions"><a class="button primary" href="#get-started">Start researching <span>↗</span></a><a class="button" href="https://calendar.superhuman.com/book/11Wx5q95SPgTTclPo4/KrRGA" target="_blank" rel="noopener">Book a demo <span>→</span></a></div>
+        <a class="hero-install" href="#get-started">$ curl -fsSL app.autolab.ai/install.sh | sh <span>↓</span></a>
       </div>
       <div>
         <div class="terminal">
@@ -99,6 +101,32 @@
       </div>
     </section>
 
+    <section class="get-started" id="get-started">
+      <div class="get-started-copy">
+        <span class="mono-label eyebrow-mint">From goal to first run</span>
+        <h2>Start this <em>afternoon.</em></h2>
+        <p>Install, point it at your eval, go. Or meet Autolab inside the coding agent you already use.</p>
+        <span class="infra-note">Your infra or ours. Code, data, and weights stay in your network.</span>
+      </div>
+      <div class="onboarding-console" data-onboarding-tabs>
+        <div class="onboarding-head"><span>autolab / initialize</span><i></i></div>
+        <div class="onboarding-tabs" role="tablist" aria-label="Install Autolab">
+          <button id="tab-cli" role="tab" aria-selected="true" aria-controls="panel-cli" tabindex="0">CLI</button>
+          <button id="tab-claude" role="tab" aria-selected="false" aria-controls="panel-claude" tabindex="-1">Claude Code</button>
+          <button id="tab-codex" role="tab" aria-selected="false" aria-controls="panel-codex" tabindex="-1">Codex</button>
+        </div>
+        <div class="onboarding-panel" id="panel-cli" role="tabpanel" aria-labelledby="tab-cli"><pre><span>$</span> curl -fsSL app.autolab.ai/install.sh | sh
+<span>$</span> autolab init   <i># point it at the eval script that prints your metric</i>
+<span>$</span> autolab start  <i># the agents begin. watch or walk away.</i></pre></div>
+        <div class="onboarding-panel" id="panel-claude" role="tabpanel" aria-labelledby="tab-claude" hidden><pre><span>$</span> autolab install claude-code
+<i>then, inside Claude Code:</i>
+<span>&gt;</span> use /autolab to run experiments on this repo</pre></div>
+        <div class="onboarding-panel" id="panel-codex" role="tabpanel" aria-labelledby="tab-codex" hidden><pre><span>$</span> autolab install codex
+<i>then, inside Codex:</i>
+<span>&gt;</span> queue autolab experiments against eval.py</pre></div>
+      </div>
+    </section>
+
     <section class="a3-outro" id="outro"><div><span class="mono-label eyebrow-mint">Chaos in. Evidence out.</span><h2>Research that collapses into <em>proof.</em></h2><p>Every experiment stays reproducible. Every winning change stays reviewable. Every merge remains yours to approve.</p><a class="button primary" href="#top">Run Autolab <span>↗</span></a></div></section>
   </main>
 
@@ -108,5 +136,6 @@
   <div class="concept-label variant-label"><strong>A3-S</strong> IMPLODE → SLINGSHOT</div>
 
   <script type="module" src="autolab-mog-a3-scene-v1.js"></script>
+  <script type="module" src="autolab-mog-a3-onboarding-v1.js"></script>
 </body>
 </html>

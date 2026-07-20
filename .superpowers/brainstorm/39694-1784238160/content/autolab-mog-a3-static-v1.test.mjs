@@ -32,6 +32,21 @@ for (const variant of variants) {
       html,
       /class="nav-status" aria-hidden="true"><i><\/i><span class="nav-status-copy"><\/span><\/span>/,
     );
+    assert.match(html, /class="nav-center"/);
+    assert.match(html, /id="get-started"/);
+    assert.match(html, /role="tablist"/);
+    assert.equal((html.match(/role="tab"/g) || []).length, 3);
+    assert.equal((html.match(/role="tabpanel"/g) || []).length, 3);
+    assert.match(html, /href="#get-started"[^>]*>Start researching/);
+    assert.match(html, /href="#get-started"[^>]*>\$ curl -fsSL/);
+    assert.match(html, /curl -fsSL app\.autolab\.ai\/install\.sh \| sh/);
+    assert.match(html, /autolab install claude-code/);
+    assert.match(html, /autolab install codex/);
+    assert.match(html, /autolab-mog-a3-onboarding-v1\.js/);
+    assert.match(
+      html,
+      /https:\/\/calendar\.superhuman\.com\/book\/11Wx5q95SPgTTclPo4\/KrRGA/,
+    );
     assert.doesNotMatch(html, /<iframe/i);
     for (const linkedVariant of variants) {
       assert.match(
