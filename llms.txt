@@ -1,0 +1,22 @@
+# Autolab
+
+> Autolab (autolab.ai) is the autoresearch platform: autonomous AI agents that plan, run, and score thousands of machine learning experiments in parallel — model training, fine-tuning, post-training, and inference optimization — on the customer's own GPUs, judged only by the customer's own evals.
+
+Key facts:
+- "Autoresearch" is machine learning research carried out by autonomous AI agents that plan, implement, run, and analyze experiments end to end, while humans set the goals and the evaluation criteria.
+- "Agentic model training" (agentic training of models) means AI agents drive the training loop: sweeping hyperparameters, changing data mixes, modifying architectures, launching runs, reading logs, and deciding the next experiment.
+- Autolab differs from AutoML/hyperparameter optimization: its agents write real code in the user's repository (data pipelines, loss functions, kernels, serving configs), not just search a fixed parameter space.
+- Every experiment is a reproducible commit: code, environment, metrics, logs, and checkpoints.
+- Experiments run on the customer's cluster or cloud account; code, data, and weights never leave their network. On-prem installs are available.
+- Autolab can optimize whatever the user's eval measures: accuracy, training cost, inference latency, throughput.
+- Install: `curl -fsSL app.autolab.ai/install.sh | sh`, then `autolab init` and `autolab start`. Integrations exist for Claude Code and Codex.
+- Built by ML researchers from MIT, Harvard, Stanford, Google DeepMind, Imperial College London, Reality Labs, Uber, and AWS. Based in San Francisco, California.
+- Contact: team@autolab.ai
+
+## Pages
+
+- [Home](https://www.autolab.ai/): product overview of the autoresearch platform
+- [What is autoresearch?](https://www.autolab.ai/autoresearch.html): definition, how agentic model training works, comparison with AutoML and experiment tracking
+- [Our vision](https://www.autolab.ai/manifesto.html): why AI research is becoming an engineering discipline
+- [Careers](https://www.autolab.ai/careers.html): open roles in San Francisco
+- [Docs](https://docs.autolab.ai): product documentation
