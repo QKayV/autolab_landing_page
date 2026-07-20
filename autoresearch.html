@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<title>What Is Autoresearch? Agentic AI Model Training, Explained · Autolab</title>
+<meta name="description" content="Autoresearch is AI agents running the ML research loop: planning experiments, writing code, training models, and iterating on results. How it works, how it differs from AutoML, and how to start.">
+<link rel="canonical" href="https://www.autolab.ai/autoresearch.html">
+<meta property="og:title" content="What Is Autoresearch? Agentic AI Model Training, Explained">
+<meta property="og:description" content="Autoresearch is AI agents running the ML research loop: planning experiments, writing code, training models, and iterating on results — with humans setting the goals.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://www.autolab.ai/autoresearch.html">
+<meta property="og:site_name" content="Autolab">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://www.autolab.ai/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Autolab — the autoresearch platform for agentic AI model training">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="What Is Autoresearch? Agentic AI Model Training, Explained">
+<meta name="twitter:description" content="AI agents running the ML research loop: planning experiments, writing code, training models, and iterating on results.">
+<meta name="twitter:image" content="https://www.autolab.ai/og.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230A0A0A'/%3E%3Ctext x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' font-family='monospace' font-weight='600' font-size='22' fill='%2334d399'%3E/%3C/text%3E%3C/svg%3E">
+<link rel="icon" href="/favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Article",
+      "@id": "https://www.autolab.ai/autoresearch.html#article",
+      "headline": "What Is Autoresearch? Agentic AI Model Training, Explained",
+      "description": "Autoresearch is AI agents running the machine learning research loop: planning experiments, writing code, training models, and iterating on results, with humans setting the goals.",
+      "author": { "@type": "Organization", "name": "Autolab", "url": "https://www.autolab.ai/" },
+      "publisher": { "@id": "https://www.autolab.ai/#organization" },
+      "datePublished": "2026-07-20",
+      "dateModified": "2026-07-20",
+      "mainEntityOfPage": "https://www.autolab.ai/autoresearch.html",
+      "image": "https://www.autolab.ai/og.png",
+      "about": { "@id": "https://www.autolab.ai/autoresearch.html#term" }
+    },
+    {
+      "@type": "DefinedTerm",
+      "@id": "https://www.autolab.ai/autoresearch.html#term",
+      "name": "Autoresearch",
+      "description": "The use of autonomous AI agents to run the machine learning research loop — proposing experiments, writing code, training and evaluating models, and deciding what to try next — while humans set the goals and evaluation criteria.",
+      "url": "https://www.autolab.ai/autoresearch.html"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Autolab", "item": "https://www.autolab.ai/" },
+        { "@type": "ListItem", "position": 2, "name": "What is autoresearch?", "item": "https://www.autolab.ai/autoresearch.html" }
+      ]
+    }
+  ]
+}
+</script>
+<style>
+:root{--mint:#2FCE96;--mint-deep:#0C8A5F;--paper:#F7F5F0;--ink:#141414}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--paper);font-family:'IBM Plex Sans',sans-serif;color:#1A1916;-webkit-font-smoothing:antialiased}
+::selection{background:rgba(47,206,150,.30)}
+.inner{max-width:1240px;margin:0 auto;padding:0 32px}
+.nav{display:flex;justify-content:space-between;align-items:center;font:400 12.5px/1 'IBM Plex Mono',monospace;color:#6E6A5E;max-width:1240px;margin:0 auto;height:58px;padding:0 32px}
+.topbar{position:sticky;top:0;z-index:50;background:rgba(247,245,240,.97);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);border-bottom:1px solid #DCD8CA}
+.wordmark{font-weight:500;font-size:15px;color:var(--ink)}
+.navlinks{display:flex;gap:28px;align-items:center}
+.navlinks a{color:inherit;text-decoration:none}
+a:focus-visible,.btn:focus-visible{outline:2px solid var(--mint-deep);outline-offset:3px;border-radius:3px}
+.navbtn{border:1px solid #B9B4A4;padding:8px 16px;border-radius:3px;color:var(--ink)}
+.wordlink{color:inherit;text-decoration:none}
+.eyebrow{font:500 13px/1 'IBM Plex Mono',monospace;letter-spacing:.09em;color:#8A857A;margin-bottom:16px}
+.pageh1{font:500 clamp(34px,4.2vw,54px)/1.12 'IBM Plex Serif',serif;letter-spacing:-.01em;margin:10px 0 22px;max-width:20ch}
+h2{font:500 clamp(24px,2.6vw,34px)/1.2 'IBM Plex Serif',serif;letter-spacing:-.012em;margin:56px 0 16px}
+h2 em{font-style:italic;font-weight:400;color:var(--mint-deep)}
+h3{font:500 19px/1.3 'IBM Plex Serif',serif;margin:28px 0 8px}
+.body{font:400 16px/1.7 'IBM Plex Sans',sans-serif;color:#3B3934;max-width:68ch;margin-bottom:16px}
+.body a{color:var(--mint-deep)}
+.lede{font:400 19px/1.65 'IBM Plex Sans',sans-serif;color:#3B3934;max-width:62ch;margin-bottom:16px}
+.deffn{background:#FCFBF7;border:1px solid #DCD8CA;border-left:3px solid var(--mint);border-radius:6px;padding:22px 26px;max-width:760px;margin:26px 0 8px}
+.deffn p{font:400 16.5px/1.65 'IBM Plex Serif',serif;color:#1A1916}
+.deffn .dt{font:500 11.5px/1 'IBM Plex Mono',monospace;letter-spacing:.14em;color:#8A857A;margin-bottom:10px}
+ul.plain{list-style:none;margin:0 0 16px;padding:0;max-width:68ch}
+ul.plain li{font:400 15.5px/1.65 'IBM Plex Sans',sans-serif;color:#3B3934;padding:5px 0 5px 20px;position:relative}
+ul.plain li::before{content:'';position:absolute;left:2px;top:14px;width:5px;height:5px;background:var(--mint-deep)}
+.cmp{width:100%;max-width:820px;border-collapse:collapse;margin:20px 0 8px;font:400 14.5px/1.55 'IBM Plex Sans',sans-serif}
+.cmp th{font:500 12px/1.3 'IBM Plex Mono',monospace;letter-spacing:.08em;color:#8A857A;text-align:left;padding:10px 14px;border-bottom:1px solid #DCD8CA}
+.cmp td{padding:12px 14px;border-bottom:1px solid #E7E3D5;color:#3B3934;vertical-align:top}
+.cmp td:first-child{font-weight:500;color:var(--ink);white-space:nowrap}
+.tablewrap{overflow-x:auto}
+.btn{font:500 14.5px/1 'IBM Plex Sans',sans-serif;background:var(--mint);color:#06301F;padding:15px 26px;border-radius:3px;text-decoration:none;display:inline-block}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid #B9B4A4}
+.ctarow{display:flex;gap:14px;align-items:center;flex-wrap:wrap;margin:34px 0 10px}
+.install{font:400 13px/1 'IBM Plex Mono',monospace;color:#6E6A5E;margin-top:8px}
+.footer{display:flex;justify-content:space-between;align-items:center;padding:26px 0 40px;border-top:1px solid #DDD8C9;font:400 12px/1 'IBM Plex Mono',monospace;color:#8A857A;margin-top:80px}
+.footer .fl{display:flex;gap:22px}
+.footer a{color:inherit;text-decoration:none}
+.footer a:hover{color:var(--mint-deep)}
+@media (max-width:640px){.inner{padding:0 20px}.nav{padding:0 20px}}
+</style>
+</head>
+<body>
+<header class="topbar"><nav class="nav" aria-label="Main"><a class="wordlink" href="index.html"><div class="wordmark">autolab▮</div></a><div class="navlinks"><a class="navbtn" href="index.html">← back to autolab</a></div></nav></header>
+<div class="inner">
+<article style="padding-top:70px">
+  <div class="eyebrow">AUTORESEARCH, EXPLAINED</div>
+  <h1 class="pageh1">What is autoresearch?</h1>
+
+  <p class="lede">Autoresearch is the use of autonomous AI agents to run the machine learning research loop itself: proposing experiments, writing the code, training and evaluating models, and deciding what to try next — while humans set the goals.</p>
+
+  <div class="deffn">
+    <div class="dt">DEFINITION</div>
+    <p>autoresearch <em>(n.)</em> — machine learning research carried out by autonomous AI agents that plan, implement, run, and analyze experiments end to end, with humans specifying the objective and the evaluation that defines success.</p>
+  </div>
+
+  <h2>Why it exists</h2>
+  <p class="body">Modern ML progress is bottlenecked by experiment throughput, not ideas. A researcher can hold ten hypotheses in their head but can only babysit a handful of training runs at a time; meanwhile the GPUs they aren't using sit idle. The best results now come from systematic experimentation at scale — the labs that win run the most informative experiments per unit of compute.</p>
+  <p class="body">Autoresearch closes that gap. AI agents are already good at writing training code; given structured feedback about what happened during a run — losses, gradients, evals, logs — they can also decide what to try next. That turns one researcher's goal into hundreds of parallel, self-correcting experiments.</p>
+
+  <h2>How agentic model training works</h2>
+  <p class="body">Agentic training of models means the agents drive the full training loop, not just a search over hyperparameters. In a typical autoresearch run:</p>
+  <ul class="plain">
+    <li><b>You state the goal.</b> Beat this baseline, cut this latency, test these three ideas — plus the eval script that defines the metric.</li>
+    <li><b>Agents plan the experiments.</b> They read the repository and propose concrete changes: learning-rate sweeps, data mixes, architecture tweaks, tokenizers, optimizers, quantization and serving configs.</li>
+    <li><b>Every experiment runs as a real commit.</b> Code, environment, metrics, logs, and checkpoints are captured, so every result is reproducible and inspectable.</li>
+    <li><b>Results steer the next round.</b> Failed runs are diagnosed (NaN losses, OOMs, divergence) and retried or pruned; winners are scaled up and merged.</li>
+    <li><b>Nothing ships unless the metric moves.</b> The eval you wrote is the only judge.</li>
+  </ul>
+
+  <h2>Autoresearch vs. AutoML vs. experiment tracking</h2>
+  <div class="tablewrap">
+  <table class="cmp">
+    <thead><tr><th>APPROACH</th><th>WHAT IT DOES</th><th>WHAT IT CAN'T DO</th></tr></thead>
+    <tbody>
+      <tr><td>Experiment tracking</td><td>Logs metrics and artifacts from runs a human launches; dashboards for humans to analyze.</td><td>Doesn't decide, launch, or fix anything. The human is still the loop.</td></tr>
+      <tr><td>AutoML / HPO</td><td>Searches a predefined space — hyperparameters, sometimes architectures — with fixed strategies.</td><td>Can't write new code, change the data pipeline, or pursue an open-ended research goal.</td></tr>
+      <tr><td>Autoresearch</td><td>Agents write real code in your repo, run and score experiments on your infrastructure, and iterate toward a goal.</td><td>Doesn't replace judgment: humans still choose the goals and the evals that define success.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h2>What an autoresearch platform provides</h2>
+  <p class="body">Running a thousand agents against one goal takes more than a prompt. An autoresearch platform like <a href="index.html">Autolab</a> supplies the infrastructure layer:</p>
+  <ul class="plain">
+    <li><b>Orchestration</b> — scheduling thousands of concurrent experiments across heterogeneous GPU fleets, keeping no GPU idle.</li>
+    <li><b>Telemetry and context</b> — logging everything that happens during training and compressing it into the structured context agents need to make good decisions.</li>
+    <li><b>Reproducibility</b> — every experiment pinned as a commit: code, environment, data, metrics, checkpoints.</li>
+    <li><b>Evaluation discipline</b> — every change scored against your evals, with a readout that ranks what worked and why.</li>
+    <li><b>Security</b> — everything runs on your cluster or your cloud account; code, data, and weights never leave your network.</li>
+  </ul>
+
+  <h2>What teams use it for</h2>
+  <p class="body">Autoresearch applies wherever a number needs to move and experiments are the way to move it: pre-training and fine-tuning of language models, post-training recipes (SFT, RL, distillation), computer vision and robotics model training, and inference optimization — quantization, kernels, and serving configs tuned for latency and cost.</p>
+
+  <h2>Start running autoresearch <em>today</em></h2>
+  <p class="body">Autolab installs in one line, points at the eval script that prints your metric, and starts the agents on your own compute.</p>
+  <div class="ctarow">
+    <a class="btn" href="https://calendar.superhuman.com/book/11Wx5q95SPgTTclPo4/KrRGA" target="_blank" rel="noopener">Book a demo</a>
+    <a class="btn ghost" href="index.html">See the platform</a>
+  </div>
+  <div class="install">$ curl -fsSL app.autolab.ai/install.sh | sh</div>
+</article>
+</div>
+<div class="inner">
+<div class="footer"><span>autolab▮ © 2026</span><div class="fl"><a href="index.html">autolab</a><a href="manifesto.html">vision</a><a href="https://docs.autolab.ai">docs</a><a href="careers.html">careers</a><a href="mailto:team@autolab.ai">contact</a></div></div>
+</div>
+</body></html>
