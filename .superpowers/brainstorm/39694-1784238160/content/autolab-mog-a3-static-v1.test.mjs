@@ -38,6 +38,7 @@ for (const variant of variants) {
     assert.equal((html.match(/role="tab"/g) || []).length, 3);
     assert.equal((html.match(/role="tabpanel"/g) || []).length, 3);
     assert.match(html, /href="#get-started"[^>]*>Start researching/);
+    assert.match(html, /href="#get-started"[^>]*>Run Autolab/);
     assert.match(html, /href="#get-started"[^>]*>\$ curl -fsSL/);
     assert.match(html, /curl -fsSL app\.autolab\.ai\/install\.sh \| sh/);
     assert.match(html, /autolab install claude-code/);
