@@ -84,6 +84,24 @@ test('navigation telemetry is hidden by default and driven by the motion timelin
   assert.match(scene, /classList\.toggle\('is-live', telemetry\.visible\)/);
 });
 
+test('navigation uses one centered stage and onboarding has responsive styling', async () => {
+  const [css, scene] = await Promise.all([
+    readFile(new URL('./autolab-mog-core-v1.css', import.meta.url), 'utf8'),
+    readFile(new URL('./autolab-mog-a3-scene-v1.js', import.meta.url), 'utf8'),
+  ]);
+
+  assert.match(css, /\.nav-shell\s*\{[^}]*display:\s*grid/s);
+  assert.match(css, /\.nav-center\s*\{[^}]*grid-area:/s);
+  assert.match(css, /\.topbar\.has-telemetry\s+\.nav-links/s);
+  assert.match(css, /\.get-started\s*\{[^}]*display:\s*grid/s);
+  assert.match(css, /\.onboarding-tabs\s*\{/s);
+  assert.match(css, /:focus-visible/s);
+  assert.match(
+    scene,
+    /classList\.toggle\('has-telemetry', telemetry\.visible\)/,
+  );
+});
+
 test('settled vectors consume the topology gradient for their heading', async () => {
   const scene = await readFile(
     new URL('./autolab-mog-a3-scene-v1.js', import.meta.url),

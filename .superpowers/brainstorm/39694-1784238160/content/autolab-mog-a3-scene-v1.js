@@ -425,6 +425,7 @@ function updateMetrics() {
 
 function updateNavigationTelemetry() {
   const telemetry = navigationTelemetryFor(progress);
+  topbar.classList.toggle('has-telemetry', telemetry.visible);
   navStatus.classList.toggle('is-live', telemetry.visible);
   navStatus.setAttribute('aria-hidden', String(!telemetry.visible));
   navStatusCopy.textContent = telemetry.text;
