@@ -101,10 +101,12 @@ test('surface gradient points every settled experiment uphill', () => {
   assert.ok(uphill > height);
 });
 
-test('surface alignment blends in on the topology and releases before collapse', () => {
+test('surface headings stay tangential until experiments are mostly landed', () => {
   assert.equal(typeof motion.surfaceAlignmentFor, 'function');
   assert.equal(motion.surfaceAlignmentFor(0.2), 0);
   assert.equal(motion.surfaceAlignmentFor(TIMELINE.orbit), 0);
+  assert.equal(motion.surfaceAlignmentFor(0.45), 0);
+  assert.ok(motion.surfaceAlignmentFor(0.48) > 0);
   assert.ok(motion.surfaceAlignmentFor(TIMELINE.gradient) > 0.99);
   assert.ok(motion.surfaceAlignmentFor(TIMELINE.pressure) > 0.99);
   assert.equal(motion.surfaceAlignmentFor(TIMELINE.compression), 0);

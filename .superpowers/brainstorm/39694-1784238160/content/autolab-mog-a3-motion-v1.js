@@ -129,8 +129,7 @@ export function surfaceGradient(
 
 export function surfaceAlignmentFor(progress) {
   const settled = ease(
-    (progress - (TIMELINE.orbit + 0.03)) /
-      (TIMELINE.gradient - TIMELINE.orbit - 0.03),
+    (progress - 0.46) / (TIMELINE.gradient - 0.46),
   );
   const released = ease(
     (progress - TIMELINE.pressure) /
