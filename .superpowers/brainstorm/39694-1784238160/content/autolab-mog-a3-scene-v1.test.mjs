@@ -39,7 +39,10 @@ function fakeElement() {
   };
 }
 
-function installSceneEnvironment({ reducedMotion = false } = {}) {
+function installSceneEnvironment({
+  reducedMotion = false,
+  firstFrameId = 1,
+} = {}) {
   const originals = new Map(
     GLOBAL_KEYS.map(key => [key, Object.getOwnPropertyDescriptor(globalThis, key)]),
   );
@@ -48,7 +51,7 @@ function installSceneEnvironment({ reducedMotion = false } = {}) {
   const runHeight = 4400;
   let runTop = 1800;
   let now = 1000;
-  let nextFrameId = 1;
+  let nextFrameId = firstFrameId;
   let intersectionCallback;
   let intersectionOptions;
   let observerCount = 0;
@@ -349,6 +352,39 @@ test('research canvas frames run only while the scene is visible', async () => {
     animated.intersect(false);
   } finally {
     animated.restore();
+  }
+});
+
+test('RAF handle zero stays deduplicated across visible updates', async () => {
+  const zeroFrame = installSceneEnvironment({ firstFrameId: 0 });
+  try {
+    await zeroFrame.load();
+    zeroFrame.intersect(true);
+    assert.deepEqual([...zeroFrame.frames.keys()], [0]);
+
+    zeroFrame.intersect(true);
+    assert.deepEqual([...zeroFrame.frames.keys()], [0]);
+    zeroFrame.dispatch('scroll');
+    assert.deepEqual([...zeroFrame.frames.keys()], [0]);
+    zeroFrame.dispatch('resize');
+    assert.deepEqual([...zeroFrame.frames.keys()], [0]);
+  } finally {
+    zeroFrame.restore();
+  }
+});
+
+test('RAF handle zero is cancelled on exit', async () => {
+  const zeroFrame = installSceneEnvironment({ firstFrameId: 0 });
+  try {
+    await zeroFrame.load();
+    zeroFrame.intersect(true);
+    assert.deepEqual([...zeroFrame.frames.keys()], [0]);
+
+    zeroFrame.intersect(false);
+    assert.deepEqual(zeroFrame.cancelledFrames, [0]);
+    assert.equal(zeroFrame.frames.size, 0);
+  } finally {
+    zeroFrame.restore();
   }
 });
 

@@ -65,7 +65,7 @@ let pointerMode = 'none';
 let endingProgress = 0;
 let variantState = {};
 let visible = false;
-let frameId = 0;
+let frameId = null;
 let lastFrame = 0;
 let launch = { x: 0, y: 0 };
 let origin = { x: width * 0.7, y: height * 0.58 };
@@ -950,7 +950,7 @@ function drawParticle(particle, target) {
 }
 
 function scheduleFrame() {
-  if (!visible || frameId) return;
+  if (!visible || frameId !== null) return;
   if (reducedMotion) {
     frame(performance.now());
     return;
@@ -959,13 +959,13 @@ function scheduleFrame() {
 }
 
 function stopFrame() {
-  if (!frameId) return;
+  if (frameId === null) return;
   cancelAnimationFrame(frameId);
-  frameId = 0;
+  frameId = null;
 }
 
 function frame(now) {
-  frameId = 0;
+  frameId = null;
   if (!visible) return;
   lastFrame = now;
   if (ending === 'loop' && phase === 'ending') {
