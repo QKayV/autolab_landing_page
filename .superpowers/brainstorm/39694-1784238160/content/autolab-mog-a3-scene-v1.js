@@ -64,6 +64,9 @@ let caretDetached = false;
 let pointerMode = 'none';
 let endingProgress = 0;
 let variantState = {};
+let visible = false;
+let frameId = 0;
+let lastFrame = 0;
 let launch = { x: 0, y: 0 };
 let origin = { x: width * 0.7, y: height * 0.58 };
 let result = { x: width * 0.62, y: height * 0.54 };
@@ -946,7 +949,25 @@ function drawParticle(particle, target) {
   drawArrow(particle, target.alpha, color, target.pose.scale);
 }
 
+function scheduleFrame() {
+  if (!visible || frameId) return;
+  if (reducedMotion) {
+    frame(performance.now());
+    return;
+  }
+  frameId = requestAnimationFrame(frame);
+}
+
+function stopFrame() {
+  if (!frameId) return;
+  cancelAnimationFrame(frameId);
+  frameId = 0;
+}
+
 function frame(now) {
+  frameId = 0;
+  if (!visible) return;
+  lastFrame = now;
   if (ending === 'loop' && phase === 'ending') {
     syncLaunchPoint();
     updateLoopPathGeometry();
@@ -972,7 +993,7 @@ function frame(now) {
       drawParticle(particle, targetForParticle(particle, now));
     }
   }
-  requestAnimationFrame(frame);
+  if (!reducedMotion) scheduleFrame();
 }
 
 function getState() {
@@ -999,16 +1020,30 @@ function getState() {
         (progress - TIMELINE.gradient) / (TIMELINE.pressure - TIMELINE.gradient),
       )),
     reducedMotion,
+    visible,
+    lastFrame,
   };
 }
 
 window.__AUTOLAB_A3__ = Object.freeze({ getState });
 
+new IntersectionObserver(entries => {
+  const nextVisible = entries[0]?.isIntersecting ?? false;
+  if (nextVisible === visible) return;
+  visible = nextVisible;
+  if (visible) scheduleFrame();
+  else stopFrame();
+}, { rootMargin: '0px' }).observe(run);
+
 addEventListener('resize', () => {
   resize();
   updateScroll();
+  scheduleFrame();
 });
-addEventListener('scroll', updateScroll, { passive: true });
+addEventListener('scroll', () => {
+  updateScroll();
+  scheduleFrame();
+}, { passive: true });
 addEventListener('pointermove', event => {
   pointer.x = event.clientX;
   pointer.y = event.clientY;
@@ -1020,4 +1055,3 @@ addEventListener('pointermove', event => {
 
 resize();
 updateScroll();
-requestAnimationFrame(frame);
