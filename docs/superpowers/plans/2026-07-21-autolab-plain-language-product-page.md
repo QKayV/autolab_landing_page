@@ -1306,7 +1306,7 @@ function initWatchdogScene() {
     visible = entries[0]?.isIntersecting ?? false;
     if (visible) start();
     else stop();
-  }, { rootMargin: '120px 0px', threshold: .05 }).observe(feature);
+  }, { rootMargin: '0px', threshold: .05 }).observe(feature);
 
   window.__AUTOLAB_WATCHDOG__ = Object.freeze({
     getState() {
