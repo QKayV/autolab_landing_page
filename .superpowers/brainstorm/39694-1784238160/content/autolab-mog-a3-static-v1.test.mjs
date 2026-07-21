@@ -90,15 +90,15 @@ test('rebirth hero leads with model optimization and restores the three-part spi
   assert.doesNotMatch(html, />The autoresearch platform</i);
 });
 
-test('rebirth names each vector and the complete model improvement loop', async () => {
+test('rebirth moves directly into the complete model improvement loop', async () => {
   const html = await readFile(
     new URL('./autolab-mog-a3-rebirth-v1.html', import.meta.url),
     'utf8',
   );
   const text = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
 
-  assert.match(text, /One goal\. A thousand experiments\./);
-  assert.match(text, /Every vector is a real experiment\./);
+  assert.doesNotMatch(html, /class="a3-handoff"/);
+  assert.doesNotMatch(text, /One goal\. A thousand experiments\./);
   assert.match(text, /Autolab \/ model improvement loop/);
   for (const headline of [
     'Set the goal.',

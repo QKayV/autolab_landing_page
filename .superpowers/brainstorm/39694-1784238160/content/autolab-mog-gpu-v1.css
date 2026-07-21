@@ -16,10 +16,11 @@
 }
 
 .gpu-stage {
-  --gpu-inset: 38px;
+  --gpu-scale-x: .947;
+  --gpu-scale-y: .917;
   --gpu-radius: 26px;
   position: absolute;
-  inset: var(--gpu-inset);
+  inset: 0;
   overflow: hidden;
   border: 1px solid rgba(47,206,150,.28);
   border-radius: var(--gpu-radius);
@@ -29,7 +30,9 @@
     #070a08;
   color: var(--paper);
   box-shadow: 0 28px 90px rgba(20,20,20,.22),0 2px 0 rgba(247,245,240,.05) inset;
-  will-change: inset,border-radius;
+  transform: translateZ(0) scale(var(--gpu-scale-x),var(--gpu-scale-y));
+  transform-origin: center;
+  will-change: transform,border-radius;
 }
 
 .gpu-stage::before {
@@ -186,7 +189,7 @@
 
 @media (max-width: 900px) {
   .gpu-efficiency { height: 300vh; min-height: 2100px; }
-  .gpu-stage { --gpu-inset: 10px; --gpu-radius: 19px; }
+  .gpu-stage { --gpu-scale-x: .95; --gpu-scale-y: .975; --gpu-radius: 19px; }
   .gpu-copy { top: 82px; left: 18px; right: 18px; }
   .gpu-copy .mono-label { margin-bottom: 15px; }
   .gpu-copy h2 { max-width: 520px; font-size: clamp(48px,13.5vw,66px); }

@@ -457,6 +457,23 @@ git commit -m "feat: turn experiments into a live GPU fabric"
 
 ---
 
+### Task 3A: Apply GPU Routing Feedback
+
+**Files:**
+- Modify: `.superpowers/brainstorm/39694-1784238160/content/autolab-mog-a3-rebirth-v1.html`
+- Modify: `.superpowers/brainstorm/39694-1784238160/content/autolab-mog-gpu-motion-v1.js`
+- Modify: `.superpowers/brainstorm/39694-1784238160/content/autolab-mog-gpu-scene-v1.js`
+- Modify: `.superpowers/brainstorm/39694-1784238160/content/autolab-mog-gpu-v1.css`
+- Modify: the corresponding motion and static contract tests.
+
+- [x] Remove the full `One goal. A thousand experiments.` interstitial from Rebirth.
+- [x] Replace the dense slot grid with twelve legible GPUs receiving four experiments each.
+- [x] Draw faint route guides, brighter active trails, per-GPU `FLOW n/4` states, and cumulative mint luminance.
+- [x] Ease rendered progress toward scroll position and replace layout-changing stage insets with transform-only opening and closing.
+- [x] Verify that scroll causes zero canvas resizes and inspect desktop and mobile phases in Chrome.
+
+---
+
 ### Task 4: Tighten Onboarding and Closing Copy
 
 **Files:**

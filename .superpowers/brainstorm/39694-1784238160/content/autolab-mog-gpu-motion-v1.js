@@ -4,6 +4,9 @@ export const GPU_TIMELINE = Object.freeze({
   pruning: 0.72,
 });
 
+export const GPU_NODE_COUNT = 12;
+export const EXPERIMENTS_PER_GPU = 4;
+
 const clamp = value => Math.max(0, Math.min(1, value));
 const ease = value => 1 - Math.pow(1 - clamp(value), 3);
 
@@ -36,6 +39,61 @@ export function gpuSlotFor(index, columns = 8) {
     column: index % columns,
     row: Math.floor(index / columns),
   };
+}
+
+export function gpuNodeFor(index, nodeCount = GPU_NODE_COUNT) {
+  return index % nodeCount;
+}
+
+export function gpuArrivalFor(
+  progress,
+  index,
+  nodeCount = GPU_NODE_COUNT,
+) {
+  const node = gpuNodeFor(index, nodeCount);
+  const wave = Math.floor(index / nodeCount);
+  const normalizedNode = node / Math.max(1, nodeCount - 1);
+  const start = 0.018 + normalizedNode * 0.09 + wave * 0.135;
+  return ease((progress - start) / 0.12);
+}
+
+export function gpuLoadFor(
+  progress,
+  nodeIndex,
+  jobCount = GPU_NODE_COUNT * EXPERIMENTS_PER_GPU,
+  nodeCount = GPU_NODE_COUNT,
+) {
+  const arrivals = [];
+  for (let index = nodeIndex; index < jobCount; index += nodeCount) {
+    arrivals.push(gpuArrivalFor(progress, index, nodeCount));
+  }
+  const arrived = arrivals.filter(value => value >= 0.985).length;
+  const energy = arrivals.length === 0
+    ? 0
+    : arrivals.reduce((sum, value) => sum + value, 0) / arrivals.length;
+
+  return {
+    arrivals,
+    arrived,
+    energy: clamp(energy),
+  };
+}
+
+export function smoothScrollProgress(
+  current,
+  target,
+  deltaMs,
+  timeConstantMs = 78,
+) {
+  if (current === target) return target;
+  if (deltaMs <= 0) return current;
+  if (deltaMs >= timeConstantMs * 8) return target;
+  const amount = 1 - Math.exp(-deltaMs / timeConstantMs);
+  const next = current + (target - current) * amount;
+  if (Math.abs(target - next) < 0.0001) return target;
+  return target > current
+    ? Math.min(next, target)
+    : Math.max(next, target);
 }
 
 export function gpuStateFor(progress) {

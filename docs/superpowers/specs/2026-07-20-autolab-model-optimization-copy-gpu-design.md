@@ -46,12 +46,9 @@ Use one memorable flourish in the hero and one in the close. Everywhere else, le
 
 The spinner restores the original site's three-part language and is the hero's single copy flourish. Its sequence is `research`, `training`, `inference`.
 
-### Visual handoff
+### Direct hero-to-loop handoff
 
-- Headline: `One goal. A thousand experiments.`
-- Supporting copy: `Every vector is a real experiment. Autolab branches ideas into isolated runs, scores each one against your eval, and directs compute toward the strongest evidence.`
-
-This text establishes the visual grammar before the orbiting vectors become a topology: each vector is an experiment, not an abstract agent or decorative particle.
+Do not insert a standalone copy interstitial between the hero and the model-improvement loop. The hero should move directly into the six-step research instrument, whose legend establishes that each vector is an experiment.
 
 ### Model-improvement loop
 
@@ -105,10 +102,13 @@ The GPU section uses a dark instrument panel inside the light paper page. It beg
 
 1. Experiment vectors leave the evaluated topology and stream toward the compute panel.
 2. Their existing identities become scheduled jobs; they do not transform into a second unexplained particle system.
-3. Jobs enter a compact GPU fabric. Each cell represents a GPU, and restrained labels may distinguish heterogeneous hardware such as `3090`, `A100`, and `H100` where useful.
-4. Completed jobs clear and new experiments occupy the capacity immediately, creating a continuous repacking rhythm rather than a one-time fill animation.
-5. Dominated directions dim and terminate. Promising directions remain visually legible as the scheduler gives them more compute.
-6. A verified winner expands across a larger multi-GPU block, resolving the section with an unmistakable optimization payoff.
+3. Jobs enter a compact twelve-GPU fabric. Each cell is one GPU, labeled with restrained heterogeneous hardware such as `3090`, `A100`, and `H100`.
+4. Four experiments route into each GPU. A persistent route spine may remain only as a very faint guide; the active vector and its short trail carry the visible motion.
+5. Each GPU accumulates mint luminance as its four experiments arrive and exposes the current `FLOW n/4` state.
+6. Dominated directions dim and terminate. Promising directions remain visually legible as the scheduler gives them more compute.
+7. A verified winner expands across a larger multi-GPU block, resolving the section with an unmistakable optimization payoff.
+
+Scroll updates set a target progress value; the rendered progress eases toward it in the animation frame. The panel opening and closing uses compositor transforms rather than changing layout dimensions, so the canvas does not resize while the user scrolls.
 
 The panel should communicate scheduling, pruning, and scaling through motion and layout. It must not display fabricated values such as `96% utilization` or `4.8× throughput`. Small operational labels may expose real concepts—`queued`, `running`, `pruned`, `verified`—without turning the section into a dashboard.
 
