@@ -1,10 +1,21 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
+  WATCHDOG_CYCLE_MS,
   WATCHDOG_TIMELINE,
   watchdogCurveAt,
   watchdogStateFor,
 } from './autolab-mog-product-motion-v1.js';
+
+test('watchdog timing matches the authored handoff cycle', () => {
+  assert.deepEqual(WATCHDOG_TIMELINE, {
+    plateau: 0.42,
+    stop: 0.61,
+    reassign: 0.76,
+    restart: 0.88,
+  });
+  assert.equal(WATCHDOG_CYCLE_MS, 7200);
+});
 
 test('watchdog moves through observe, plateau, stop, reassign, and restart', () => {
   assert.equal(watchdogStateFor(0).phase, 'observing');

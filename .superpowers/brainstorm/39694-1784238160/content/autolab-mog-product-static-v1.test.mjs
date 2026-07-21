@@ -92,12 +92,16 @@ test('Product watchdog renderer is connected without synthetic claims', async ()
     readFile(new URL('./autolab-mog-product-scene-v1.js', import.meta.url), 'utf8'),
   ]);
   const text = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+  const claims = `${text} ${scene}`;
 
   assert.match(html, /<canvas id="watchdog-canvas" aria-hidden="true"><\/canvas>/);
   assert.match(html, /<script type="module" src="autolab-mog-product-scene-v1\.js"><\/script>/);
   assert.match(scene, /from '\.\/autolab-mog-product-motion-v1\.js'/);
+  assert.match(scene, /WATCHDOG_CYCLE_MS/);
+  assert.doesNotMatch(scene, /const CYCLE_MS\s*=/);
+  assert.doesNotMatch(scene, /\b7200\b/);
   assert.match(scene, /new IntersectionObserver/);
   assert.match(scene, /new ResizeObserver/);
   assert.doesNotMatch(scene, /—/);
-  assert.doesNotMatch(text, /\b\d+(?:\.\d+)?(?:%|x)\b/i);
+  assert.doesNotMatch(claims, /\b\d+(?:\.\d+)?(?:%|x)\b/i);
 });

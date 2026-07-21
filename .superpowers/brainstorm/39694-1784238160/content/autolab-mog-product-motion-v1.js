@@ -1,3 +1,5 @@
+export const WATCHDOG_CYCLE_MS = 7200;
+
 export const WATCHDOG_TIMELINE = Object.freeze({
   plateau: 0.42,
   stop: 0.61,

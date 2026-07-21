@@ -1,9 +1,9 @@
 import {
+  WATCHDOG_CYCLE_MS,
   watchdogCurveAt,
   watchdogStateFor,
 } from './autolab-mog-product-motion-v1.js';
 
-const CYCLE_MS = 7200;
 const MINT = '#2fce96';
 const AMBER = '#d8a447';
 const PAPER = '#f7f5f0';
@@ -36,9 +36,9 @@ function initWatchdogScene() {
     if (canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
       canvas.width = pixelWidth;
       canvas.height = pixelHeight;
-      context.setTransform(ratio, 0, 0, ratio, 0, 0);
       resizeCount += 1;
     }
+    context.setTransform(ratio, 0, 0, ratio, 0, 0);
     draw(performance.now());
   }
 
@@ -188,7 +188,7 @@ function initWatchdogScene() {
   function frame(now) {
     frameId = 0;
     if (!visible || reducedMotion) return;
-    progress = ((now - cycleStarted) % CYCLE_MS) / CYCLE_MS;
+    progress = ((now - cycleStarted) % WATCHDOG_CYCLE_MS) / WATCHDOG_CYCLE_MS;
     state = watchdogStateFor(progress);
     draw(now);
     frameId = requestAnimationFrame(frame);
@@ -202,7 +202,7 @@ function initWatchdogScene() {
       return;
     }
     if (frameId) return;
-    cycleStarted = performance.now() - progress * CYCLE_MS;
+    cycleStarted = performance.now() - progress * WATCHDOG_CYCLE_MS;
     frameId = requestAnimationFrame(frame);
   }
 
@@ -217,7 +217,7 @@ function initWatchdogScene() {
     visible = entries[0]?.isIntersecting ?? false;
     if (visible) start();
     else stop();
-  }, { rootMargin: '120px 0px', threshold: .05 }).observe(feature);
+  }, { rootMargin: '0px', threshold: .05 }).observe(feature);
 
   window.__AUTOLAB_WATCHDOG__ = Object.freeze({
     getState() {
