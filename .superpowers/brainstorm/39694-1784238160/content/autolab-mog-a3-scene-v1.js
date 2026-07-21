@@ -296,7 +296,7 @@ function updateStory(nextStage) {
   storySteps.forEach((step, index) => {
     step.classList.toggle('active', index === stage);
   });
-  indexEl.textContent = `0${stage + 1}—06`;
+  indexEl.textContent = `0${stage + 1} / 06`;
 }
 
 function syncLaunchPoint() {

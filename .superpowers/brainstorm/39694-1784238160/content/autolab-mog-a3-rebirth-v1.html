@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Autolab — Singularity Rebirth</title>
+  <title>Autolab | AI model optimization</title>
   <link rel="icon" href="data:,">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,7 +19,7 @@
     <div class="nav-shell">
       <a href="#top" class="wordmark">autolab<span class="brand-caret" id="brand-caret"></span></a>
       <div class="nav-center">
-        <nav class="nav-links" aria-label="Main navigation"><a href="#research-run">How it works</a><a href="#outro">Research</a><a href="#get-started">Docs</a></nav>
+        <nav class="nav-links" aria-label="Main navigation"><a href="autolab-mog-product-v1.html">Product</a><a href="#research-run">How it works</a><a href="https://docs.autolab.ai">Docs</a></nav>
         <span class="nav-status" aria-hidden="true"><i></i><span class="nav-status-copy"></span></span>
       </div>
       <a class="nav-cta" href="https://calendar.superhuman.com/book/11Wx5q95SPgTTclPo4/KrRGA" target="_blank" rel="noopener">Book a demo <span>↗</span></a>
@@ -32,11 +32,11 @@
         <div class="hero-pill">AI model optimization, automated.</div>
         <h1 aria-label="Supercharge your research, training, and inference.">
           <span>Supercharge your</span>
-          <span class="hero-cycle-line" aria-hidden="true"><em data-hero-cycle>research</em><span class="hero-period">.</span><small data-hero-cycle-index>01 / 03</small></span>
+          <span class="hero-cycle-line" aria-hidden="true"><span class="hero-cycle-word"><em data-hero-cycle>research</em><span class="hero-period">.</span></span><small data-hero-cycle-index>01 / 03</small></span>
         </h1>
-        <p class="hero-sub">Set a goal and an eval. Autolab's agents write, run, and score thousands of experiments on your compute—then turn the winners into reviewable PRs.</p>
-        <div class="hero-actions"><a class="button primary" href="#get-started">Start researching <span>↗</span></a><a class="button" href="https://calendar.superhuman.com/book/11Wx5q95SPgTTclPo4/KrRGA" target="_blank" rel="noopener">Book a demo <span>→</span></a></div>
-        <a class="hero-install" href="#get-started">$ curl -fsSL app.autolab.ai/install.sh | sh <span>↓</span></a>
+        <p class="hero-sub">Set a goal and connect your GPUs. Autolab's agents run experiments, stop jobs once they stop improving or are clearly failing, and use every result to decide what to try next.</p>
+        <div class="hero-actions"><a class="button primary" href="#early-access">Get early access <span>↗</span></a><a class="button" href="https://calendar.superhuman.com/book/11Wx5q95SPgTTclPo4/KrRGA" target="_blank" rel="noopener">Book a demo <span>→</span></a></div>
+        <a class="hero-install" href="#onboarding-console">$ curl -fsSL app.autolab.ai/install.sh | sh <span>↓</span></a>
       </div>
       <div>
         <div class="terminal">
@@ -69,19 +69,19 @@
         <div class="slingshot-tear" id="slingshot-tear" aria-hidden="true"></div>
         <canvas id="research-canvas" aria-hidden="true"></canvas>
 
-        <div class="research-head"><span>Autolab / model improvement loop</span><span>▸ experiment · — lineage · ● winner</span><div class="research-progress"><i></i></div><b id="research-index">01—06</b></div>
+        <div class="research-head"><span>Autolab / model improvement loop</span><span>▸ experiment · lineage · ● winner</span><div class="research-progress"><i></i></div><b id="research-index">01 / 06</b></div>
         <div class="research-story">
-          <article class="research-step active" data-step="0"><span class="step">Goal / 01</span><h3>Set the <em>goal.</em></h3><p>Tell Autolab what better means: the metric, constraints, and eval that matter.</p><span class="research-key">metric + constraints + eval</span></article>
-          <article class="research-step" data-step="1"><span class="step">Explore / 02</span><h3>Run a thousand <em>experiments.</em></h3><p>Agents turn hypotheses into isolated runs across the GPUs available to them.</p><span class="research-key">▸ one vector = one experiment</span></article>
-          <article class="research-step" data-step="2"><span class="step">Measure / 03</span><h3>Find what moves the <em>metric.</em></h3><p>Every result updates the frontier. Stronger directions earn the next run.</p><span class="research-key">↑ altitude = evaluated performance</span></article>
-          <article class="research-step" data-step="3"><span class="step">Prune / 04</span><h3>Prune what <em>doesn't work.</em></h3><p>Dominated experiments stop. Their code, logs, and lineage remain inspectable.</p><span class="research-key">dead ends stop · evidence remains</span></article>
-          <article class="research-step" data-step="4"><span class="step">Verify / 05</span><h3>Verify what <em>does.</em></h3><p>The strongest candidates rerun against your evals and constraints until the improvement holds.</p><span class="research-key">rerun · compare · hold</span></article>
-          <article class="research-step" data-step="5"><span class="step">Ship / 06</span><h3>Ship the <em>improvement.</em></h3><p>The winner arrives as a reviewable PR with the evidence behind it. You decide what merges.</p><span class="research-key">verified diff → reviewable PR</span></article>
+          <article class="research-step active" data-step="0"><span class="step">Goal / 01</span><h3>Tell Autolab what to <em>improve.</em></h3><p>Choose the metric that matters, such as accuracy, cost, or latency.</p><span class="research-key">metric + constraints + evaluation</span></article>
+          <article class="research-step" data-step="1"><span class="step">Explore / 02</span><h3>Turn ideas into <em>experiments.</em></h3><p>Agents read your code and create concrete changes they can test.</p><span class="research-key">▸ one vector = one experiment</span></article>
+          <article class="research-step" data-step="2"><span class="step">Run / 03</span><h3>Run them across <em>your GPUs.</em></h3><p>Autolab sends each experiment to the next available machine.</p><span class="research-key">every available GPU joins the queue</span></article>
+          <article class="research-step" data-step="3"><span class="step">Stop / 04</span><h3>Stop wasted work <em>early.</em></h3><p>Runs stop when they have plateaued or are clearly going to fail.</p><span class="research-key">dead ends stop · evidence remains</span></article>
+          <article class="research-step" data-step="4"><span class="step">Learn / 05</span><h3>Choose what to try <em>next.</em></h3><p>Every result helps Autolab propose a better next experiment.</p><span class="research-key">result → next experiment</span></article>
+          <article class="research-step" data-step="5"><span class="step">Return / 06</span><h3>Return the best <em>change.</em></h3><p>You get the winning code, its results, and the history behind it.</p><span class="research-key">winning change → human review</span></article>
         </div>
 
         <div class="event-horizon" id="event-horizon" aria-hidden="true"><div class="accretion-ring r3"></div><div class="accretion-ring r2"></div><div class="accretion-ring"></div><div class="horizon-disc"></div></div>
         <div class="impact-label" aria-hidden="true">EXP–0001 / FIELD ORIGIN</div>
-        <div class="semantic-legend" aria-hidden="true"><span>▸ one vector = one experiment</span><span>— line = experiment lineage</span><span>↑ altitude = eval performance</span><span>● mint = frontier candidate</span></div>
+        <div class="semantic-legend" aria-hidden="true"><span>▸ one vector = one experiment</span><span>line = experiment history</span><span>↑ altitude = eval performance</span><span>● mint = frontier candidate</span></div>
         <div class="gravity-pointer" data-mode="gravity pull" aria-hidden="true"></div>
         <div class="compression-reticle" aria-hidden="true"></div>
         <div class="rebirth-seed" aria-hidden="true"></div>
@@ -107,7 +107,8 @@
           <div class="gpu-copy">
             <span class="mono-label">Compute / continuously scheduled</span>
             <h2>More insights. <em>Same GPUs.</em></h2>
-            <p>Autolab queues the next-most-valuable experiment the moment capacity opens. Dead ends stop consuming compute. Promising runs scale.</p>
+            <p>Autolab watches every job. When a run stops improving or is clearly failing, it ends the job and gives that GPU to the next experiment.</p>
+            <strong class="gpu-payoff">More useful experiments finish without adding more compute.</strong>
           </div>
           <div class="gpu-instrument" aria-hidden="true">
             <div class="gpu-instrument-head">
@@ -128,13 +129,13 @@
     </section>
 
     <section class="get-started" id="get-started">
-      <div class="get-started-copy">
+      <div class="get-started-copy" id="early-access">
         <span class="mono-label eyebrow-mint">From goal to first run</span>
         <h2>Start this <em>afternoon.</em></h2>
         <p>Install, point it at your eval, go. Or meet Autolab inside the coding agent you already use.</p>
         <span class="infra-note">Your infra or ours. Code, data, and weights stay in your network.</span>
       </div>
-      <div class="onboarding-console" data-onboarding-tabs>
+      <div class="onboarding-console" id="onboarding-console" data-onboarding-tabs>
         <div class="onboarding-head"><span>autolab / initialize</span><i></i></div>
         <div class="onboarding-tabs" role="tablist" aria-label="Install Autolab">
           <button id="tab-cli" role="tab" aria-selected="true" aria-controls="panel-cli" tabindex="0">CLI</button>

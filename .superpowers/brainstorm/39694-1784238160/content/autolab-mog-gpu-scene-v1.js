@@ -27,10 +27,10 @@ const jobsByNode = Array.from({ length: GPU_NODE_COUNT }, (_, node) =>
   jobs.filter(job => gpuNodeFor(job.index) === node));
 const winner = jobs.find(job => job.winner);
 const phaseCopy = Object.freeze({
-  intake: 'experiments finding capacity',
-  packing: 'every GPU compounding evidence',
-  pruning: 'low-value paths released',
-  verified: 'winner scaling',
+  intake: 'watching every run',
+  packing: 'next experiment running',
+  pruning: 'GPU reassigned',
+  verified: 'best result verified',
 });
 
 let width = 1;

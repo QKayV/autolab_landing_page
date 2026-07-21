@@ -37,9 +37,17 @@ for (const variant of variants) {
     assert.match(html, /role="tablist"/);
     assert.equal((html.match(/role="tab"/g) || []).length, 3);
     assert.equal((html.match(/role="tabpanel"/g) || []).length, 3);
-    assert.match(html, /href="#get-started"[^>]*>Start researching/);
+    if (variant === 'rebirth') {
+      assert.match(html, /href="#early-access"[^>]*>Get early access/);
+    } else {
+      assert.match(html, /href="#get-started"[^>]*>Start researching/);
+    }
     assert.match(html, /href="#get-started"[^>]*>Run Autolab/);
-    assert.match(html, /href="#get-started"[^>]*>\$ curl -fsSL/);
+    if (variant === 'rebirth') {
+      assert.match(html, /href="#onboarding-console"[^>]*>\$ curl -fsSL/);
+    } else {
+      assert.match(html, /href="#get-started"[^>]*>\$ curl -fsSL/);
+    }
     assert.match(html, /curl -fsSL app\.autolab\.ai\/install\.sh \| sh/);
     assert.match(html, /autolab install claude-code/);
     assert.match(html, /autolab install codex/);
@@ -73,70 +81,57 @@ test('chooser links all endings and the preserved A2', async () => {
   assert.doesNotMatch(html, /<iframe/i);
 });
 
-test('rebirth hero leads with model optimization and restores the three-part spinner', async () => {
-  const html = await readFile(
-    new URL('./autolab-mog-a3-rebirth-v1.html', import.meta.url),
-    'utf8',
-  );
-
-  assert.match(html, /AI model optimization, automated\./);
-  assert.match(
-    html,
-    /aria-label="Supercharge your research, training, and inference\."/,
-  );
-  assert.match(html, /data-hero-cycle>research<\/em>/);
-  assert.match(html, /Set a goal and an eval\./);
-  assert.match(html, /autolab-mog-hero-cycle-v1\.js/);
-  assert.doesNotMatch(html, />The autoresearch platform</i);
-});
-
-test('rebirth moves directly into the complete model improvement loop', async () => {
-  const html = await readFile(
-    new URL('./autolab-mog-a3-rebirth-v1.html', import.meta.url),
-    'utf8',
-  );
+test('rebirth explains the autonomous experiment loop in plain language', async () => {
+  const [html, scene, gpuScene] = await Promise.all([
+    readFile(new URL('./autolab-mog-a3-rebirth-v1.html', import.meta.url), 'utf8'),
+    readFile(new URL('./autolab-mog-a3-scene-v1.js', import.meta.url), 'utf8'),
+    readFile(new URL('./autolab-mog-gpu-scene-v1.js', import.meta.url), 'utf8'),
+  ]);
   const text = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
 
-  assert.doesNotMatch(html, /class="a3-handoff"/);
-  assert.doesNotMatch(text, /One goal\. A thousand experiments\./);
-  assert.match(text, /Autolab \/ model improvement loop/);
-  for (const headline of [
-    'Set the goal.',
-    'Run a thousand experiments.',
-    'Find what moves the metric.',
-    "Prune what doesn't work.",
-    'Verify what does.',
-    'Ship the improvement.',
-  ]) {
-    assert.ok(text.includes(headline), `missing research headline: ${headline}`);
-  }
-  assert.equal((html.match(/class="research-step/g) || []).length, 6);
-  assert.doesNotMatch(html, /research singularity/i);
+  assert.match(text, /Set a goal and connect your GPUs\. Autolab's agents run experiments, stop jobs once they stop improving or are clearly failing, and use every result to decide what to try next\./);
+  assert.match(text, /Tell Autolab what to improve\./);
+  assert.match(text, /Choose the metric that matters, such as accuracy, cost, or latency\./);
+  assert.match(text, /Turn ideas into experiments\./);
+  assert.match(text, /Agents read your code and create concrete changes they can test\./);
+  assert.match(text, /Run them across your GPUs\./);
+  assert.match(text, /Autolab sends each experiment to the next available machine\./);
+  assert.match(text, /Stop wasted work early\./);
+  assert.match(text, /Runs stop when they have plateaued or are clearly going to fail\./);
+  assert.match(text, /Choose what to try next\./);
+  assert.match(text, /Every result helps Autolab propose a better next experiment\./);
+  assert.match(text, /Return the best change\./);
+  assert.match(text, /You get the winning code, its results, and the history behind it\./);
+  assert.match(text, /Autolab watches every job\. When a run stops improving or is clearly failing, it ends the job and gives that GPU to the next experiment\./);
+  assert.match(text, /More useful experiments finish without adding more compute\./);
+  assert.doesNotMatch(`${html}\n${scene}\n${gpuScene}`, /—/);
 });
 
-test('rebirth carries experiments into the GPU efficiency instrument', async () => {
+test('rebirth exposes the Product page and exact conversion targets', async () => {
   const html = await readFile(
     new URL('./autolab-mog-a3-rebirth-v1.html', import.meta.url),
     'utf8',
   );
-  const researchIndex = html.indexOf('id="research-run"');
-  const gpuIndex = html.indexOf('id="gpu-efficiency"');
-  const onboardingIndex = html.indexOf('id="get-started"');
 
-  assert.ok(researchIndex >= 0 && researchIndex < gpuIndex);
-  assert.ok(gpuIndex < onboardingIndex);
-  assert.match(html, /More insights\. <em>Same GPUs\.<\/em>/);
-  assert.match(html, /Autolab queues the next-most-valuable experiment/);
+  assert.match(html, /href="autolab-mog-product-v1\.html"[^>]*>Product</);
+  assert.match(html, /href="#research-run"[^>]*>How it works</);
+  assert.match(html, /href="https:\/\/docs\.autolab\.ai"[^>]*>Docs</);
+  assert.match(html, /href="#early-access"[^>]*>Get early access/);
+  assert.match(html, /href="#onboarding-console"[^>]*>\$ curl -fsSL/);
+});
+
+test('hero cycle reserves one unbroken word and period', async () => {
+  const [html, css] = await Promise.all([
+    readFile(new URL('./autolab-mog-a3-rebirth-v1.html', import.meta.url), 'utf8'),
+    readFile(new URL('./autolab-mog-core-v1.css', import.meta.url), 'utf8'),
+  ]);
+
   assert.match(
     html,
-    /<canvas id="gpu-canvas" aria-hidden="true"><\/canvas>/,
+    /class="hero-cycle-word"><em data-hero-cycle>research<\/em><span class="hero-period">\.<\/span><\/span>/,
   );
-  assert.match(html, /autolab-mog-gpu-v1\.css/);
-  assert.match(html, /autolab-mog-gpu-scene-v1\.js/);
-
-  const gpuMarkup = html.slice(gpuIndex, onboardingIndex);
-  assert.doesNotMatch(gpuMarkup, /\d+% utilization/i);
-  assert.doesNotMatch(gpuMarkup, /\d+(?:\.\d+)?× throughput/i);
+  assert.match(css, /\.hero-cycle-word\s*\{[^}]*white-space:\s*nowrap/s);
+  assert.match(css, /\.hero-cycle-word\s*\{[^}]*min-width:/s);
 });
 
 test('navigation telemetry is hidden by default and driven by the motion timeline', async () => {

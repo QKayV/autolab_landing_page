@@ -97,6 +97,15 @@
   font: 400 clamp(13px,1.1vw,16px)/1.62 "IBM Plex Sans",sans-serif;
 }
 
+.gpu-payoff {
+  display: block;
+  margin-top: 12px;
+  color: var(--mint);
+  font: 500 9px/1.5 "IBM Plex Mono",monospace;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
 .gpu-instrument {
   position: absolute;
   z-index: 3;

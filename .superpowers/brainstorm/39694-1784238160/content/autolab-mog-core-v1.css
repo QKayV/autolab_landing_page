@@ -212,6 +212,12 @@ h1 em { color: var(--mint-deep); font-weight: 400; }
   overflow: hidden;
   perspective: 600px;
 }
+.hero-cycle-word {
+  min-width: 4.7em;
+  display: inline-flex;
+  align-items: baseline;
+  white-space: nowrap;
+}
 .hero-cycle-line::after {
   content: "";
   position: absolute;
@@ -230,6 +236,7 @@ h1 em { color: var(--mint-deep); font-weight: 400; }
 }
 .hero-period { color: var(--mint-deep); }
 .hero-cycle-line small {
+  flex: 0 0 auto;
   align-self: flex-end;
   margin: 0 0 .58em 16px;
   color: var(--faint);
@@ -500,6 +507,11 @@ a:focus-visible,button:focus-visible { outline: 2px solid var(--mint-deep); outl
   .onboarding-panel pre { font-size: 11px; }
   .concept-label { display: none; }
   .comparison-links { left: 50%; transform: translateX(-50%); }
+}
+
+@media (max-width: 540px) {
+  .hero-cycle-word { min-width: 4.55em; }
+  .hero-cycle-line small { margin-left: 9px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
