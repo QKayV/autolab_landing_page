@@ -90,6 +90,30 @@ test('rebirth hero leads with model optimization and restores the three-part spi
   assert.doesNotMatch(html, />The autoresearch platform</i);
 });
 
+test('rebirth names each vector and the complete model improvement loop', async () => {
+  const html = await readFile(
+    new URL('./autolab-mog-a3-rebirth-v1.html', import.meta.url),
+    'utf8',
+  );
+  const text = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+
+  assert.match(text, /One goal\. A thousand experiments\./);
+  assert.match(text, /Every vector is a real experiment\./);
+  assert.match(text, /Autolab \/ model improvement loop/);
+  for (const headline of [
+    'Set the goal.',
+    'Run a thousand experiments.',
+    'Find what moves the metric.',
+    "Prune what doesn't work.",
+    'Verify what does.',
+    'Ship the improvement.',
+  ]) {
+    assert.ok(text.includes(headline), `missing research headline: ${headline}`);
+  }
+  assert.equal((html.match(/class="research-step/g) || []).length, 6);
+  assert.doesNotMatch(html, /research singularity/i);
+});
+
 test('navigation telemetry is hidden by default and driven by the motion timeline', async () => {
   const [css, scene] = await Promise.all([
     readFile(new URL('./autolab-mog-core-v1.css', import.meta.url), 'utf8'),
