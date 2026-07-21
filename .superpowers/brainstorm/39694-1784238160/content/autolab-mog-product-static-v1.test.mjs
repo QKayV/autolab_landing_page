@@ -49,3 +49,39 @@ test('Product page shares navigation and early-access contracts', async () => {
   assert.match(html, /autolab-early-access-v1\.js/);
   assert.doesNotMatch(html, /role="tablist"/);
 });
+
+test('Product access input exposes a high-contrast keyboard focus ring', async () => {
+  const css = await readFile(
+    new URL('./autolab-mog-product-v1.css', import.meta.url),
+    'utf8',
+  );
+
+  assert.match(
+    css,
+    /\.product-access \.early-access-control input:focus-visible \{ border-color: var\(--mint\); outline: 2px solid var\(--mint\); outline-offset: 3px; box-shadow: 0 0 0 5px rgba\(47,206,150,\.18\); \}/,
+  );
+});
+
+test('Product access form scopes readable status colors to the dark panel', async () => {
+  const css = await readFile(
+    new URL('./autolab-mog-product-v1.css', import.meta.url),
+    'utf8',
+  );
+
+  assert.match(
+    css,
+    /\.product-access \.early-access-form label \{ color: #b8c1bc; \}/,
+  );
+  assert.match(
+    css,
+    /\.product-access \.early-access-status \{ color: #a9b0ac; \}/,
+  );
+  assert.match(
+    css,
+    /\.product-access \.early-access-form\[data-state="success"\] \.early-access-status \{ color: var\(--mint\); \}/,
+  );
+  assert.match(
+    css,
+    /\.product-access \.early-access-form\[data-state="invalid"\] \.early-access-status,\n\.product-access \.early-access-form\[data-state="failure"\] \.early-access-status \{ color: #f0a38e; \}/,
+  );
+});

@@ -87,6 +87,12 @@
 .product-access h2 em { color: var(--mint); font-weight: 400; }
 .product-access > div p { max-width: 38ch; color: #a9b0ac; font: 400 15px/1.7 "IBM Plex Sans",sans-serif; }
 .product-access .early-access-control input { border-color: #46514c; background: rgba(255,255,255,.04); color: var(--paper); }
+.product-access .early-access-control input:focus-visible { border-color: var(--mint); outline: 2px solid var(--mint); outline-offset: 3px; box-shadow: 0 0 0 5px rgba(47,206,150,.18); }
+.product-access .early-access-form label { color: #b8c1bc; }
+.product-access .early-access-status { color: #a9b0ac; }
+.product-access .early-access-form[data-state="success"] .early-access-status { color: var(--mint); }
+.product-access .early-access-form[data-state="invalid"] .early-access-status,
+.product-access .early-access-form[data-state="failure"] .early-access-status { color: #f0a38e; }
 .product-access .early-access-demo { color: #a9b0ac; }
 
 @media (max-width: 900px) {
