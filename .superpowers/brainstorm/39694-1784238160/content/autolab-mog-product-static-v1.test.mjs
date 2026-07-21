@@ -85,3 +85,19 @@ test('Product access form scopes readable status colors to the dark panel', asyn
     /\.product-access \.early-access-form\[data-state="invalid"\] \.early-access-status,\n\.product-access \.early-access-form\[data-state="failure"\] \.early-access-status \{ color: #f0a38e; \}/,
   );
 });
+
+test('Product watchdog renderer is connected without synthetic claims', async () => {
+  const [html, scene] = await Promise.all([
+    readFile(new URL('./autolab-mog-product-v1.html', import.meta.url), 'utf8'),
+    readFile(new URL('./autolab-mog-product-scene-v1.js', import.meta.url), 'utf8'),
+  ]);
+  const text = html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ');
+
+  assert.match(html, /<canvas id="watchdog-canvas" aria-hidden="true"><\/canvas>/);
+  assert.match(html, /<script type="module" src="autolab-mog-product-scene-v1\.js"><\/script>/);
+  assert.match(scene, /from '\.\/autolab-mog-product-motion-v1\.js'/);
+  assert.match(scene, /new IntersectionObserver/);
+  assert.match(scene, /new ResizeObserver/);
+  assert.doesNotMatch(scene, /—/);
+  assert.doesNotMatch(text, /\b\d+(?:\.\d+)?(?:%|x)\b/i);
+});
