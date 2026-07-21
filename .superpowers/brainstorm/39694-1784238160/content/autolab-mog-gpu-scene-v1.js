@@ -40,7 +40,7 @@ let progress = targetProgress;
 let state = gpuStateFor(progress);
 let columns = 6;
 let visible = false;
-let animationFrame = 0;
+let animationFrame = null;
 let previousFrameTime = 0;
 let lastDrawTime = 0;
 let lastStyledProgress = -1;
@@ -536,11 +536,23 @@ function draw(now) {
 }
 
 function scheduleFrame() {
-  if (!animationFrame) animationFrame = requestAnimationFrame(frame);
+  if (!visible || animationFrame !== null) return;
+  if (reducedMotion) {
+    frame(performance.now());
+    return;
+  }
+  animationFrame = requestAnimationFrame(frame);
+}
+
+function stopFrame() {
+  if (animationFrame === null) return;
+  cancelAnimationFrame(animationFrame);
+  animationFrame = null;
 }
 
 function frame(now) {
-  animationFrame = 0;
+  animationFrame = null;
+  if (!visible) return;
   const delta = previousFrameTime
     ? Math.min(80, Math.max(0, now - previousFrameTime))
     : 16;
@@ -562,12 +574,12 @@ function resize() {
   const pixelHeight = Math.round(nextHeight * ratio);
   width = nextWidth;
   height = nextHeight;
-  if (canvas.width === pixelWidth && canvas.height === pixelHeight) return;
-
-  canvas.width = pixelWidth;
-  canvas.height = pixelHeight;
+  if (canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
+    canvas.width = pixelWidth;
+    canvas.height = pixelHeight;
+    resizeCount += 1;
+  }
   context.setTransform(ratio, 0, 0, ratio, 0, 0);
-  resizeCount += 1;
   scheduleFrame();
 }
 
@@ -579,10 +591,13 @@ function updateScroll() {
 }
 
 new IntersectionObserver(entries => {
-  visible = entries[0]?.isIntersecting || false;
+  const nextVisible = entries[0]?.isIntersecting ?? false;
+  if (nextVisible === visible) return;
+  visible = nextVisible;
   previousFrameTime = 0;
   if (visible) scheduleFrame();
-}, { rootMargin: '35% 0px' }).observe(section);
+  else stopFrame();
+}, { rootMargin: '0px' }).observe(section);
 
 new ResizeObserver(resize).observe(canvas);
 addEventListener('resize', () => {
@@ -604,6 +619,7 @@ window.__AUTOLAB_GPU__ = Object.freeze({
       experimentsPerGpu: EXPERIMENTS_PER_GPU,
       columns,
       reducedMotion,
+      visible,
       resizeCount,
       lastFrame: lastDrawTime,
     };

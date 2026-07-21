@@ -18,6 +18,7 @@ function installSceneEnvironment({
   width = 640,
   height = 400,
   ratio = 1,
+  firstFrameId = 1,
 } = {}) {
   const originals = new Map(
     GLOBAL_KEYS.map(key => [key, Object.getOwnPropertyDescriptor(globalThis, key)]),
@@ -31,7 +32,7 @@ function installSceneEnvironment({
   let resizeCallback;
   let intersectionCallback;
   let intersectionOptions;
-  let nextFrameId = 1;
+  let nextFrameId = firstFrameId;
   const frames = new Map();
   const cancelledFrames = [];
   const widthWrites = [];
@@ -303,5 +304,34 @@ test('watchdog resize clamps zero dimensions and reapplies its transform', async
     ]);
   } finally {
     stableBacking.restore();
+  }
+});
+
+test('watchdog RAF handle zero stays deduplicated across entry', async () => {
+  const zeroFrame = installSceneEnvironment({ firstFrameId: 0 });
+  try {
+    await zeroFrame.load();
+    zeroFrame.intersect(true);
+    assert.deepEqual([...zeroFrame.frames.keys()], [0]);
+
+    zeroFrame.intersect(true);
+    assert.deepEqual([...zeroFrame.frames.keys()], [0]);
+  } finally {
+    zeroFrame.restore();
+  }
+});
+
+test('watchdog RAF handle zero is cancelled on exit', async () => {
+  const zeroFrame = installSceneEnvironment({ firstFrameId: 0 });
+  try {
+    await zeroFrame.load();
+    zeroFrame.intersect(true);
+    assert.deepEqual([...zeroFrame.frames.keys()], [0]);
+
+    zeroFrame.intersect(false);
+    assert.deepEqual(zeroFrame.cancelledFrames, [0]);
+    assert.equal(zeroFrame.frames.size, 0);
+  } finally {
+    zeroFrame.restore();
   }
 });

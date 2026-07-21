@@ -24,7 +24,7 @@ function initWatchdogScene() {
   let visible = false;
   let resizeCount = 0;
   let lastFrame = 0;
-  let frameId = 0;
+  let frameId = null;
   let cycleStarted = performance.now();
 
   function resize() {
@@ -186,7 +186,7 @@ function initWatchdogScene() {
   }
 
   function frame(now) {
-    frameId = 0;
+    frameId = null;
     if (!visible || reducedMotion) return;
     progress = ((now - cycleStarted) % WATCHDOG_CYCLE_MS) / WATCHDOG_CYCLE_MS;
     state = watchdogStateFor(progress);
@@ -201,15 +201,15 @@ function initWatchdogScene() {
       draw(performance.now());
       return;
     }
-    if (frameId) return;
+    if (frameId !== null) return;
     cycleStarted = performance.now() - progress * WATCHDOG_CYCLE_MS;
     frameId = requestAnimationFrame(frame);
   }
 
   function stop() {
-    if (!frameId) return;
+    if (frameId === null) return;
     cancelAnimationFrame(frameId);
-    frameId = 0;
+    frameId = null;
   }
 
   new ResizeObserver(resize).observe(canvas);
