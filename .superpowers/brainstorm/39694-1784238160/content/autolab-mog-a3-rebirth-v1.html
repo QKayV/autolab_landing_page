@@ -28,9 +28,12 @@
   <main id="top">
     <section class="hero">
       <div class="hero-copy">
-        <div class="hero-pill">The autoresearch platform</div>
-        <h1>Supercharge your <em>research.</em></h1>
-        <p class="hero-sub">A thousand experiments in parallel, on your compute, scored against your evals. State of the art with the team and budget you already have.</p>
+        <div class="hero-pill">AI model optimization, automated.</div>
+        <h1 aria-label="Supercharge your research, training, and inference.">
+          <span>Supercharge your</span>
+          <span class="hero-cycle-line" aria-hidden="true"><em data-hero-cycle>research</em><span class="hero-period">.</span><small data-hero-cycle-index>01 / 03</small></span>
+        </h1>
+        <p class="hero-sub">Set a goal and an eval. Autolab's agents write, run, and score thousands of experiments on your compute—then turn the winners into reviewable PRs.</p>
         <div class="hero-actions"><a class="button primary" href="#get-started">Start researching <span>↗</span></a><a class="button" href="https://calendar.superhuman.com/book/11Wx5q95SPgTTclPo4/KrRGA" target="_blank" rel="noopener">Book a demo <span>→</span></a></div>
         <a class="hero-install" href="#get-started">$ curl -fsSL app.autolab.ai/install.sh | sh <span>↓</span></a>
       </div>
@@ -137,5 +140,6 @@
 
   <script type="module" src="autolab-mog-a3-scene-v1.js"></script>
   <script type="module" src="autolab-mog-a3-onboarding-v1.js"></script>
+  <script type="module" src="autolab-mog-hero-cycle-v1.js"></script>
 </body>
 </html>

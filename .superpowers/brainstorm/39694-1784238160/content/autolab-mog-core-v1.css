@@ -201,6 +201,45 @@ h1 {
   letter-spacing: -.045em;
 }
 h1 em { color: var(--mint-deep); font-weight: 400; }
+.hero h1 > span:first-child { display: block; }
+.hero-cycle-line {
+  position: relative;
+  width: max-content;
+  max-width: 100%;
+  min-height: 1.04em;
+  display: flex;
+  align-items: baseline;
+  overflow: hidden;
+  perspective: 600px;
+}
+.hero-cycle-line::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: .01em;
+  height: 1px;
+  background: linear-gradient(90deg,var(--mint-deep),rgba(12,138,95,0));
+  transform-origin: left;
+  animation: hero-cycle-progress 3.2s linear infinite;
+}
+.hero-cycle-line em {
+  display: inline-block;
+  transform-origin: 50% 100%;
+  will-change: transform,opacity,filter;
+}
+.hero-period { color: var(--mint-deep); }
+.hero-cycle-line small {
+  align-self: flex-end;
+  margin: 0 0 .58em 16px;
+  color: var(--faint);
+  font: 500 8px/1 "IBM Plex Mono",monospace;
+  letter-spacing: .12em;
+}
+@keyframes hero-cycle-progress {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
 .hero-sub {
   max-width: 590px;
   margin: 30px 0;
@@ -466,4 +505,5 @@ a:focus-visible,button:focus-visible { outline: 2px solid var(--mint-deep); outl
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; }
+  .hero-cycle-line::after { transform: scaleX(1); }
 }

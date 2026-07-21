@@ -73,6 +73,23 @@ test('chooser links all endings and the preserved A2', async () => {
   assert.doesNotMatch(html, /<iframe/i);
 });
 
+test('rebirth hero leads with model optimization and restores the three-part spinner', async () => {
+  const html = await readFile(
+    new URL('./autolab-mog-a3-rebirth-v1.html', import.meta.url),
+    'utf8',
+  );
+
+  assert.match(html, /AI model optimization, automated\./);
+  assert.match(
+    html,
+    /aria-label="Supercharge your research, training, and inference\."/,
+  );
+  assert.match(html, /data-hero-cycle>research<\/em>/);
+  assert.match(html, /Set a goal and an eval\./);
+  assert.match(html, /autolab-mog-hero-cycle-v1\.js/);
+  assert.doesNotMatch(html, />The autoresearch platform</i);
+});
+
 test('navigation telemetry is hidden by default and driven by the motion timeline', async () => {
   const [css, scene] = await Promise.all([
     readFile(new URL('./autolab-mog-core-v1.css', import.meta.url), 'utf8'),
