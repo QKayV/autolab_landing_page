@@ -300,7 +300,7 @@ h1 em { color: var(--mint-deep); font-weight: 400; }
   letter-spacing: -.052em;
 }
 .get-started-copy h2 em { color: var(--mint-deep); font-weight: 400; }
-.get-started-copy p {
+.get-started-copy > p {
   max-width: 520px;
   margin-top: 28px;
   color: var(--muted);
@@ -317,6 +317,18 @@ h1 em { color: var(--mint-deep); font-weight: 400; }
   letter-spacing: .06em;
   text-transform: uppercase;
 }
+.early-access-form { max-width: 540px; margin-top: 30px; }
+.early-access-form label { display: block; margin-bottom: 9px; color: var(--muted); font: 500 9px/1 "IBM Plex Mono",monospace; letter-spacing: .12em; text-transform: uppercase; }
+.early-access-control { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 8px; }
+.early-access-control input { min-width: 0; height: 52px; padding: 0 16px; border: 1px solid #aaa69a; border-radius: 4px; background: rgba(255,255,255,.46); color: var(--ink); font: 400 14px/1 "IBM Plex Sans",sans-serif; outline: none; }
+.early-access-control input:focus { border-color: var(--mint-deep); box-shadow: 0 0 0 3px rgba(12,138,95,.1); }
+.early-access-control .button { min-width: 170px; }
+.early-access-status { min-height: 20px; margin-top: 10px; color: var(--muted); font: 400 10px/1.5 "IBM Plex Mono",monospace; }
+.early-access-form[data-state="success"] .early-access-status { color: var(--mint-deep); }
+.early-access-form[data-state="invalid"] .early-access-status,
+.early-access-form[data-state="failure"] .early-access-status { color: #9e4937; }
+.early-access-demo { display: inline-block; margin-top: 15px; color: var(--muted); font: 500 10px/1.4 "IBM Plex Mono",monospace; }
+.onboarding-access-label { display: block; margin-bottom: 12px; color: var(--mint-deep); font: 500 9px/1 "IBM Plex Mono",monospace; letter-spacing: .12em; text-transform: uppercase; }
 .onboarding-console {
   position: relative;
   overflow: hidden;
@@ -512,6 +524,8 @@ a:focus-visible,button:focus-visible { outline: 2px solid var(--mint-deep); outl
 @media (max-width: 540px) {
   .hero-cycle-word { min-width: 4.55em; }
   .hero-cycle-line small { margin-left: 9px; }
+  .early-access-control { grid-template-columns: 1fr; }
+  .early-access-control .button { width: 100%; }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -41,8 +41,8 @@ for (const variant of variants) {
       assert.match(html, /href="#early-access"[^>]*>Get early access/);
     } else {
       assert.match(html, /href="#get-started"[^>]*>Start researching/);
+      assert.match(html, /href="#get-started"[^>]*>Run Autolab/);
     }
-    assert.match(html, /href="#get-started"[^>]*>Run Autolab/);
     if (variant === 'rebirth') {
       assert.match(html, /href="#onboarding-console"[^>]*>\$ curl -fsSL/);
     } else {
@@ -206,4 +206,30 @@ test('ending preview target enters the unique ending on desktop and mobile', asy
     assert.equal(phaseFor(progress), 'ending');
     assert.ok(progress > TIMELINE.compression && progress < 0.94);
   }
+});
+
+test('rebirth exposes an accessible early-access form and preserves onboarding', async () => {
+  const html = await readFile(
+    new URL('./autolab-mog-a3-rebirth-v1.html', import.meta.url),
+    'utf8',
+  );
+
+  assert.match(html, /<form[^>]*id="early-access"[^>]*data-early-access[^>]*data-endpoint=""[^>]*data-source="homepage"/);
+  assert.match(html, /<label for="early-access-email-home">Email address<\/label>/);
+  assert.match(html, /id="early-access-email-home"[^>]*data-early-access-email[^>]*type="email"/);
+  assert.match(html, /data-early-access-status[^>]*role="status"[^>]*aria-live="polite"/);
+  assert.match(html, /id="onboarding-console"[^>]*data-onboarding-tabs/);
+  assert.equal((html.match(/role="tab"/g) || []).length, 3);
+  assert.equal((html.match(/role="tabpanel"/g) || []).length, 3);
+  assert.match(html, /<script type="module" src="autolab-early-access-v1\.js"><\/script>/);
+  assert.match(html, /<section class="a3-outro"[\s\S]*href="#early-access"/);
+});
+
+test('intro copy styles do not override the nested early-access status', async () => {
+  const css = await readFile(
+    new URL('./autolab-mog-core-v1.css', import.meta.url),
+    'utf8',
+  );
+
+  assert.match(css, /\.get-started-copy\s*>\s*p\s*\{/);
 });

@@ -129,32 +129,43 @@
     </section>
 
     <section class="get-started" id="get-started">
-      <div class="get-started-copy" id="early-access">
-        <span class="mono-label eyebrow-mint">From goal to first run</span>
-        <h2>Start this <em>afternoon.</em></h2>
-        <p>Install, point it at your eval, go. Or meet Autolab inside the coding agent you already use.</p>
-        <span class="infra-note">Your infra or ours. Code, data, and weights stay in your network.</span>
+      <div class="get-started-copy">
+        <span class="mono-label eyebrow-mint">Start with Autolab</span>
+        <h2>Get early <em>access.</em></h2>
+        <p>Leave your email and we will send you access details.</p>
+        <form class="early-access-form" id="early-access" data-early-access data-endpoint="" data-source="homepage" novalidate>
+          <label for="early-access-email-home">Email address</label>
+          <div class="early-access-control">
+            <input id="early-access-email-home" data-early-access-email type="email" name="email" autocomplete="email" inputmode="email" required placeholder="you@example.com">
+            <button class="button primary" data-early-access-submit type="submit">Request access <span>↗</span></button>
+          </div>
+          <p class="early-access-status" data-early-access-status role="status" aria-live="polite"></p>
+        </form>
+        <a class="early-access-demo" href="https://calendar.superhuman.com/book/11Wx5q95SPgTTclPo4/KrRGA" target="_blank" rel="noopener">Prefer to talk? Book a demo →</a>
       </div>
-      <div class="onboarding-console" id="onboarding-console" data-onboarding-tabs>
-        <div class="onboarding-head"><span>autolab / initialize</span><i></i></div>
-        <div class="onboarding-tabs" role="tablist" aria-label="Install Autolab">
-          <button id="tab-cli" role="tab" aria-selected="true" aria-controls="panel-cli" tabindex="0">CLI</button>
-          <button id="tab-claude" role="tab" aria-selected="false" aria-controls="panel-claude" tabindex="-1">Claude Code</button>
-          <button id="tab-codex" role="tab" aria-selected="false" aria-controls="panel-codex" tabindex="-1">Codex</button>
-        </div>
-        <div class="onboarding-panel" id="panel-cli" role="tabpanel" aria-labelledby="tab-cli"><pre><span>$</span> curl -fsSL app.autolab.ai/install.sh | sh
+      <div>
+        <span class="onboarding-access-label">Already have access?</span>
+        <div class="onboarding-console" id="onboarding-console" data-onboarding-tabs>
+          <div class="onboarding-head"><span>autolab / initialize</span><i></i></div>
+          <div class="onboarding-tabs" role="tablist" aria-label="Install Autolab">
+            <button id="tab-cli" role="tab" aria-selected="true" aria-controls="panel-cli" tabindex="0">CLI</button>
+            <button id="tab-claude" role="tab" aria-selected="false" aria-controls="panel-claude" tabindex="-1">Claude Code</button>
+            <button id="tab-codex" role="tab" aria-selected="false" aria-controls="panel-codex" tabindex="-1">Codex</button>
+          </div>
+          <div class="onboarding-panel" id="panel-cli" role="tabpanel" aria-labelledby="tab-cli"><pre><span>$</span> curl -fsSL app.autolab.ai/install.sh | sh
 <span>$</span> autolab init   <i># point it at the eval script that prints your metric</i>
 <span>$</span> autolab start  <i># the agents begin. watch or walk away.</i></pre></div>
-        <div class="onboarding-panel" id="panel-claude" role="tabpanel" aria-labelledby="tab-claude" hidden><pre><span>$</span> autolab install claude-code
+          <div class="onboarding-panel" id="panel-claude" role="tabpanel" aria-labelledby="tab-claude" hidden><pre><span>$</span> autolab install claude-code
 <i>then, inside Claude Code:</i>
 <span>&gt;</span> use /autolab to run experiments on this repo</pre></div>
-        <div class="onboarding-panel" id="panel-codex" role="tabpanel" aria-labelledby="tab-codex" hidden><pre><span>$</span> autolab install codex
+          <div class="onboarding-panel" id="panel-codex" role="tabpanel" aria-labelledby="tab-codex" hidden><pre><span>$</span> autolab install codex
 <i>then, inside Codex:</i>
 <span>&gt;</span> queue autolab experiments against eval.py</pre></div>
+        </div>
       </div>
     </section>
 
-    <section class="a3-outro" id="outro"><div><span class="mono-label eyebrow-mint">Chaos in. Evidence out.</span><h2>Research that collapses into <em>proof.</em></h2><p>Every experiment stays reproducible. Every winning change stays reviewable. Every merge remains yours to approve.</p><a class="button primary" href="#get-started">Run Autolab <span>↗</span></a></div></section>
+    <section class="a3-outro" id="outro"><div><span class="mono-label eyebrow-mint">From GPU time to better models</span><h2>Every experiment improves <em>the next one.</em></h2><p>Autolab keeps the code, metrics, and history behind every run. You review the winning change and decide what ships.</p><a class="button primary" href="#early-access">Get early access <span>↗</span></a></div></section>
   </main>
 
   <div class="flight-object" id="flight-object" aria-hidden="true"><div class="flight-core"></div><div class="flight-head"></div></div>
@@ -164,6 +175,7 @@
 
   <script type="module" src="autolab-mog-a3-scene-v1.js"></script>
   <script type="module" src="autolab-mog-a3-onboarding-v1.js"></script>
+  <script type="module" src="autolab-early-access-v1.js"></script>
   <script type="module" src="autolab-mog-hero-cycle-v1.js"></script>
   <script type="module" src="autolab-mog-gpu-scene-v1.js"></script>
 </body>
