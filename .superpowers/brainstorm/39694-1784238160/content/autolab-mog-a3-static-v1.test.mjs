@@ -114,6 +114,31 @@ test('rebirth names each vector and the complete model improvement loop', async 
   assert.doesNotMatch(html, /research singularity/i);
 });
 
+test('rebirth carries experiments into the GPU efficiency instrument', async () => {
+  const html = await readFile(
+    new URL('./autolab-mog-a3-rebirth-v1.html', import.meta.url),
+    'utf8',
+  );
+  const researchIndex = html.indexOf('id="research-run"');
+  const gpuIndex = html.indexOf('id="gpu-efficiency"');
+  const onboardingIndex = html.indexOf('id="get-started"');
+
+  assert.ok(researchIndex >= 0 && researchIndex < gpuIndex);
+  assert.ok(gpuIndex < onboardingIndex);
+  assert.match(html, /More insights\. <em>Same GPUs\.<\/em>/);
+  assert.match(html, /Autolab queues the next-most-valuable experiment/);
+  assert.match(
+    html,
+    /<canvas id="gpu-canvas" aria-hidden="true"><\/canvas>/,
+  );
+  assert.match(html, /autolab-mog-gpu-v1\.css/);
+  assert.match(html, /autolab-mog-gpu-scene-v1\.js/);
+
+  const gpuMarkup = html.slice(gpuIndex, onboardingIndex);
+  assert.doesNotMatch(gpuMarkup, /\d+% utilization/i);
+  assert.doesNotMatch(gpuMarkup, /\d+(?:\.\d+)?× throughput/i);
+});
+
 test('navigation telemetry is hidden by default and driven by the motion timeline', async () => {
   const [css, scene] = await Promise.all([
     readFile(new URL('./autolab-mog-core-v1.css', import.meta.url), 'utf8'),

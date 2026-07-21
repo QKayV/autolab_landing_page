@@ -10,6 +10,7 @@
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="autolab-mog-core-v1.css">
   <link rel="stylesheet" href="autolab-mog-a3-core-v1.css">
+  <link rel="stylesheet" href="autolab-mog-gpu-v1.css">
 </head>
 <body data-ending="rebirth">
   <div class="grain" aria-hidden="true"></div>
@@ -104,6 +105,33 @@
       </div>
     </section>
 
+    <section class="gpu-efficiency" id="gpu-efficiency" data-gpu-section>
+      <div class="gpu-sticky">
+        <div class="gpu-stage">
+          <div class="gpu-grid" aria-hidden="true"></div>
+          <div class="gpu-copy">
+            <span class="mono-label">Compute / continuously scheduled</span>
+            <h2>More insights. <em>Same GPUs.</em></h2>
+            <p>Autolab queues the next-most-valuable experiment the moment capacity opens. Dead ends stop consuming compute. Promising runs scale.</p>
+          </div>
+          <div class="gpu-instrument" aria-hidden="true">
+            <div class="gpu-instrument-head">
+              <span>autolab / compute fabric</span>
+              <b><i></i><span data-gpu-phase>experiments arriving</span></b>
+            </div>
+            <canvas id="gpu-canvas" aria-hidden="true"></canvas>
+            <div class="gpu-instrument-foot">
+              <span>▸ experiment</span>
+              <span>□ available GPU</span>
+              <span>■ scheduled</span>
+              <span>● verified</span>
+              <b data-gpu-counter>000 / 048 experiments resolved</b>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="get-started" id="get-started">
       <div class="get-started-copy">
         <span class="mono-label eyebrow-mint">From goal to first run</span>
@@ -141,5 +169,6 @@
   <script type="module" src="autolab-mog-a3-scene-v1.js"></script>
   <script type="module" src="autolab-mog-a3-onboarding-v1.js"></script>
   <script type="module" src="autolab-mog-hero-cycle-v1.js"></script>
+  <script type="module" src="autolab-mog-gpu-scene-v1.js"></script>
 </body>
 </html>
