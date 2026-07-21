@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Product | Autolab</title>
+  <meta name="description" content="Autolab connects your GPUs, watches every training run, stops wasted work, and uses each result to choose the next experiment.">
+  <link rel="icon" href="data:,">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="autolab-mog-core-v1.css">
+  <link rel="stylesheet" href="autolab-mog-product-v1.css">
+</head>
+<body class="product-page">
+  <div class="grain" aria-hidden="true"></div>
+  <header class="topbar island" id="topbar">
+    <div class="nav-shell">
+      <a href="autolab-mog-a3-rebirth-v1.html" class="wordmark">autolab<span class="brand-caret"></span></a>
+      <div class="nav-center"><nav class="nav-links" aria-label="Main navigation"><a aria-current="page" href="autolab-mog-product-v1.html">Product</a><a href="autolab-mog-a3-rebirth-v1.html#research-run">How it works</a><a href="https://docs.autolab.ai">Docs</a></nav></div>
+      <a class="nav-cta" href="https://calendar.superhuman.com/book/11Wx5q95SPgTTclPo4/KrRGA" target="_blank" rel="noopener">Book a demo <span>↗</span></a>
+    </div>
+  </header>
+  <main>
+    <section class="product-hero">
+      <div><span class="mono-label eyebrow-mint">The Autolab platform</span><h1>Your GPUs, running the next <em>useful experiment.</em></h1><p>Autolab connects your compute, watches every training run, stops wasted work, and uses each result to decide what to try next.</p><div class="hero-actions"><a class="button primary" href="#early-access">Get early access <span>↗</span></a><a class="button" href="https://calendar.superhuman.com/book/11Wx5q95SPgTTclPo4/KrRGA" target="_blank" rel="noopener">Book a demo <span>→</span></a></div></div>
+      <div class="product-loop" aria-hidden="true"><span><small>01</small>CONNECT</span><span><small>02</small>WATCH</span><span><small>03</small>STOP</span><span><small>04</small>NEXT</span></div>
+    </section>
+    <section class="product-feature" data-product-feature><div class="product-copy"><span class="mono-label">Compute / 01</span><h2>Connect the GPUs you already have.</h2><p>Autolab connects machines across your cluster or cloud account and treats them as one experiment pool. A spare GPU and a multi-node cluster participate in the same queue.</p></div><div class="compute-map" aria-hidden="true"><div class="compute-nodes"><i><b>GPU 01</b><small>A100</small></i><i><b>GPU 02</b><small>A100</small></i><i><b>GPU 03</b><small>H100</small></i><i><b>GPU 04</b><small>4090</small></i><i><b>GPU 05</b><small>A100</small></i><i><b>GPU 06</b><small>H100</small></i><i><b>GPU 07</b><small>4090</small></i><i><b>GPU 08</b><small>A100</small></i></div><span class="compute-route"></span><strong>AUTOLAB SCHEDULER</strong></div></section>
+    <section class="product-feature reverse" data-product-feature><div class="product-copy"><span class="mono-label">Observe / 02</span><h2>Watch every experiment as it runs.</h2><p>Autolab reads training metrics, logs, failures, checkpoints, and evaluation results while each job is running.</p></div><div class="jobs-instrument" aria-hidden="true"><div class="product-instrument-head"><span>LIVE JOBS</span><b>WATCHING 04</b></div><div class="job-row"><span>EXP-011</span><svg viewBox="0 0 96 24"><polyline points="0,22 18,18 36,15 54,10 72,8 96,4"></polyline></svg><i>RUNNING</i><b>loss 1.42</b></div><div class="job-row"><span>EXP-012</span><svg viewBox="0 0 96 24"><polyline points="0,21 18,17 36,12 54,11 72,7 96,5"></polyline></svg><i>CHECKPOINT</i><b>loss 1.18</b></div><div class="job-row warning"><span>EXP-013</span><svg viewBox="0 0 96 24"><polyline points="0,20 18,13 36,9 54,8 72,8 96,8"></polyline></svg><i>PLATEAU</i><b>loss 1.67</b></div><div class="job-row"><span>EXP-014</span><svg viewBox="0 0 96 24"><polyline points="0,21 18,19 36,13 54,9 72,6 96,3"></polyline></svg><i>EVALUATING</i><b>score .84</b></div></div></section>
+    <section class="product-feature watchdog-feature" data-product-feature><div class="product-copy"><span class="mono-label">Watchdog / 03</span><h2>Stop runs when they stop being useful.</h2><p>Autolab's watchdog models detect experiments that have plateaued or are clearly likely to fail. Those jobs stop before they consume more GPU time.</p></div><div class="watchdog-instrument" aria-hidden="true"><canvas id="watchdog-canvas" aria-hidden="true"></canvas></div></section>
+    <section class="product-feature reverse" data-product-feature><div class="product-copy"><span class="mono-label">Decide / 04</span><h2>Use every result to choose what comes next.</h2><p>Completed, failed, and stopped experiments all produce information. Autolab uses that evidence to propose the next changes worth testing.</p></div><div class="experiment-queue" aria-hidden="true"><div class="queue-results"><span>COMPLETED</span><span>STOPPED</span><span>FAILED</span><span>IMPROVED</span></div><b>RESULTS</b><i>→</i><strong>NEXT EXPERIMENT</strong></div></section>
+    <section class="product-feature" data-product-feature><div class="product-copy"><span class="mono-label">Review / 05</span><h2>Review what worked.</h2><p>Winning experiments arrive with the code change, metrics, logs, and experiment history behind them. Your team decides what ships.</p></div><div class="product-diff" aria-hidden="true"><div class="product-diff-head"><span>EXP-018 / WINNER</span><b>READY TO REVIEW</b></div><pre><i>  optimizer:</i> adamw&#10;<span>- learning_rate: 3e-4</span>&#10;<b>+ learning_rate: 1.8e-4</b>&#10;<span>- warmup_steps: 100</span>&#10;<b>+ warmup_steps: 240</b></pre><div class="product-diff-foot"><span>METRIC IMPROVED</span><strong>VIEW CHANGE ↗</strong></div></div></section>
+    <aside class="product-infra"><span class="mono-label">Deployment</span><h2>Your infrastructure or ours.</h2><p>Run Autolab on your cluster or in your cloud account. Code, data, and model weights can stay inside your network.</p></aside>
+    <section class="product-access"><div><span class="mono-label eyebrow-mint">Start with Autolab</span><h2>Get early <em>access.</em></h2><p>Leave your email and we will send you access details.</p></div><form class="early-access-form" id="early-access" data-early-access data-endpoint="" data-source="product" novalidate><label for="early-access-email-product">Email address</label><div class="early-access-control"><input id="early-access-email-product" data-early-access-email type="email" name="email" autocomplete="email" inputmode="email" required placeholder="you@example.com"><button class="button primary" data-early-access-submit type="submit">Request access <span>↗</span></button></div><p class="early-access-status" data-early-access-status role="status" aria-live="polite"></p><a class="early-access-demo" href="https://calendar.superhuman.com/book/11Wx5q95SPgTTclPo4/KrRGA" target="_blank" rel="noopener">Prefer to talk? Book a demo →</a></form></section>
+  </main>
+  <script type="module" src="autolab-early-access-v1.js"></script>
+</body>
+</html>
