@@ -461,7 +461,140 @@ test('Product page shares navigation and early-access contracts', async () => {
   assert.match(html, /id="watchdog-canvas"/);
   assert.match(html, /id="early-access"[^>]*data-early-access/);
   assert.match(html, /autolab-early-access-v1\.js/);
-  assert.doesNotMatch(html, /role="tablist"/);
+});
+
+test('Product deployment plate separates customer infrastructure from managed compute', async () => {
+  const [html, css] = await Promise.all([
+    readFile(PRODUCT_URL, 'utf8'),
+    readFile(new URL('./autolab-mog-product-v1.css', import.meta.url), 'utf8'),
+  ]);
+  const text = visibleText(html);
+  const customerBoundary = html.match(
+    /<section class="deployment-customer-boundary" data-deployment-boundary>([\s\S]*?)<\/section>/,
+  )?.[1] || '';
+
+  assert.match(customerBoundary, /YOUR NETWORK/);
+  for (const label of ['CUSTOMER CLOUD', 'CLUSTER', 'ON-PREM', 'CODE', 'DATA', 'WEIGHTS']) {
+    assert.match(visibleText(customerBoundary), new RegExp(label));
+  }
+  assert.doesNotMatch(customerBoundary, /MANAGED COMPUTE/);
+  assert.match(text, /MANAGED COMPUTE/);
+  assert.match(text, /AUTOLAB CONTROL PLANE/);
+  assert.equal((html.match(/data-deployment-route=/g) || []).length, 4);
+  for (const route of ['customer-cloud', 'cluster', 'on-prem', 'managed-compute']) {
+    assert.match(html, new RegExp(`data-deployment-route="${route}"`));
+  }
+  assert.match(
+    css,
+    /\.deployment-customer-boundary \{[^}]*border: 1px dashed[^}]*display: grid;/,
+  );
+  assert.match(css, /\.deployment-system \{[^}]*display: grid;/);
+  assert.match(css, /\.deployment-connectors \{[^}]*position: absolute;/);
+  assert.doesNotMatch(css, /\.deployment-customer-boundary \{[^}]*position: absolute;/);
+});
+
+test('Product page restores all three accessible onboarding paths', async () => {
+  const html = await readFile(PRODUCT_URL, 'utf8');
+  const text = visibleText(html);
+  const tabs = [...html.matchAll(/<button id="([^"]+)" role="tab" aria-selected="(true|false)" aria-controls="([^"]+)" tabindex="(-?\d)">([^<]+)<\/button>/g)];
+  const panels = [...html.matchAll(/<div class="onboarding-panel" id="([^"]+)" role="tabpanel" aria-labelledby="([^"]+)"( hidden)?>/g)];
+
+  assert.match(html, /<section class="product-onboarding" id="start-researching">/);
+  assert.match(html, /data-onboarding-tabs/);
+  assert.match(html, /role="tablist"/);
+  assert.equal(tabs.length, 3);
+  assert.equal(panels.length, 3);
+  assert.deepEqual(tabs.map(match => match[5]), ['CLI', 'Claude Code', 'Codex']);
+  assert.deepEqual(tabs.map(match => match[2]), ['true', 'false', 'false']);
+  assert.deepEqual(tabs.map(match => match[4]), ['0', '-1', '-1']);
+  assert.equal(panels.filter(match => match[3]).length, 2);
+
+  const ids = [...tabs.map(match => match[1]), ...panels.map(match => match[1])];
+  assert.equal(new Set(ids).size, 6);
+  for (const tab of tabs) {
+    assert.ok(panels.some(panel => panel[1] === tab[3] && panel[2] === tab[1]));
+  }
+  for (const line of [
+    '$ curl -fsSL app.autolab.ai/install.sh | sh',
+    '$ autolab init # connect the evaluation that prints your metric',
+    '$ autolab start # begin proposing and running experiments',
+  ]) assert.ok(text.includes(line), `missing onboarding line: ${line}`);
+  assert.match(html, /<script type="module" src="autolab-mog-a3-onboarding-v1\.js"><\/script>/);
+});
+
+test('Product onboarding keeps its console large and becomes one column below 900px', async () => {
+  const css = await readFile(
+    new URL('./autolab-mog-product-v1.css', import.meta.url),
+    'utf8',
+  );
+
+  assert.match(
+    css,
+    /\.product-onboarding \{[^}]*display: grid;[^}]*grid-template-columns: minmax\(0,[^)]+\) minmax\(620px,[^)]+\);/,
+  );
+  assert.match(
+    css,
+    /@media \(max-width: 900px\) \{[\s\S]*?\.product-onboarding \{[^}]*grid-template-columns: 1fr;/,
+  );
+  assert.match(
+    css,
+    /\.product-onboarding \.onboarding-tabs button:focus-visible \{[^}]*outline: 2px solid var\(--mint\);/,
+  );
+  for (const selector of [
+    '.product-onboarding .onboarding-access-label',
+    '.product-onboarding .onboarding-head',
+    '.product-onboarding .onboarding-tabs button',
+  ]) {
+    const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    const declarations = css.match(new RegExp(`(?:^|\\n)${escaped} \\{([^}]*)\\}`))?.[1] || '';
+    assert.match(declarations, /font: [^;]*10px\//, `${selector} must use at least 10px text`);
+  }
+});
+
+test('Product small deployment and onboarding labels use AA text tokens on Paper', async () => {
+  const css = await readFile(
+    new URL('./autolab-mog-product-v1.css', import.meta.url),
+    'utf8',
+  );
+  const ruleBody = selector => {
+    const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return css.match(new RegExp(`(?:^|\\n)${escaped} \\{([^}]*)\\}`))?.[1] || '';
+  };
+
+  assert.match(ruleBody('.deployment-managed > b'), /color: var\(--ink\);/);
+  assert.match(ruleBody('.product-onboarding .onboarding-access-label'), /color: var\(--ink\);/);
+  assert.match(ruleBody('.product-onboarding .mono-label'), /color: var\(--muted\);/);
+  assert.match(ruleBody('.product-onboarding .mono-label'), /font: [^;]*10px\//);
+});
+
+test('Product FAQ answers five technical buying questions', async () => {
+  const [html, css] = await Promise.all([
+    readFile(PRODUCT_URL, 'utf8'),
+    readFile(new URL('./autolab-mog-product-v1.css', import.meta.url), 'utf8'),
+  ]);
+  const text = visibleText(html);
+  const questions = [
+    'What does Autolab connect to?',
+    'How is this different from fixed-space tuning?',
+    'Where do experiments run?',
+    'What can Autolab optimize?',
+    'What does a human approve?',
+  ];
+
+  assert.equal((html.match(/<details/g) || []).length, 5);
+  assert.equal((html.match(/<summary/g) || []).length, 5);
+  for (const question of questions) assert.ok(text.includes(question));
+  for (const answerConcept of [
+    /code repository/i,
+    /fixed list of parameters/i,
+    /customer cloud/i,
+    /evaluation goal/i,
+    /proposed code change and the evidence/i,
+  ]) assert.match(text, answerConcept);
+  assert.match(
+    css,
+    /\.product-faq summary:focus-visible \{[^}]*outline: 2px solid var\(--mint-deep\);/,
+  );
 });
 
 test('Product access input exposes a high-contrast keyboard focus ring', async () => {
