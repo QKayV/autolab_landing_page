@@ -493,6 +493,84 @@ test('Product deployment plate separates customer infrastructure from managed co
   assert.doesNotMatch(css, /\.deployment-customer-boundary \{[^}]*position: absolute;/);
 });
 
+test('Product deployment routes stay centered in proportional Grid targets', async () => {
+  const [html, css] = await Promise.all([
+    readFile(PRODUCT_URL, 'utf8'),
+    readFile(new URL('./autolab-mog-product-v1.css', import.meta.url), 'utf8'),
+  ]);
+  const ruleBody = selector => {
+    const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return css.match(new RegExp(`(?:^|\\n)${escaped} \\{([^}]*)\\}`))?.[1] || '';
+  };
+  const systemRule = ruleBody('.deployment-system');
+
+  assert.match(
+    systemRule,
+    /grid-template-columns: minmax\(0,3fr\) minmax\(110px,1fr\);/,
+  );
+  assert.match(systemRule, /column-gap: clamp\(18px,2\.4vw,28px\);/);
+  assert.match(ruleBody('.deployment-managed'), /width: 100%;/);
+
+  const routes = new Map(
+    [...html.matchAll(/data-deployment-route="([^"]+)" d="M([\d.]+) [\d.]+ C[^"]* ([\d.]+) [\d.]+"/g)]
+      .map(match => [match[1], { startX: Number(match[2]), endX: Number(match[3]) }]),
+  );
+  assert.equal(routes.size, 4);
+
+  for (const { systemWidth, columnGap } of [
+    { systemWidth: 520, columnGap: 18 },
+    { systemWidth: 920, columnGap: 28 },
+  ]) {
+    const customerWidth = (systemWidth - columnGap) * .75;
+    const cardWidth = (customerWidth - 36 - 20) / 3;
+    const customerIntervals = Array.from({ length: 3 }, (_, index) => {
+      const start = 18 + index * (cardWidth + 10);
+      return [start, start + cardWidth];
+    });
+    const intervals = new Map([
+      ['customer-cloud', customerIntervals[0]],
+      ['cluster', customerIntervals[1]],
+      ['on-prem', customerIntervals[2]],
+      ['managed-compute', [0, customerWidth]],
+    ]);
+    const controlInterval = [customerWidth + columnGap, systemWidth];
+    const fromViewBox = value => value / 960 * systemWidth;
+
+    for (const [name, route] of routes) {
+      const source = fromViewBox(route.startX);
+      const target = fromViewBox(route.endX);
+      const [sourceStart, sourceEnd] = intervals.get(name);
+      const normalizedCenter = ((sourceStart + sourceEnd) / 2) / systemWidth * 960;
+      assert.ok(source >= sourceStart && source <= sourceEnd, `${name} route misses its source`);
+      assert.ok(Math.abs(route.startX - normalizedCenter) <= 12, `${name} route is off center`);
+      assert.ok(
+        target >= controlInterval[0] && target <= controlInterval[1],
+        `${name} route misses the control plane`,
+      );
+    }
+  }
+});
+
+test('Product deployment metadata fits the narrowest authored customer card', async () => {
+  const html = await readFile(PRODUCT_URL, 'utf8');
+  const metadata = [...html.matchAll(
+    /data-deployment-node="(?:customer-cloud|cluster|on-prem)"><span>([^<]+)<\/span>/g,
+  )].map(match => match[1]);
+
+  assert.deepEqual(metadata, ['01 / CUSTOMER', '02 / CUSTOMER', '03 / CUSTOMER']);
+  assert.doesNotMatch(html, /INFRASTRUCTURE/);
+
+  const minimumSystemWidth = 520;
+  const minimumGap = 18;
+  const customerWidth = (minimumSystemWidth - minimumGap) * .75;
+  const cardContentWidth = ((customerWidth - 36 - 20) / 3) - 24;
+  const longestToken = Math.max(
+    ...metadata.flatMap(label => label.split(/\s+/).map(token => token.length)),
+  );
+  const estimatedTokenWidth = longestToken * 10 * .62;
+  assert.ok(estimatedTokenWidth <= cardContentWidth);
+});
+
 test('Product page restores all three accessible onboarding paths', async () => {
   const html = await readFile(PRODUCT_URL, 'utf8');
   const text = visibleText(html);
@@ -549,6 +627,42 @@ test('Product onboarding keeps its console large and becomes one column below 90
     const declarations = css.match(new RegExp(`(?:^|\\n)${escaped} \\{([^}]*)\\}`))?.[1] || '';
     assert.match(declarations, /font: [^;]*10px\//, `${selector} must use at least 10px text`);
   }
+});
+
+test('Product onboarding stacks before its console crowds the copy', async () => {
+  const css = await readFile(
+    new URL('./autolab-mog-product-v1.css', import.meta.url),
+    'utf8',
+  );
+
+  const breakpoint1080 = css.slice(
+    css.indexOf('@media (max-width: 1080px)'),
+    css.indexOf('@media (max-width: 900px)'),
+  );
+  const breakpoint900 = css.slice(
+    css.indexOf('@media (max-width: 900px)'),
+    css.indexOf('@media (max-width: 720px)'),
+  );
+
+  assert.match(breakpoint1080, /\.product-onboarding \{[^}]*grid-template-columns: 1fr;/);
+  assert.match(breakpoint1080, /\.product-onboarding-console-column \{[^}]*min-width: 0;/);
+  assert.match(breakpoint900, /\.product-onboarding \{[^}]*grid-template-columns: 1fr;/);
+});
+
+test('Product selected onboarding tab keeps its active dark-console treatment', async () => {
+  const css = await readFile(
+    new URL('./autolab-mog-product-v1.css', import.meta.url),
+    'utf8',
+  );
+  const baseSelector = '.product-onboarding .onboarding-tabs button {';
+  const selectedSelector = '.product-onboarding .onboarding-tabs button[aria-selected="true"] {';
+  const selectedRule = css.match(
+    /\.product-onboarding \.onboarding-tabs button\[aria-selected="true"\] \{([^}]*)\}/,
+  )?.[1] || '';
+
+  assert.match(selectedRule, /color: var\(--paper\);/);
+  assert.match(selectedRule, /border-color: var\(--mint\);/);
+  assert.ok(css.indexOf(selectedSelector) > css.indexOf(baseSelector));
 });
 
 test('Product small deployment and onboarding labels use AA text tokens on Paper', async () => {
