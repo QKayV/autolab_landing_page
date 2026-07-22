@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { execFileSync } from 'node:child_process';
 import { readFile } from 'node:fs/promises';
 import test from 'node:test';
 
@@ -264,4 +265,57 @@ test('both static roots use one byte-identical analytics module', async () => {
     readFile(CONTENT_MODULE, 'utf8'),
   ]);
   assert.equal(contentSource, rootSource);
+});
+
+test('every production-facing page loads exactly one analytics module', async () => {
+  const pages = [
+    'index.html',
+    'autoresearch.html',
+    'manifesto.html',
+    'careers.html',
+    '.superpowers/brainstorm/39694-1784238160/content/autolab-mog-a3-rebirth-v1.html',
+    '.superpowers/brainstorm/39694-1784238160/content/autolab-mog-product-v1.html',
+  ];
+  const script = '<script type="module" src="autolab-posthog-v1.js"></script>';
+
+  for (const page of pages) {
+    const html = await readFile(new URL(page, import.meta.url), 'utf8');
+    assert.equal(html.split(script).length - 1, 1, page + ' must load analytics once');
+  }
+});
+
+test('early-access forms opt out of autocapture without changing their contract', async () => {
+  const pages = [
+    ['.superpowers/brainstorm/39694-1784238160/content/autolab-mog-a3-rebirth-v1.html', 'homepage'],
+    ['.superpowers/brainstorm/39694-1784238160/content/autolab-mog-product-v1.html', 'product'],
+  ];
+
+  for (const [page, source] of pages) {
+    const html = await readFile(new URL(page, import.meta.url), 'utf8');
+    const form = html.match(/<form\b[^>]*\bdata-early-access\b[^>]*>/)?.[0] || '';
+    assert.match(form, /\bdata-ph-no-capture\b/, page + ' must suppress form autocapture');
+    assert.match(form, /\bdata-endpoint=""/, page + ' must keep the blank production endpoint');
+    assert.match(form, new RegExp('\\bdata-source="' + source + '"'));
+  }
+});
+
+test('tracked source contains only the approved browser project token', async () => {
+  const tracked = execFileSync('git', ['ls-files', '-z'], { encoding: 'utf8' })
+    .split('\0')
+    .filter(Boolean)
+    .filter(file => /\.(?:css|html|js|json|md|mjs|txt|xml)$/.test(file));
+  const personalKeyPrefix = ['p', 'h', 'x', '_'].join('');
+  const publicTokenFiles = [];
+
+  for (const file of tracked) {
+    const source = await readFile(new URL(file, import.meta.url), 'utf8');
+    assert.equal(source.includes(personalKeyPrefix), false, file + ' contains a personal PostHog key');
+    if (source.includes(POSTHOG_PROJECT_TOKEN)) publicTokenFiles.push(file);
+  }
+
+  assert.deepEqual(publicTokenFiles.sort(), [
+    '.superpowers/brainstorm/39694-1784238160/content/autolab-posthog-v1.js',
+    'autolab-posthog-v1.js',
+    'docs/superpowers/plans/2026-07-21-autolab-sitewide-posthog.md',
+  ]);
 });
