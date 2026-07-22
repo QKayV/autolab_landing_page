@@ -66,6 +66,25 @@ test('Product circuit exposes three zones and one complete route', async () => {
   }
 });
 
+test('Product topology and experiment plates expose their static anatomy', async () => {
+  const html = await readFile(PRODUCT_URL, 'utf8');
+
+  for (const hook of [
+    'data-topology-source="repository"',
+    'data-topology-source="evaluation"',
+    'data-topology-source="constraints"',
+    'data-compute-pool="local"',
+    'data-compute-pool="cloud"',
+    'data-compute-pool="cluster"',
+    'data-anatomy-part="change"',
+    'data-anatomy-part="gpu"',
+    'data-anatomy-part="trace"',
+    'data-anatomy-part="logs"',
+    'data-anatomy-part="checkpoint"',
+    'data-anatomy-part="evaluation"',
+  ]) assert.match(html, new RegExp(hook));
+});
+
 test('Product chapters preserve approved copy, figures, and image summaries', async () => {
   const html = await readFile(PRODUCT_URL, 'utf8');
   const text = visibleText(html);
