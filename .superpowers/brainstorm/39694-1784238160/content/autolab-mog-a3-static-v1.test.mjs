@@ -38,7 +38,7 @@ for (const variant of variants) {
     assert.equal((html.match(/role="tab"/g) || []).length, 3);
     assert.equal((html.match(/role="tabpanel"/g) || []).length, 3);
     if (variant === 'rebirth') {
-      assert.match(html, /href="#early-access"[^>]*>Get early access/);
+      assert.match(html, /href="\/interest\.html"[^>]*>Get early access/);
     } else {
       assert.match(html, /href="#get-started"[^>]*>Start researching/);
       assert.match(html, /href="#get-started"[^>]*>Run Autolab/);
@@ -193,7 +193,7 @@ test('rebirth exposes the Product page and exact conversion targets', async () =
   assert.match(html, /href="autolab-mog-product-v1\.html"[^>]*>Product</);
   assert.match(html, /href="#research-run"[^>]*>How it works</);
   assert.match(html, /href="https:\/\/docs\.autolab\.ai"[^>]*>Docs</);
-  assert.match(html, /href="#early-access"[^>]*>Get early access/);
+  assert.equal((html.match(/href="\/interest\.html"[^>]*>Get early access/g) || []).length, 2);
   assert.match(html, /href="#onboarding-console"[^>]*>\$ curl -fsSL/);
 });
 
@@ -291,7 +291,7 @@ test('rebirth exposes an accessible early-access form and preserves onboarding',
     'utf8',
   );
 
-  assert.match(html, /<form[^>]*id="early-access"[^>]*data-early-access[^>]*data-endpoint=""[^>]*data-source="homepage"/);
+  assert.match(html, /<form[^>]*id="early-access"[^>]*data-early-access[^>]*data-endpoint="\/api\/interest"[^>]*data-source="homepage"/);
   assert.match(html, /<label for="early-access-email-home">Email address<\/label>/);
   assert.match(html, /id="early-access-email-home"[^>]*data-early-access-email[^>]*type="email"/);
   assert.match(html, /data-early-access-status[^>]*role="status"[^>]*aria-live="polite"/);
@@ -299,7 +299,7 @@ test('rebirth exposes an accessible early-access form and preserves onboarding',
   assert.equal((html.match(/role="tab"/g) || []).length, 3);
   assert.equal((html.match(/role="tabpanel"/g) || []).length, 3);
   assert.match(html, /<script type="module" src="autolab-early-access-v1\.js"><\/script>/);
-  assert.match(html, /<section class="a3-outro"[\s\S]*href="#early-access"/);
+  assert.match(html, /<section class="a3-outro"[\s\S]*href="\/interest\.html"/);
 });
 
 test('intro copy styles do not override the nested early-access status', async () => {

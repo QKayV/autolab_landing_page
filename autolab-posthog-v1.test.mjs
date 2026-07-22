@@ -134,12 +134,12 @@ test('delegated events use the live SDK after it replaces the queue stub', () =>
     },
   };
   harness.handlers.get('click')[0].listener({
-    target: clickTarget({ href: '#early-access' }),
+    target: clickTarget({ href: '/interest.html' }),
   });
 
   assert.deepEqual(captured, [{
     name: 'early_access_opened',
-    properties: { target: 'early_access', page_path: '/product' },
+    properties: { target: 'interest_page', page_path: '/product' },
   }]);
 });
 
@@ -165,6 +165,7 @@ test('click mapping covers the approved high-value funnel actions', () => {
     [clickTarget({ href: 'mailto:team@autolab.ai' }), 'contact_link_clicked', { channel: 'email' }],
     [clickTarget({ href: 'https://forms.gle/example', roleId: 'infrastructure-engineer' }), 'career_application_clicked', { role: 'infrastructure-engineer' }],
     [clickTarget({ href: '#early-access' }), 'early_access_opened', { target: 'early_access' }],
+    [clickTarget({ href: '/interest.html' }), 'early_access_opened', { target: 'interest_page' }],
     [clickTarget({ href: '#onboarding-console' }), 'onboarding_opened', { target: 'onboarding' }],
     [clickTarget({ tabText: 'Claude Code' }), 'onboarding_method_selected', { method: 'claude_code' }],
   ];
@@ -294,7 +295,7 @@ test('early-access forms opt out of autocapture without changing their contract'
     const html = await readFile(new URL(page, import.meta.url), 'utf8');
     const form = html.match(/<form\b[^>]*\bdata-early-access\b[^>]*>/)?.[0] || '';
     assert.match(form, /\bdata-ph-no-capture\b/, page + ' must suppress form autocapture');
-    assert.match(form, /\bdata-endpoint=""/, page + ' must keep the blank production endpoint');
+    assert.match(form, /\bdata-endpoint="\/api\/interest"/, page + ' must use the capture function');
     assert.match(form, new RegExp('\\bdata-source="' + source + '"'));
   }
 });

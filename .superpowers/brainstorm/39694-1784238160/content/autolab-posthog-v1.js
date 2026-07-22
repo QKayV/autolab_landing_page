@@ -93,6 +93,9 @@ export function analyticsEventForClick(target) {
       role: closest(link, 'details[id]')?.id || 'open_call',
     });
   }
+  if (href === '/interest.html' || href === 'interest.html') {
+    return detail('early_access_opened', { target: 'interest_page' });
+  }
   if (href === '#early-access') {
     return detail('early_access_opened', { target: 'early_access' });
   }

@@ -459,7 +459,8 @@ test('Product page shares navigation and early-access contracts', async () => {
   assert.match(html, /href="autolab-mog-a3-rebirth-v1\.html#research-run"[^>]*>How it works/);
   assert.match(html, /href="https:\/\/docs\.autolab\.ai"[^>]*>Docs/);
   assert.match(html, /id="watchdog-canvas"/);
-  assert.match(html, /id="early-access"[^>]*data-early-access/);
+  assert.match(html, /href="\/interest\.html"[^>]*>Get early access/);
+  assert.match(html, /id="early-access"[^>]*data-early-access[^>]*data-endpoint="\/api\/interest"/);
   assert.match(html, /autolab-early-access-v1\.js/);
 });
 
