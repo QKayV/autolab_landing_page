@@ -60,6 +60,7 @@
   text-transform: uppercase;
   transition: color .3s,border-color .3s;
 }
+.research-head h2 { margin: 0; font: inherit; }
 .research-head b { color: var(--mint-deep); text-align: right; }
 .research-progress { height: 2px; background: rgba(20,20,20,.1); }
 .research-progress i { display: block; width: 0; height: 100%; background: var(--mint); }

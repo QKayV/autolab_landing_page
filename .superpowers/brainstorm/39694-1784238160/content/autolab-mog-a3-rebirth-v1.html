@@ -43,18 +43,18 @@
           <div class="terminal-bar"><i></i><i></i><i></i><span>autolab · from goal to merge</span></div>
           <div class="terminal-body">
             <span class="terminal-line mint">$ autolab start --goal "beat baseline"</span>
-            <span class="terminal-line dim">reading repo · binding eval.py · finding 8×H100</span>
-            <span class="terminal-line">spawned 1,000 experiments across 84 live agents</span>
-            <span class="terminal-line">exp/021  rope θ 10k → 1m          +0.4%</span>
-            <span class="terminal-line">exp/084  reasoning mix v2          +1.1%</span>
-            <span class="terminal-line dim">exp/201  optimizer: muon          running</span>
-            <span class="terminal-line dim">exp/389  rejected: latency +31ms   pruned</span>
-            <span class="terminal-line mint">frontier updated · 17 non-dominated experiments</span>
-            <span class="terminal-line result">winner / exp-941c2<br>val_acc 93.5% · latency 38ms · Δ +2.3%</span>
+            <span class="terminal-line dim">reading repo · locating evaluation</span>
+            <span class="terminal-line">connecting available GPUs · experiments queued</span>
+            <span class="terminal-line">exp/021 · evaluating</span>
+            <span class="terminal-line">exp/084 · stopped · evidence retained</span>
+            <span class="terminal-line dim">comparing experiment results</span>
+            <span class="terminal-line dim">proposing the next experiments</span>
+            <span class="terminal-line mint">winner / exp-941c2 · winning change identified</span>
+            <span class="terminal-line result">checks passed · change ready for review</span>
             <span class="terminal-line mint">ready to inspect <span class="terminal-caret"></span></span>
           </div>
         </div>
-        <div class="terminal-caption">a real session, compressed</div>
+        <div class="terminal-caption">an Autolab run, compressed</div>
       </div>
     </section>
 
@@ -69,7 +69,7 @@
         <div class="slingshot-tear" id="slingshot-tear" aria-hidden="true"></div>
         <canvas id="research-canvas" aria-hidden="true"></canvas>
 
-        <div class="research-head"><span>Autolab / model improvement loop</span><span>▸ experiment · lineage · ● winner</span><div class="research-progress"><i></i></div><b id="research-index">01 / 06</b></div>
+        <div class="research-head"><h2>Autolab / model improvement loop</h2><span>▸ experiment · lineage · ● winner</span><div class="research-progress"><i></i></div><b id="research-index">01 / 06</b></div>
         <div class="research-story">
           <article class="research-step active" data-step="0"><span class="step">Goal / 01</span><h3>Tell Autolab what to <em>improve.</em></h3><p>Choose the metric that matters, such as accuracy, cost, or latency.</p><span class="research-key">metric + constraints + evaluation</span></article>
           <article class="research-step" data-step="1"><span class="step">Explore / 02</span><h3>Turn ideas into <em>experiments.</em></h3><p>Agents read your code and create concrete changes they can test.</p><span class="research-key">▸ one vector = one experiment</span></article>
@@ -88,14 +88,14 @@
         <svg class="loop-path" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M70 58 C55 34 38 18 21 6"></path></svg>
         <div class="loop-scan" aria-hidden="true"></div>
 
-        <aside class="research-metrics metric-strip" aria-label="Research metrics"><span class="metric"><small id="metric-a-label">ORBITING</small><strong id="metric-a">001</strong></span><span class="metric"><small id="metric-b-label">PRUNED</small><strong id="metric-b">000</strong></span><span class="metric"><small>BEST Δ</small><strong class="mint" id="metric-best">+0.0%</strong></span></aside>
+        <aside class="research-metrics metric-strip" aria-label="Research metrics"><span class="metric"><small id="metric-a-label">QUEUE</small><strong id="metric-a">QUEUED</strong></span><span class="metric"><small id="metric-b-label">REPO</small><strong id="metric-b">MAPPED</strong></span><span class="metric"><small>STATUS</small><strong class="mint" id="metric-best">SEARCHING</strong></span></aside>
 
         <article class="result-card diff-card" id="result-card">
           <div class="diff-head"><span>winner / exp-0138</span><b>ready for approval</b></div>
           <div class="diff-title">reasoning-frontier ↗</div>
-          <div class="diff-metrics"><span>VAL_ACC<b>93.5%</b></span><span>Δ BASE<b>+2.3</b></span><span>RUNTIME<b>4:18h</b></span></div>
+          <div class="diff-metrics"><span>EVAL<b>IMPROVED</b></span><span>CHECKS<b>PASSED</b></span><span>STATUS<b>REVIEW</b></span></div>
           <pre class="diff-code">- rope_theta = 10_000<span class="add">+ rope_theta = 1_000_000</span><span class="add">+ data_mix = "reasoning_v2"</span></pre>
-          <div class="diff-foot"><span>lineage / 1,000 experiments</span><span>human approval required</span></div>
+          <div class="diff-foot"><span>experiment history attached</span><span>human approval required</span></div>
         </article>
       </div>
     </section>

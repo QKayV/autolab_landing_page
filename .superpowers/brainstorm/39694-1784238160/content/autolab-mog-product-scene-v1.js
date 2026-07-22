@@ -33,13 +33,12 @@ function initWatchdogScene() {
     const ratio = Math.min(window.devicePixelRatio || 1, 2);
     const pixelWidth = Math.round(width * ratio);
     const pixelHeight = Math.round(height * ratio);
-    if (canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
-      canvas.width = pixelWidth;
-      canvas.height = pixelHeight;
-      resizeCount += 1;
-    }
+    const resized = canvas.width !== pixelWidth || canvas.height !== pixelHeight;
+    if (canvas.width !== pixelWidth) canvas.width = pixelWidth;
+    if (canvas.height !== pixelHeight) canvas.height = pixelHeight;
+    if (resized) resizeCount += 1;
     context.setTransform(ratio, 0, 0, ratio, 0, 0);
-    draw(performance.now());
+    if (visible) draw(performance.now());
   }
 
   function label(text, x, y, color = MUTED, align = 'left') {

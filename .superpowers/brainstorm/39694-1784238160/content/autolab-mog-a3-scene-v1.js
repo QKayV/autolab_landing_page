@@ -99,8 +99,10 @@ function resize() {
   width = innerWidth;
   height = innerHeight;
   pixelRatio = Math.min(devicePixelRatio || 1, 2);
-  canvas.width = Math.round(width * pixelRatio);
-  canvas.height = Math.round(height * pixelRatio);
+  const pixelWidth = Math.round(width * pixelRatio);
+  const pixelHeight = Math.round(height * pixelRatio);
+  if (canvas.width !== pixelWidth) canvas.width = pixelWidth;
+  if (canvas.height !== pixelHeight) canvas.height = pixelHeight;
   context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
 }
 
@@ -389,41 +391,31 @@ function updateField() {
 }
 
 function updateMetrics() {
-  const orbitLocal = ease((progress - 0.1) / 0.24);
-  const surfaceLocal = ease(
-    (progress - TIMELINE.orbit) / (TIMELINE.gradient - TIMELINE.orbit),
-  );
-  const pressureLocal = ease(
-    (progress - TIMELINE.gradient) / (TIMELINE.pressure - TIMELINE.gradient),
-  );
-  const compressionLocal = ease(
-    (progress - TIMELINE.pressure) / (TIMELINE.compression - TIMELINE.pressure),
-  );
-
   if (progress < TIMELINE.orbit) {
-    metricALabel.textContent = 'ORBITING';
-    metricBLabel.textContent = 'PRUNED';
-    metricA.textContent = String(Math.round(mix(1, 1000, orbitLocal))).padStart(3, '0');
-    metricB.textContent = '000';
+    metricALabel.textContent = 'QUEUE';
+    metricBLabel.textContent = 'REPO';
+    metricA.textContent = 'QUEUED';
+    metricB.textContent = 'MAPPED';
+    metricBest.textContent = 'SEARCHING';
   } else if (progress < TIMELINE.gradient) {
-    metricALabel.textContent = 'EXPERIMENTS';
-    metricBLabel.textContent = 'FRONTIER';
-    metricA.textContent = '1,000';
-    metricB.textContent = String(Math.round(mix(1, 17, surfaceLocal))).padStart(2, '0');
+    metricALabel.textContent = 'GPUS';
+    metricBLabel.textContent = 'EXPERIMENTS';
+    metricA.textContent = 'RUNNING';
+    metricB.textContent = 'QUEUED';
+    metricBest.textContent = 'SEARCHING';
   } else if (progress < TIMELINE.pressure) {
-    const pruned = Math.round(742 * pressureLocal);
-    metricALabel.textContent = 'ACTIVE';
-    metricBLabel.textContent = 'PRUNED';
-    metricA.textContent = String(1000 - pruned);
-    metricB.textContent = String(pruned).padStart(3, '0');
+    metricALabel.textContent = 'EVAL';
+    metricBLabel.textContent = 'REST';
+    metricA.textContent = 'RUNNING';
+    metricB.textContent = 'STOPPED';
+    metricBest.textContent = 'CANDIDATE';
   } else {
-    metricALabel.textContent = 'SURVIVORS';
-    metricBLabel.textContent = 'COLLAPSED';
-    metricA.textContent = String(Math.max(1, Math.round(mix(258, 1, compressionLocal))));
-    metricB.textContent = String(Math.min(999, Math.round(mix(742, 999, compressionLocal))));
+    metricALabel.textContent = 'BEST';
+    metricBLabel.textContent = 'CHECKS';
+    metricA.textContent = 'IMPROVED';
+    metricB.textContent = 'VERIFIED';
+    metricBest.textContent = 'REVIEW';
   }
-
-  metricBest.textContent = `+${mix(0, 2.3, ease((progress - 0.38) / 0.38)).toFixed(1)}%`;
 }
 
 function updateNavigationTelemetry() {

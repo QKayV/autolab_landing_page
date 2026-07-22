@@ -107,6 +107,83 @@ test('rebirth explains the autonomous experiment loop in plain language', async 
   assert.doesNotMatch(`${html}\n${scene}\n${gpuScene}`, /—/);
 });
 
+test('rebirth outcome UI uses operational states instead of unsupported claims', async () => {
+  const [html, scene] = await Promise.all([
+    readFile(new URL('./autolab-mog-a3-rebirth-v1.html', import.meta.url), 'utf8'),
+    readFile(new URL('./autolab-mog-a3-scene-v1.js', import.meta.url), 'utf8'),
+  ]);
+  const visibleText = html
+    .replace(/<script[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<style[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\s+/g, ' ');
+  const metricUiText = [...scene.matchAll(
+    /metric(?:A|B|Best|ALabel|BLabel)\.textContent\s*=\s*([^;]+);/g,
+  )].map(match => match[1]).join('\n');
+
+  assert.match(visibleText, /\$ autolab start --goal "beat baseline"/);
+  for (const copy of [
+    'reading repo',
+    'connecting available GPUs',
+    'experiments queued',
+    'evaluating',
+    'stopped',
+    'comparing experiment results',
+    'proposing the next experiments',
+    'winning change identified',
+    'checks passed',
+    'ready to inspect',
+    'an Autolab run, compressed',
+    'experiment history attached',
+    'human approval required',
+  ]) {
+    assert.match(visibleText, new RegExp(copy, 'i'));
+  }
+  assert.match(
+    html,
+    /<div class="diff-metrics"><span>EVAL<b>IMPROVED<\/b><\/span><span>CHECKS<b>PASSED<\/b><\/span><span>STATUS<b>REVIEW<\/b><\/span><\/div>/,
+  );
+  for (const state of [
+    'QUEUED',
+    'MAPPED',
+    'RUNNING',
+    'STOPPED',
+    'SEARCHING',
+    'CANDIDATE',
+    'IMPROVED',
+    'VERIFIED',
+    'REVIEW',
+  ]) {
+    assert.match(metricUiText, new RegExp(`['\"]${state}['\"]`));
+  }
+
+  assert.doesNotMatch(visibleText, /\ba real session\b/i);
+  assert.doesNotMatch(visibleText, /(?:[+-]\s*)?\d+(?:\.\d+)?%/);
+  assert.doesNotMatch(visibleText, /\b\d+(?:\.\d+)?ms\b|\b\d+:\d+h\b/i);
+  assert.doesNotMatch(visibleText, /\bVAL_ACC\b|\bBEST\s*Δ\b|Δ\s*BASE/i);
+  assert.doesNotMatch(visibleText, /\b(?:spawned|lineage\s*\/)\s*[\d,]+\s+experiments\b/i);
+  assert.doesNotMatch(visibleText, /\b\d+\s+live agents\b|\b\d+\s+non-dominated experiments\b/i);
+  assert.doesNotMatch(metricUiText, /%|\b2\.3\b|\b1,000\b|\b742\b|\b999\b/);
+});
+
+test('rebirth research section has one h2 followed by six h3 stage headings', async () => {
+  const [html, css] = await Promise.all([
+    readFile(new URL('./autolab-mog-a3-rebirth-v1.html', import.meta.url), 'utf8'),
+    readFile(new URL('./autolab-mog-a3-core-v1.css', import.meta.url), 'utf8'),
+  ]);
+  const researchStory = html.match(
+    /<div class="research-story">([\s\S]*?)<\/div>\s*<div class="event-horizon"/,
+  )?.[1] ?? '';
+
+  assert.match(
+    html,
+    /<div class="research-head"><h2>Autolab \/ model improvement loop<\/h2>/,
+  );
+  assert.equal((researchStory.match(/<h3>/g) ?? []).length, 6);
+  assert.doesNotMatch(researchStory, /<h[12456]>/);
+  assert.match(css, /\.research-head h2\s*\{[^}]*margin:\s*0[^}]*font:\s*inherit/s);
+});
+
 test('rebirth exposes the Product page and exact conversion targets', async () => {
   const html = await readFile(
     new URL('./autolab-mog-a3-rebirth-v1.html', import.meta.url),

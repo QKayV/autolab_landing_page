@@ -210,20 +210,25 @@ function installSceneEnvironment({
 
 test('watchdog runs only in view and resumes one continuous cycle', async () => {
   const animated = installSceneEnvironment();
-  let observerOptions;
   try {
     await animated.load();
-    observerOptions = animated.intersectionOptions;
     assert.equal(animated.frames.size, 0);
+    assert.equal(animated.drawCount, 0);
+    assert.deepEqual(animated.intersectionOptions, { rootMargin: '0px', threshold: 0.05 });
+
+    animated.resize();
+    assert.equal(animated.drawCount, 0);
 
     const widthWrites = animated.widthWrites.length;
     const heightWrites = animated.heightWrites.length;
     animated.intersect(true);
     assert.equal(animated.frames.size, 1);
+    assert.equal(animated.drawCount, 0);
     animated.intersect(true);
     assert.equal(animated.frames.size, 1);
 
     animated.runFrame(4600);
+    assert.equal(animated.drawCount, 1);
     assert.equal(animated.state().progress, 0.5);
     assert.equal(animated.frames.size, 1);
     assert.equal(animated.widthWrites.length, widthWrites);
@@ -250,22 +255,26 @@ test('watchdog runs only in view and resumes one continuous cycle', async () => 
   } finally {
     animated.restore();
   }
+});
 
+test('watchdog reduced motion draws one final frame only after entry', async () => {
   const reduced = installSceneEnvironment({ reducedMotion: true });
   try {
     await reduced.load();
     assert.equal(reduced.frames.size, 0);
+    assert.equal(reduced.drawCount, 0);
+
+    reduced.resize();
+    assert.equal(reduced.drawCount, 0);
     reduced.intersect(true);
     assert.equal(reduced.frames.size, 0);
+    assert.equal(reduced.drawCount, 1);
     assert.equal(reduced.state().progress, 1);
     assert.equal(reduced.state().phase, 'running-next');
     assert.ok(reduced.labels.includes('EXP-015 / RUNNING'));
-    assert.ok(reduced.drawCount > 0);
   } finally {
     reduced.restore();
   }
-
-  assert.deepEqual(observerOptions, { rootMargin: '0px', threshold: 0.05 });
 });
 
 test('watchdog resize clamps zero dimensions and reapplies its transform', async () => {
@@ -304,6 +313,24 @@ test('watchdog resize clamps zero dimensions and reapplies its transform', async
     ]);
   } finally {
     stableBacking.restore();
+  }
+});
+
+test('watchdog resize writes only the backing dimension that changed', async () => {
+  const scene = installSceneEnvironment({ width: 320, height: 200, ratio: 2 });
+  try {
+    await scene.load();
+    scene.setDimensions({ width: 321, height: 200, ratio: 2 });
+    scene.resize();
+
+    assert.deepEqual(scene.widthWrites, [640, 642]);
+    assert.deepEqual(scene.heightWrites, [400]);
+    assert.deepEqual(scene.transforms, [
+      [2, 0, 0, 2, 0, 0],
+      [2, 0, 0, 2, 0, 0],
+    ]);
+  } finally {
+    scene.restore();
   }
 });
 

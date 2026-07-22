@@ -42,12 +42,18 @@ function fakeElement() {
 function installSceneEnvironment({
   reducedMotion = false,
   firstFrameId = 1,
+  width = 1200,
+  height = 800,
+  ratio = 1,
 } = {}) {
   const originals = new Map(
     GLOBAL_KEYS.map(key => [key, Object.getOwnPropertyDescriptor(globalThis, key)]),
   );
-  const viewportWidth = 1200;
-  const viewportHeight = 800;
+  let viewportWidth = width;
+  let viewportHeight = height;
+  let pixelRatio = ratio;
+  let backingWidth = 300;
+  let backingHeight = 150;
   const runHeight = 4400;
   let runTop = 1800;
   let now = 1000;
@@ -59,6 +65,9 @@ function installSceneEnvironment({
   const frames = new Map();
   const cancelledFrames = [];
   const listeners = new Map();
+  const widthWrites = [];
+  const heightWrites = [];
+  const transforms = [];
 
   const context = {
     arc() {},
@@ -80,7 +89,9 @@ function installSceneEnvironment({
     rotate() {},
     save() {},
     setLineDash() {},
-    setTransform() {},
+    setTransform(...values) {
+      transforms.push(values);
+    },
     stroke() {},
     translate() {},
   };
@@ -120,8 +131,20 @@ function installSceneEnvironment({
   const storySteps = Array.from({ length: 6 }, fakeElement);
   const canvas = {
     ...fakeElement(),
-    width: 300,
-    height: 150,
+    get width() {
+      return backingWidth;
+    },
+    set width(value) {
+      backingWidth = value;
+      widthWrites.push(value);
+    },
+    get height() {
+      return backingHeight;
+    },
+    set height(value) {
+      backingHeight = value;
+      heightWrites.push(value);
+    },
     getContext() {
       return context;
     },
@@ -237,7 +260,7 @@ function installSceneEnvironment({
     },
     innerWidth: viewportWidth,
     innerHeight: viewportHeight,
-    devicePixelRatio: 1,
+    devicePixelRatio: pixelRatio,
     scrollY: 0,
   };
 
@@ -250,8 +273,12 @@ function installSceneEnvironment({
   }
 
   return {
+    canvas,
     cancelledFrames,
     frames,
+    heightWrites,
+    transforms,
+    widthWrites,
     get drawCount() {
       return drawCount;
     },
@@ -281,6 +308,24 @@ function installSceneEnvironment({
       callback(timestamp);
       return frameId;
     },
+    metrics() {
+      return {
+        a: `${elements.metricALabel.textContent} / ${elements.metricA.textContent}`,
+        b: `${elements.metricBLabel.textContent} / ${elements.metricB.textContent}`,
+        status: elements.metricBest.textContent,
+      };
+    },
+    setDimensions(next) {
+      viewportWidth = next.width;
+      viewportHeight = next.height;
+      pixelRatio = next.ratio;
+      globalThis.innerWidth = viewportWidth;
+      globalThis.innerHeight = viewportHeight;
+      globalThis.devicePixelRatio = pixelRatio;
+    },
+    setProgress(value) {
+      runTop = -value * Math.max(1, runHeight - viewportHeight);
+    },
     setRunTop(value) {
       runTop = value;
     },
@@ -295,6 +340,90 @@ function installSceneEnvironment({
     },
   };
 }
+
+test('research metrics report qualitative operational phases', async () => {
+  const scene = installSceneEnvironment();
+  try {
+    await scene.load();
+    assert.deepEqual(scene.metrics(), {
+      a: 'QUEUE / QUEUED',
+      b: 'REPO / MAPPED',
+      status: 'SEARCHING',
+    });
+
+    for (const expected of [
+      {
+        progress: 0.4,
+        metrics: {
+          a: 'GPUS / RUNNING',
+          b: 'EXPERIMENTS / QUEUED',
+          status: 'SEARCHING',
+        },
+      },
+      {
+        progress: 0.65,
+        metrics: {
+          a: 'EVAL / RUNNING',
+          b: 'REST / STOPPED',
+          status: 'CANDIDATE',
+        },
+      },
+      {
+        progress: 0.8,
+        metrics: {
+          a: 'BEST / IMPROVED',
+          b: 'CHECKS / VERIFIED',
+          status: 'REVIEW',
+        },
+      },
+    ]) {
+      scene.setProgress(expected.progress);
+      scene.dispatch('scroll');
+      assert.deepEqual(scene.metrics(), expected.metrics);
+    }
+  } finally {
+    scene.restore();
+  }
+});
+
+test('research resize skips backing writes at identical dimensions and reapplies its transform', async () => {
+  const scene = installSceneEnvironment({ width: 320, height: 200, ratio: 2 });
+  try {
+    await scene.load();
+    assert.equal(scene.canvas.width, 640);
+    assert.equal(scene.canvas.height, 400);
+    assert.deepEqual(scene.widthWrites, [640]);
+    assert.deepEqual(scene.heightWrites, [400]);
+    assert.deepEqual(scene.transforms, [[2, 0, 0, 2, 0, 0]]);
+
+    scene.dispatch('resize');
+    assert.deepEqual(scene.widthWrites, [640]);
+    assert.deepEqual(scene.heightWrites, [400]);
+    assert.deepEqual(scene.transforms, [
+      [2, 0, 0, 2, 0, 0],
+      [2, 0, 0, 2, 0, 0],
+    ]);
+  } finally {
+    scene.restore();
+  }
+});
+
+test('research resize skips writes when CSS and DPR changes preserve backing dimensions', async () => {
+  const scene = installSceneEnvironment({ width: 320, height: 200, ratio: 2 });
+  try {
+    await scene.load();
+    scene.setDimensions({ width: 640, height: 400, ratio: 1 });
+    scene.dispatch('resize');
+    assert.deepEqual(scene.widthWrites, [640]);
+    assert.deepEqual(scene.heightWrites, [400]);
+    assert.deepEqual(scene.transforms, [
+      [2, 0, 0, 2, 0, 0],
+      [1, 0, 0, 1, 0, 0],
+    ]);
+  } finally {
+    scene.restore();
+  }
+});
 
 test('research canvas frames run only while the scene is visible', async () => {
   const animated = installSceneEnvironment();
