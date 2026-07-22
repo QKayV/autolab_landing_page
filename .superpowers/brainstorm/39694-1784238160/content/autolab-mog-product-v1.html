@@ -90,8 +90,55 @@
       </figure>
     </section>
     <section class="product-feature product-chapter watchdog-feature" data-explainer-chapter><div class="product-copy"><span class="mono-label">Watchdog / 03</span><h2>Stop waste. Keep GPUs moving.</h2><p>Watchdog models stop runs that have plateaued or are clearly trending toward failure. The evidence remains, and the freed GPU immediately becomes available to the next queued experiment.</p></div><div class="watchdog-instrument" role="img" aria-label="Watchdog stopping a plateaued run and releasing its GPU to the next queued experiment."><canvas id="watchdog-canvas" aria-hidden="true"></canvas></div></section>
-    <section class="product-feature product-chapter reverse" data-explainer-chapter><div class="product-copy"><span class="mono-label">Lineage / 04</span><h2>Turn every result into the next experiment.</h2><p>Completed, stopped, and failed runs all add evidence. Autolab uses that history to propose concrete changes, avoid repeated dead ends, and choose the next experiments worth running.</p></div><div class="lineage-plate experiment-queue" role="img" aria-label="Completed, stopped, and failed runs contributing evidence to the next proposed experiment."><div class="queue-results"><span>COMPLETED</span><span>STOPPED</span><span>FAILED</span><span>SELECTED</span></div><b>EVIDENCE</b><i>→</i><strong>NEXT EXPERIMENT</strong></div></section>
-    <section class="product-feature product-chapter" data-explainer-chapter><div class="product-copy"><span class="mono-label">Review / 05</span><h2>Review the full research record.</h2><p>The winning change arrives with its configuration, evaluation state, logs, checkpoint reference, and experiment lineage. Your team decides what ships.</p></div><div class="research-packet product-diff" role="img" aria-label="A reviewable research packet containing the winning configuration, evidence, checkpoint, and experiment lineage."><div class="product-diff-head"><span>EXP-018 / SELECTED</span><b>READY TO REVIEW</b></div><pre><i>  configuration</i>&#10;<span>  evaluation state</span>&#10;<b>  logs + checkpoint</b>&#10;<span>  experiment lineage</span></pre><div class="product-diff-foot"><span>RESEARCH PACKET</span><strong>TEAM APPROVAL ↗</strong></div></div></section>
+    <section class="product-feature product-chapter reverse" data-explainer-chapter>
+      <div class="product-copy"><span class="mono-label">Lineage / 04</span><h2>Turn every result into the next experiment.</h2><p>Completed, stopped, and failed runs all add evidence. Autolab uses that history to propose concrete changes, avoid repeated dead ends, and choose the next experiments worth running.</p></div>
+      <figure class="lineage-plate experiment-queue" role="img" aria-label="Completed, stopped, and failed experiments feed research memory, which proposes three next changes and highlights one selected lineage.">
+        <div class="lineage-index"><span>PLATE 04 / EXPERIMENT LINEAGE</span><small>solid = retained history · dashed = proposed next step</small></div>
+        <div class="lineage-system">
+          <div class="lineage-outcomes">
+            <span class="lineage-column-label">OUTCOMES RETAINED</span>
+            <div class="lineage-result" data-lineage-result="completed" data-lineage-selected><span>● COMPLETED</span><small>SELECTED RESULT</small></div>
+            <div class="lineage-result" data-lineage-result="stopped"><span>○ STOPPED</span><small>plateau evidence</small></div>
+            <div class="lineage-result" data-lineage-result="failed"><span>× FAILED</span><small>failure evidence</small></div>
+            <p class="lineage-note">dead ends remain useful evidence</p>
+          </div>
+          <svg class="lineage-routes" viewBox="0 0 960 430" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+            <path class="lineage-history-route" d="M205 114 C300 114 306 172 410 172" vector-effect="non-scaling-stroke"></path>
+            <path class="lineage-history-route" d="M205 215 H410" vector-effect="non-scaling-stroke"></path>
+            <path class="lineage-history-route" d="M205 316 C300 316 306 258 410 258" vector-effect="non-scaling-stroke"></path>
+            <path class="lineage-proposal-route" d="M550 172 C654 172 660 114 755 114" vector-effect="non-scaling-stroke"></path>
+            <path class="lineage-proposal-route" d="M550 215 H755" vector-effect="non-scaling-stroke"></path>
+            <path class="lineage-proposal-route" d="M550 258 C654 258 660 316 755 316" vector-effect="non-scaling-stroke"></path>
+          </svg>
+          <div class="lineage-memory"><span>RESEARCH MEMORY</span><b>OUTCOME + CHANGE + EVIDENCE</b><small>Each run stays attached to what changed and what happened.</small></div>
+          <div class="lineage-proposals">
+            <span class="lineage-column-label">NEXT BATCH</span>
+            <div data-next-experiment><span>▸ PROPOSED CHANGE</span><small>refine stopping rule</small></div>
+            <div data-next-experiment><span>▸ PROPOSED CHANGE</span><small>revise data schedule</small></div>
+            <div data-next-experiment><span>▸ PROPOSED CHANGE</span><small>test model change</small></div>
+            <p class="lineage-note">useful results shape the next batch</p>
+          </div>
+        </div>
+      </figure>
+    </section>
+    <section class="product-feature product-chapter" data-explainer-chapter>
+      <div class="product-copy"><span class="mono-label">Review / 05</span><h2>Review the full research record.</h2><p>The winning change arrives with its configuration, evaluation state, logs, checkpoint reference, and experiment lineage. Your team decides what ships.</p></div>
+      <figure class="research-packet product-diff" role="img" aria-label="A seven-part research packet joins the code change and run evidence at a required human approval boundary.">
+        <div class="packet-index"><span>PLATE 05 / RESEARCH PACKET</span><small>seven parts · one human decision</small></div>
+        <div class="packet-stack">
+          <article class="packet-sheet packet-diff" data-packet-part="diff">
+            <header><span>CHANGE</span><b>CODE DIFF</b></header>
+            <code><span class="diff-removed">− fixed training window</span><span class="diff-added">+ evidence-based stop rule</span></code>
+          </article>
+          <article class="packet-sheet packet-config" data-packet-part="config"><header><span>CONTEXT</span><b>RUN CONFIG</b></header><strong>environment attached</strong><small>repository · evaluation · constraints</small></article>
+          <article class="packet-sheet packet-evaluation" data-packet-part="evaluation"><header><span>SIGNAL</span><b>EVALUATION</b></header><strong>○ IMPROVED</strong><small>your metric decides</small></article>
+          <article class="packet-sheet packet-logs" data-packet-part="logs"><header><span>EVIDENCE</span><b>LOGS</b></header><strong>run record attached</strong><small>events stay inspectable</small></article>
+          <article class="packet-sheet packet-checkpoint" data-packet-part="checkpoint"><header><span>ARTIFACT</span><b>CHECKPOINT</b></header><strong>artifact referenced</strong><small>state remains traceable</small></article>
+          <article class="packet-sheet packet-lineage" data-packet-part="lineage"><header><span>HISTORY</span><b>LINEAGE</b></header><strong>history attached</strong><small>completed · stopped · failed</small></article>
+          <article class="packet-sheet packet-approval" data-packet-part="approval"><span>DECISION BOUNDARY</span><strong>HUMAN APPROVAL REQUIRED</strong><p>YOUR TEAM DECIDES WHAT SHIPS</p><small>Autolab proposes. Your team approves.</small></article>
+        </div>
+      </figure>
+    </section>
     <section class="product-feature product-chapter reverse" data-explainer-chapter><div class="product-copy"><span class="mono-label">Deployment / 06</span><h2>Deploy where your research already runs.</h2><p>Run Autolab in your cloud account, on your cluster, on-prem, or with managed compute. Code, data, and model weights can remain inside your network.</p></div><div class="deployment-plate compute-map" role="img" aria-label="Autolab deployed in a cloud account, cluster, on-prem environment, or with managed compute."><div class="compute-nodes"><i><b>CLOUD ACCOUNT</b><small>YOUR NETWORK</small></i><i><b>CLUSTER</b><small>YOUR NETWORK</small></i><i><b>ON-PREM</b><small>YOUR NETWORK</small></i><i><b>MANAGED</b><small>COMPUTE</small></i></div><span class="compute-route"></span><strong>AUTOLAB</strong></div></section>
     <section class="product-access"><div><span class="mono-label eyebrow-mint">Start with Autolab</span><h2>Get early <em>access.</em></h2><p>Leave your email and we will send you access details.</p></div><form class="early-access-form" id="early-access" data-early-access data-endpoint="" data-source="product" novalidate><label for="early-access-email-product">Email address</label><div class="early-access-control"><input id="early-access-email-product" data-early-access-email type="email" name="email" autocomplete="email" inputmode="email" required placeholder="you@example.com"><button class="button primary" data-early-access-submit type="submit">Request access <span>↗</span></button></div><p class="early-access-status" data-early-access-status role="status" aria-live="polite"></p><a class="early-access-demo" href="https://calendar.superhuman.com/book/11Wx5q95SPgTTclPo4/KrRGA" target="_blank" rel="noopener">Prefer to talk? Book a demo →</a></form></section>
   </main>

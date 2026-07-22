@@ -238,6 +238,96 @@ test('Product watchdog canvas stays nested inside its instrument', async () => {
   );
 });
 
+test('Research memory preserves every outcome and proposes a next batch', async () => {
+  const [html, css] = await Promise.all([
+    readFile(PRODUCT_URL, 'utf8'),
+    readFile(new URL('./autolab-mog-product-v1.css', import.meta.url), 'utf8'),
+  ]);
+  const text = visibleText(html);
+  const outcomes = [
+    ['completed', '● COMPLETED'],
+    ['stopped', '○ STOPPED'],
+    ['failed', '× FAILED'],
+  ];
+
+  for (const [outcome, label] of outcomes) {
+    assert.equal(
+      (html.match(new RegExp(`data-lineage-result="${outcome}"`, 'g')) || []).length,
+      1,
+      `missing lineage outcome: ${outcome}`,
+    );
+    assert.match(text, new RegExp(label.replace(/[●○×]/g, '\\$&')));
+  }
+  assert.equal((html.match(/data-next-experiment/g) || []).length, 3);
+  assert.equal(tagsWithClass(html, 'lineage-history-route').length, 3);
+  assert.equal(tagsWithClass(html, 'lineage-proposal-route').length, 3);
+  assert.equal(tagsWithClass(html, 'lineage-memory').length, 1);
+  assert.equal((html.match(/data-lineage-selected/g) || []).length, 1);
+  assert.equal((text.match(/▸ PROPOSED CHANGE/g) || []).length, 3);
+  assert.match(text, /RESEARCH MEMORY/);
+  assert.match(text, /dead ends remain useful evidence/i);
+  assert.match(text, /useful results shape the next batch/i);
+
+  const historyRule = css.match(/(?:^|\n)\.lineage-history-route \{([^}]*)\}/)?.[1] || '';
+  const proposalRule = css.match(/(?:^|\n)\.lineage-proposal-route \{([^}]*)\}/)?.[1] || '';
+  const selectedRule = css.match(/(?:^|\n)\.lineage-result\[data-lineage-selected\] \{([^}]*)\}/)?.[1] || '';
+  assert.match(historyRule, /stroke: rgba\(20,20,20,/);
+  assert.doesNotMatch(historyRule, /stroke-dasharray/);
+  assert.match(proposalRule, /stroke: var\(--mint-deep\);/);
+  assert.match(proposalRule, /stroke-dasharray:/);
+  assert.match(selectedRule, /color: var\(--mint-deep\);/);
+});
+
+test('Research packet makes the human review boundary concrete', async () => {
+  const [html, css] = await Promise.all([
+    readFile(PRODUCT_URL, 'utf8'),
+    readFile(new URL('./autolab-mog-product-v1.css', import.meta.url), 'utf8'),
+  ]);
+  const text = visibleText(html);
+  const parts = [
+    ['diff', 'CODE DIFF'],
+    ['config', 'RUN CONFIG'],
+    ['evaluation', 'EVALUATION'],
+    ['logs', 'LOGS'],
+    ['checkpoint', 'CHECKPOINT'],
+    ['lineage', 'LINEAGE'],
+    ['approval', 'HUMAN APPROVAL REQUIRED'],
+  ];
+
+  for (const [part, label] of parts) {
+    assert.equal(
+      (html.match(new RegExp(`data-packet-part="${part}"`, 'g')) || []).length,
+      1,
+      `missing research packet part: ${part}`,
+    );
+    assert.match(text, new RegExp(label));
+  }
+  assert.equal((html.match(/data-packet-part=/g) || []).length, 7);
+  assert.equal(tagsWithClass(html, 'diff-removed').length, 1);
+  assert.equal(tagsWithClass(html, 'diff-added').length, 1);
+  for (const detail of [
+    'environment attached',
+    '○ IMPROVED',
+    'run record attached',
+    'artifact referenced',
+    'history attached',
+    'YOUR TEAM DECIDES WHAT SHIPS',
+  ]) assert.match(text, new RegExp(detail));
+
+  assert.match(
+    css,
+    /\.packet-stack \{[^}]*display: grid;[^}]*grid-template-columns: repeat\(12,minmax\(0,1fr\)\);/,
+  );
+  assert.match(
+    css,
+    /\.packet-approval \{[^}]*background: #0c1210;[^}]*color: var\(--paper\);/,
+  );
+  assert.match(
+    css,
+    /@media \(max-width: 720px\) \{[\s\S]*?\.packet-stack \{[^}]*grid-template-columns: 1fr;/,
+  );
+});
+
 test('Product page visible copy avoids em dashes', async () => {
   const html = await readFile(PRODUCT_URL, 'utf8');
 
