@@ -40,7 +40,7 @@ The submitted email is intentionally stored in PostHog. It is not added to gener
 - Successful entries appear under the `interest_submitted` event.
 - The `email` event property is the initial contact list and can be filtered or exported from PostHog.
 - `source` distinguishes `interest_page`, `homepage`, and `product` submissions.
-- No personal `phx_` API key, PostHog organization ID, or new Vercel environment variable is required.
+- No personal PostHog API key, PostHog organization ID, or new Vercel environment variable is required.
 
 ## Failure behavior
 

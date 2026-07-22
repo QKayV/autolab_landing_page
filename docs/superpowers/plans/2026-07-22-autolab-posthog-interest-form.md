@@ -11,7 +11,7 @@
 ## Global Constraints
 
 - Store only `email`, `source`, and a server-generated submission timestamp in the `interest_submitted` event.
-- Never add a personal `phx_` key, PostHog organization ID, cookie, client IP, or browser header to the payload.
+- Never add a personal PostHog key, PostHog organization ID, cookie, client IP, or browser header to the payload.
 - Keep session replay disabled and every email form marked `data-ph-no-capture`.
 - Use the existing public `POSTHOG_PROJECT_TOKEN` and US host.
 - Preserve unrelated copy, animation, SEO, navigation, docs, careers, and demo behavior.
@@ -140,7 +140,7 @@ git commit -m "feat: submit interest through the site origin"
 
 - [ ] **Step 1: Write the failing static-page tests**
 
-Assert both pages are byte-identical and expose exactly one email input, one honeypot, `data-endpoint="/api/interest"`, `data-source="interest_page"`, `data-ph-no-capture`, an `aria-live` status, consent text, visible focus CSS, a reduced-motion rule, both required modules, no em dash, and no `phx_` credential.
+Assert both pages are byte-identical and expose exactly one email input, one honeypot, `data-endpoint="/api/interest"`, `data-source="interest_page"`, `data-ph-no-capture`, an `aria-live` status, consent text, visible focus CSS, a reduced-motion rule, both required modules, no em dash, and no personal credential.
 
 - [ ] **Step 2: Run the tests and verify RED**
 
@@ -238,4 +238,3 @@ git add autolab-posthog-v1.js autolab-posthog-v1.test.mjs \
   .superpowers/brainstorm/39694-1784238160/content/autolab-mog-product-static-v1.test.mjs
 git commit -m "feat: route early access into PostHog"
 ```
-
