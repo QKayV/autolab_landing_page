@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
 const PRODUCT_URL = new URL('./autolab-mog-product-v1.html', import.meta.url);
+const HOME_URL = new URL('../../../../index.html', import.meta.url);
 
 const visibleText = html => html
   .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, ' ')
@@ -16,6 +17,11 @@ const tagsWithClass = (html, className) => (html.match(/<[^>]+>/g) || [])
     const classes = tag.match(/\bclass="([^"]*)"/)?.[1].split(/\s+/) || [];
     return classes.includes(className);
   });
+
+const withoutProductFaq = html => html.replace(
+  /<section class="product-faq"[\s\S]*?<\/section>/,
+  '',
+);
 
 test('Product page opens one complete illustrated research circuit', async () => {
   const html = await readFile(PRODUCT_URL, 'utf8');
@@ -443,10 +449,10 @@ test('Research packet headers wrap intact inside the clipped sheet', async () =>
   assert.ok(worstAuthoredContentHeight <= constrainedContentHeight);
 });
 
-test('Product page visible copy avoids em dashes', async () => {
+test('Product page visible copy outside the approved FAQ avoids em dashes', async () => {
   const html = await readFile(PRODUCT_URL, 'utf8');
 
-  assert.doesNotMatch(visibleText(html), /—/);
+  assert.doesNotMatch(visibleText(withoutProductFaq(html)), /—/);
 });
 
 test('Product page shares navigation and early-access contracts', async () => {
@@ -685,30 +691,54 @@ test('Product small deployment and onboarding labels use AA text tokens on Paper
   assert.match(ruleBody('.product-onboarding .mono-label'), /font: [^;]*10px\//);
 });
 
-test('Product FAQ answers five technical buying questions', async () => {
-  const [html, css] = await Promise.all([
+test('Product FAQ matches the approved six-question homepage FAQ', async () => {
+  const [html, homeHtml, css] = await Promise.all([
     readFile(PRODUCT_URL, 'utf8'),
+    readFile(HOME_URL, 'utf8'),
     readFile(new URL('./autolab-mog-product-v1.css', import.meta.url), 'utf8'),
   ]);
-  const text = visibleText(html);
-  const questions = [
-    'What does Autolab connect to?',
-    'How is this different from fixed-space tuning?',
-    'Where do experiments run?',
-    'What can Autolab optimize?',
-    'What does a human approve?',
+  const productFaq = html.match(/<section class="product-faq"[\s\S]*?<\/section>/)?.[0] || '';
+  const homeFaq = homeHtml.match(/<section id="faq"[\s\S]*?<\/section>/)?.[0] || '';
+  const productText = visibleText(productFaq);
+  const homeText = visibleText(homeFaq);
+  const approvedFaq = [
+    [
+      'What is autoresearch?',
+      'Autoresearch is autonomous AI agents running the machine learning research loop: proposing experiments, writing the code, training and evaluating models, and deciding what to try next — while humans set the goal. Instead of one researcher hand-running one experiment at a time, an autoresearch platform runs thousands in parallel and merges only what improves the metric. Read the full explanation →',
+    ],
+    [
+      'What is Autolab?',
+      'Autolab is an autoresearch platform for AI model training. You give it a goal and an eval; its agents read your repo, plan experiments, launch them across your GPUs, score every run against your metric, and keep iterating until the goal is met. It was built by ML researchers from MIT, Harvard, Stanford, and Google DeepMind.',
+    ],
+    [
+      'What is agentic training of models?',
+      'Agentic model training means AI agents, not humans, drive the training loop: they sweep learning rates, change data mixes, modify architectures, launch runs, read the training logs, and decide the next experiment. Autolab coordinates hundreds of these agents against a single goal, on your own compute.',
+    ],
+    [
+      'How is this different from AutoML or hyperparameter tuning?',
+      'AutoML and hyperparameter optimization search a fixed space with predefined strategies. Autoresearch agents write real code in your repository: new data pipelines, loss functions, kernels, quantization and serving configs — anything a researcher could try — and every change is scored against your own evals before it merges.',
+    ],
+    [
+      'Where do the experiments run?',
+      'On your cluster or in your cloud account. Code, data, and weights never leave your network, and on-prem installs are available for pilots. Autolab keeps whatever GPUs you have — from a spare 3090 to a multi-node H100 cluster — saturated with the next-most-valuable experiment.',
+    ],
+    [
+      'What can Autolab optimize?',
+      'Whatever your eval measures: model accuracy, training cost, inference latency, throughput. Teams use it for pre-training and fine-tuning experiments, post-training recipes, and inference optimization — the agents push the number, and nothing ships unless it moves.',
+    ],
   ];
 
-  assert.equal((html.match(/<details/g) || []).length, 5);
-  assert.equal((html.match(/<summary/g) || []).length, 5);
-  for (const question of questions) assert.ok(text.includes(question));
-  for (const answerConcept of [
-    /code repository/i,
-    /fixed list of parameters/i,
-    /customer cloud/i,
-    /evaluation goal/i,
-    /proposed code change and the evidence/i,
-  ]) assert.match(text, answerConcept);
+  assert.equal((productFaq.match(/<details/g) || []).length, 6);
+  assert.equal((productFaq.match(/<summary/g) || []).length, 6);
+  let previousQuestion = -1;
+  for (const [question, answer] of approvedFaq) {
+    const questionIndex = productText.indexOf(question);
+    assert.ok(questionIndex > previousQuestion, 'missing or unordered Product FAQ: ' + question);
+    assert.ok(productText.includes(answer), 'Product answer differs: ' + question);
+    assert.ok(homeText.includes(question), 'homepage question differs: ' + question);
+    assert.ok(homeText.includes(answer), 'homepage answer differs: ' + question);
+    previousQuestion = questionIndex;
+  }
   assert.match(
     css,
     /\.product-faq summary:focus-visible \{[^}]*outline: 2px solid var\(--mint-deep\);/,
@@ -871,7 +901,7 @@ test('Product qualitative copy and explainer controller avoid synthetic claims a
     readFile(new URL('./autolab-mog-product-explainer-v2.js', import.meta.url), 'utf8'),
     readFile(new URL('./autolab-mog-product-scene-v1.js', import.meta.url), 'utf8'),
   ]);
-  const generatedCopy = `${visibleText(html)} ${explainer} ${scene}`;
+  const generatedCopy = `${visibleText(withoutProductFaq(html))} ${explainer} ${scene}`;
   const savingsClaim = /\b(?:save|saved|saving|savings|reduce|reduced|reduction)\b[^.!?\n]{0,48}\b\d+(?:\.\d+)?\s*(?:gpu(?:-hours?)?|hours?|runs?|experiments?|dollars?)\b|\b\d+(?:\.\d+)?\s*(?:gpu(?:-hours?)?|hours?|runs?|experiments?|dollars?)\b[^.!?\n]{0,48}\b(?:save|saved|saving|savings|reduce|reduced|reduction)\b/i;
 
   assert.match(
