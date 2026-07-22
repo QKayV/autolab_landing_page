@@ -122,6 +122,26 @@ test('production initializes one asynchronous US PostHog instance', () => {
   assert.equal(harness.handlers.get('toggle')[0].options, true);
 });
 
+test('delegated events use the live SDK after it replaces the queue stub', () => {
+  const harness = createBrowserHarness();
+  const captured = [];
+  initAutolabPostHog(harness);
+
+  harness.windowObject.posthog = {
+    capture(name, properties) {
+      captured.push({ name, properties });
+    },
+  };
+  harness.handlers.get('click')[0].listener({
+    target: clickTarget({ href: '#early-access' }),
+  });
+
+  assert.deepEqual(captured, [{
+    name: 'early_access_opened',
+    properties: { target: 'early_access', page_path: '/product' },
+  }]);
+});
+
 test('analytics config is anonymous and excludes replay and form fields', () => {
   assert.match(POSTHOG_PROJECT_TOKEN, /^phc_/);
   assert.equal(POSTHOG_CONFIG.api_host, 'https://us.i.posthog.com');

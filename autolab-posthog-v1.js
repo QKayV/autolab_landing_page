@@ -162,16 +162,16 @@ function capture(posthog, eventDetail, pathname) {
   } catch {}
 }
 
-function wireFunnelEvents(posthog, windowObject, documentObject) {
+function wireFunnelEvents(windowObject, documentObject) {
   const pathname = windowObject.location.pathname;
   documentObject.addEventListener('click', event => {
-    capture(posthog, analyticsEventForClick(event.target), pathname);
+    capture(windowObject.posthog, analyticsEventForClick(event.target), pathname);
   });
   documentObject.addEventListener('submit', event => {
-    capture(posthog, analyticsEventForSubmit(event.target), pathname);
+    capture(windowObject.posthog, analyticsEventForSubmit(event.target), pathname);
   });
   documentObject.addEventListener('toggle', event => {
-    capture(posthog, analyticsEventForToggle(event.target), pathname);
+    capture(windowObject.posthog, analyticsEventForToggle(event.target), pathname);
   }, true);
 }
 
@@ -185,7 +185,7 @@ export function initAutolabPostHog({
   try {
     const posthog = installPostHogStub(windowObject, documentObject);
     posthog.init(POSTHOG_PROJECT_TOKEN, POSTHOG_CONFIG);
-    wireFunnelEvents(posthog, windowObject, documentObject);
+    wireFunnelEvents(windowObject, documentObject);
     windowObject[INITIALIZED] = true;
     return true;
   } catch {
@@ -196,4 +196,3 @@ export function initAutolabPostHog({
 if (typeof window !== 'undefined' && typeof document !== 'undefined') {
   initAutolabPostHog({ windowObject: window, documentObject: document });
 }
-
