@@ -11,6 +11,12 @@ const visibleText = html => html
   .replace(/\s+/g, ' ')
   .trim();
 
+const tagsWithClass = (html, className) => (html.match(/<[^>]+>/g) || [])
+  .filter(tag => {
+    const classes = tag.match(/\bclass="([^"]*)"/)?.[1].split(/\s+/) || [];
+    return classes.includes(className);
+  });
+
 test('Product page opens one complete illustrated research circuit', async () => {
   const html = await readFile(PRODUCT_URL, 'utf8');
   const text = visibleText(html);
@@ -46,6 +52,99 @@ test('Product chapters progressively open the same system', async () => {
     previous = index;
   }
   assert.equal((html.match(/data-explainer-chapter/g) || []).length, 6);
+});
+
+test('Product circuit exposes three zones and one complete route', async () => {
+  const html = await readFile(PRODUCT_URL, 'utf8');
+
+  assert.equal(tagsWithClass(html, 'circuit-zone').length, 3);
+  for (const zoneClass of ['circuit-inputs', 'circuit-autolab', 'circuit-output']) {
+    assert.equal(tagsWithClass(html, zoneClass).length, 1, 'missing circuit zone: ' + zoneClass);
+  }
+  for (const routeClass of ['route-history', 'route-active', 'route-loop']) {
+    assert.equal(tagsWithClass(html, routeClass).length, 1, 'missing circuit route: ' + routeClass);
+  }
+});
+
+test('Product chapters preserve approved copy, figures, and image summaries', async () => {
+  const html = await readFile(PRODUCT_URL, 'utf8');
+  const text = visibleText(html);
+  const chapterCopy = [
+    [
+      'Connect what you already have.',
+      'Point Autolab at your repository, evaluation, constraints, and available compute. Machines across a workstation, cloud account, or cluster participate in one experiment queue.',
+    ],
+    [
+      'See what every run is doing.',
+      'Autolab reads the proposed code change, assigned GPU, training trace, logs, checkpoints, and evaluation state while each experiment runs.',
+    ],
+    [
+      'Stop waste. Keep GPUs moving.',
+      'Watchdog models stop runs that have plateaued or are clearly trending toward failure. The evidence remains, and the freed GPU immediately becomes available to the next queued experiment.',
+    ],
+    [
+      'Turn every result into the next experiment.',
+      'Completed, stopped, and failed runs all add evidence. Autolab uses that history to propose concrete changes, avoid repeated dead ends, and choose the next experiments worth running.',
+    ],
+    [
+      'Review the full research record.',
+      'The winning change arrives with its configuration, evaluation state, logs, checkpoint reference, and experiment lineage. Your team decides what ships.',
+    ],
+    [
+      'Deploy where your research already runs.',
+      'Run Autolab in your cloud account, on your cluster, on-prem, or with managed compute. Code, data, and model weights can remain inside your network.',
+    ],
+  ];
+  const figureClasses = [
+    'topology-plate', 'experiment-anatomy', 'watchdog-feature',
+    'lineage-plate', 'research-packet', 'deployment-plate',
+  ];
+
+  let previous = -1;
+  for (const [headline, paragraph] of chapterCopy) {
+    const index = text.indexOf(headline + ' ' + paragraph);
+    assert.ok(index > previous, 'missing or unordered chapter copy: ' + headline);
+    previous = index;
+  }
+  for (const figureClass of figureClasses) {
+    assert.equal(tagsWithClass(html, figureClass).length, 1, 'missing figure hook: ' + figureClass);
+  }
+
+  const summaryTags = [
+    tagsWithClass(html, 'product-circuit')[0],
+    tagsWithClass(html, 'topology-plate')[0],
+    tagsWithClass(html, 'experiment-anatomy')[0],
+    tagsWithClass(html, 'watchdog-instrument')[0],
+    tagsWithClass(html, 'lineage-plate')[0],
+    tagsWithClass(html, 'research-packet')[0],
+    tagsWithClass(html, 'deployment-plate')[0],
+  ];
+
+  for (const tag of summaryTags) {
+    assert.match(tag, /\brole="img"/);
+    const summary = tag.match(/\baria-label="([^"]+)"/)?.[1] || '';
+    assert.ok(summary.length > 0 && summary.length <= 160, 'missing or verbose image summary');
+  }
+  const circuitSummary = summaryTags[0].match(/\baria-label="([^"]+)"/)[1];
+  for (const zone of ['Your System', 'Autolab', 'Your Team']) {
+    assert.match(circuitSummary, new RegExp(zone, 'i'));
+  }
+});
+
+test('Product watchdog canvas stays nested inside its instrument', async () => {
+  const html = await readFile(PRODUCT_URL, 'utf8');
+
+  assert.equal((html.match(/id="watchdog-canvas"/g) || []).length, 1);
+  assert.match(
+    html,
+    /<div\b[^>]*class="[^"]*\bwatchdog-instrument\b[^"]*"[^>]*>\s*<canvas id="watchdog-canvas" aria-hidden="true"><\/canvas>\s*<\/div>/,
+  );
+});
+
+test('Product page visible copy avoids em dashes', async () => {
+  const html = await readFile(PRODUCT_URL, 'utf8');
+
+  assert.doesNotMatch(visibleText(html), /—/);
 });
 
 test('Product page shares navigation and early-access contracts', async () => {
