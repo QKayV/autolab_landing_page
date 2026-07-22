@@ -119,9 +119,9 @@
 .lineage-proposal-route { stroke: var(--mint-deep); stroke-width: 1.35; stroke-dasharray: 7 7; }
 
 .packet-stack { min-height: 636px; padding: 30px; display: grid; grid-template-columns: repeat(12,minmax(0,1fr)); grid-template-rows: repeat(7,72px); gap: 12px; align-content: center; }
-.packet-sheet { min-width: 0; padding: 15px; border: 1px solid rgba(20,20,20,.25); background: rgba(252,251,247,.98); display: grid; align-content: space-between; gap: 12px; box-shadow: 0 14px 34px rgba(20,20,20,.09); }
-.packet-sheet header { padding-bottom: 10px; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-.packet-sheet header span,.packet-sheet header b { color: var(--muted); font: 500 10px/1.25 "IBM Plex Mono",monospace; letter-spacing: .08em; }
+.packet-sheet { min-width: 0; padding: 15px; border: 1px solid rgba(20,20,20,.25); background: rgba(252,251,247,.98); display: grid; align-content: space-between; gap: 7px; box-shadow: 0 14px 34px rgba(20,20,20,.09); }
+.packet-sheet header { padding-bottom: 8px; border-bottom: 1px solid var(--line); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; column-gap: 10px; row-gap: 3px; }
+.packet-sheet header span,.packet-sheet header b { min-width: 0; flex: 0 0 auto; max-width: 100%; color: var(--muted); font: 500 10px/1.25 "IBM Plex Mono",monospace; letter-spacing: .08em; white-space: nowrap; }
 .packet-sheet header b { color: var(--ink); }
 .packet-sheet > strong { color: var(--ink); font: 500 11px/1.35 "IBM Plex Mono",monospace; }
 .packet-sheet > small { color: var(--muted); font: 400 10px/1.4 "IBM Plex Mono",monospace; }

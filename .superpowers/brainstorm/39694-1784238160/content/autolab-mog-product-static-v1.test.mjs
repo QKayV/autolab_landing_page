@@ -412,6 +412,37 @@ test('Product research accents keep required small text readable', async () => {
   assert.match(ruleBody('.packet-evaluation'), /border-left: 3px solid var\(--mint\);/);
 });
 
+test('Research packet headers wrap intact inside the clipped sheet', async () => {
+  const [html, css] = await Promise.all([
+    readFile(PRODUCT_URL, 'utf8'),
+    readFile(new URL('./autolab-mog-product-v1.css', import.meta.url), 'utf8'),
+  ]);
+  const ruleBody = selector => {
+    const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return css.match(new RegExp(`(?:^|\\n)${escaped} \\{([^}]*)\\}`))?.[1] || '';
+  };
+  const headerPairs = [...html.matchAll(/<header><span>([^<]+)<\/span><b>([^<]+)<\/b><\/header>/g)]
+    .flatMap(match => [match[1], match[2]]);
+
+  assert.equal(headerPairs.length, 12);
+  for (const token of headerPairs) {
+    assert.ok(token.length * 7 <= 92, `packet header token is too wide: ${token}`);
+  }
+  assert.match(ruleBody('.packet-sheet'), /gap: 7px;/);
+  assert.match(ruleBody('.packet-sheet header'), /padding-bottom: 8px;/);
+  assert.match(ruleBody('.packet-sheet header'), /flex-wrap: wrap;/);
+  assert.match(ruleBody('.packet-sheet header'), /column-gap: 10px;/);
+  assert.match(ruleBody('.packet-sheet header'), /row-gap: 3px;/);
+  assert.match(ruleBody('.packet-sheet header span,.packet-sheet header b'), /min-width: 0;/);
+  assert.match(ruleBody('.packet-sheet header span,.packet-sheet header b'), /flex: 0 0 auto;/);
+  assert.match(ruleBody('.packet-sheet header span,.packet-sheet header b'), /white-space: nowrap;/);
+  assert.match(ruleBody('.experiment-queue,.product-diff'), /overflow: hidden;/);
+
+  const constrainedContentHeight = (2 * 72) + 12 - (2 * 15);
+  const worstAuthoredContentHeight = (2 * 12.5) + 3 + 8 + 1 + (2 * 14.85) + (3 * 14) + (2 * 7);
+  assert.ok(worstAuthoredContentHeight <= constrainedContentHeight);
+});
+
 test('Product page visible copy avoids em dashes', async () => {
   const html = await readFile(PRODUCT_URL, 'utf8');
 
