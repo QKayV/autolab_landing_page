@@ -7,6 +7,7 @@ const CONTENT_PAGE = new URL(
   './.superpowers/brainstorm/39694-1784238160/content/interest.html',
   import.meta.url,
 );
+const SITEMAP = new URL('./sitemap.xml', import.meta.url);
 
 test('both static roots expose one byte-identical interest page', async () => {
   const [root, content] = await Promise.all([
@@ -46,6 +47,21 @@ test('interest page loads the shared form and privacy-conscious analytics module
     1,
   );
   assert.equal(html.includes(['p', 'h', 'x', '_'].join('')), false);
+});
+
+test('interest page publishes consistent social metadata and appears in the sitemap', async () => {
+  const [html, sitemap] = await Promise.all([
+    readFile(ROOT_PAGE, 'utf8'),
+    readFile(SITEMAP, 'utf8'),
+  ]);
+
+  assert.match(html, /<link rel="canonical" href="https:\/\/www\.autolab\.ai\/interest\.html">/);
+  assert.match(html, /<meta property="og:title" content="Get early access \| Autolab">/);
+  assert.match(html, /<meta property="og:type" content="website">/);
+  assert.match(html, /<meta property="og:url" content="https:\/\/www\.autolab\.ai\/interest\.html">/);
+  assert.match(html, /<meta property="og:image" content="https:\/\/www\.autolab\.ai\/og\.png">/);
+  assert.match(html, /<meta name="twitter:card" content="summary_large_image">/);
+  assert.match(sitemap, /<loc>https:\/\/www\.autolab\.ai\/interest\.html<\/loc>/);
 });
 
 test('interest page is accessible, responsive, and restrained', async () => {
