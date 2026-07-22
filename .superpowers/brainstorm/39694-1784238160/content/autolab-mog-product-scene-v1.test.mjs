@@ -272,6 +272,10 @@ test('watchdog reduced motion draws one final frame only after entry', async () 
     assert.equal(reduced.state().progress, 1);
     assert.equal(reduced.state().phase, 'running-next');
     assert.ok(reduced.labels.includes('EXP-015 / RUNNING'));
+    assert.ok(reduced.labels.includes('QUEUED EXPERIMENTS'));
+    assert.ok(reduced.labels.includes('NEXT EXPERIMENT'));
+    assert.ok(reduced.labels.includes('GPU 04'));
+    assert.ok(reduced.labels.includes('ACTIVE'));
   } finally {
     reduced.restore();
   }

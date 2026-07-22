@@ -26,6 +26,10 @@ export function watchdogStateFor(progress) {
         : value < WATCHDOG_TIMELINE.restart
           ? 'reassigned'
           : 'running-next';
+  const gpuRelease = ease((value - WATCHDOG_TIMELINE.stop) / 0.1)
+    * (1 - ease((value - WATCHDOG_TIMELINE.reassign) / 0.08));
+  const queueConverge = ease((value - WATCHDOG_TIMELINE.reassign) / 0.1);
+  const gpuActivation = ease((value - WATCHDOG_TIMELINE.restart) / 0.12);
   return {
     progress: value,
     phase,
@@ -33,6 +37,9 @@ export function watchdogStateFor(progress) {
     stop: ease((value - WATCHDOG_TIMELINE.stop) / 0.1),
     reassign: ease((value - WATCHDOG_TIMELINE.reassign) / 0.1),
     restart: ease((value - WATCHDOG_TIMELINE.restart) / 0.12),
+    gpuRelease,
+    queueConverge,
+    gpuActivation,
     oldJobVisible: value < WATCHDOG_TIMELINE.reassign,
     nextJobVisible: value >= WATCHDOG_TIMELINE.reassign,
   };

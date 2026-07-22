@@ -39,3 +39,17 @@ test('reassignment releases the old job before the next one starts', () => {
   assert.equal(reassigned.oldJobVisible, false);
   assert.equal(reassigned.nextJobVisible, true);
 });
+
+test('watchdog releases the GPU before converging queued experiments', () => {
+  const observing = watchdogStateFor(0.2);
+  const stopped = watchdogStateFor(0.68);
+  const assigning = watchdogStateFor(0.82);
+  const running = watchdogStateFor(1);
+
+  assert.equal(observing.gpuRelease, 0);
+  assert.ok(stopped.gpuRelease > 0);
+  assert.equal(stopped.queueConverge, 0);
+  assert.ok(assigning.queueConverge > 0);
+  assert.equal(observing.gpuActivation, 0);
+  assert.equal(running.gpuActivation, 1);
+});

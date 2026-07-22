@@ -126,28 +126,42 @@ function initWatchdogScene() {
     context.stroke();
   }
 
-  function drawHandoff(graph, gpu) {
-    if (state.phase !== 'reassigned' && state.phase !== 'running-next') return;
-    const amount = state.phase === 'running-next' ? 1 : state.reassign;
-    const startX = graph.x + graph.width * .22;
-    const startY = graph.y - 23;
-    const endX = gpu.x - 12;
-    const endY = gpu.y + gpu.height / 2;
-    const x = startX + (endX - startX) * amount;
-    const y = startY + (endY - startY) * amount;
-    line(startX, startY, x, y, 'rgba(47,206,150,.5)', 1);
+  function drawQueuedExperiments(graph, gpu) {
+    const visibility = Math.max(state.gpuRelease, state.queueConverge);
+    if (visibility <= 0) return;
+
+    const sourceY = graph.y - 23;
+    const sources = [.26, .42, .58].map(position => ({
+      x: graph.x + graph.width * position,
+      y: sourceY,
+    }));
+    const selected = sources[1];
+    const target = {
+      x: gpu.x - 10,
+      y: gpu.y + gpu.height / 2,
+    };
+
     context.save();
-    context.translate(x, y);
-    context.rotate(Math.atan2(endY - startY, endX - startX));
-    context.beginPath();
-    context.moveTo(8, 0);
-    context.lineTo(-5, -4);
-    context.lineTo(-5, 4);
-    context.closePath();
-    context.fillStyle = MINT;
-    context.shadowColor = MINT;
-    context.shadowBlur = 14;
-    context.fill();
+    context.globalAlpha = visibility;
+    label('QUEUED EXPERIMENTS', sources[0].x, graph.y - 46);
+    sources.forEach((source, index) => {
+      line(source.x + 7, source.y, target.x, target.y, 'rgba(126,139,133,.28)');
+      label('▸', source.x, source.y + 3, index === 1 ? MINT : MUTED, 'center');
+    });
+    label('NEXT EXPERIMENT', selected.x, selected.y + 18, MINT, 'center');
+
+    if (state.queueConverge > 0) {
+      const startX = selected.x + 7;
+      const x = startX + (target.x - startX) * state.queueConverge;
+      const y = selected.y + (target.y - selected.y) * state.queueConverge;
+      line(startX, selected.y, x, y, MINT, 1.6);
+      context.beginPath();
+      context.arc(x, y, 2.5, 0, Math.PI * 2);
+      context.fillStyle = MINT;
+      context.shadowColor = MINT;
+      context.shadowBlur = 12;
+      context.fill();
+    }
     context.restore();
   }
 
@@ -169,19 +183,23 @@ function initWatchdogScene() {
       'running-next': 'EXP-015 / RUNNING',
     };
 
-    label('AUTOLAB / WATCHDOG', padding, padding + 8, PAPER);
-    label(statuses[state.phase], padding, padding + 34, state.phase === 'plateau' || state.phase === 'stopped' ? AMBER : MINT);
-    context.strokeStyle = state.phase === 'stopped' ? AMBER : MINT;
-    context.strokeRect(gpu.x, gpu.y, gpu.width, gpu.height);
-    label('GPU 04', gpu.x + 12, gpu.y + 21, PAPER);
-    label(state.phase === 'stopped' ? 'AVAILABLE' : state.phase === 'reassigned' ? 'ASSIGNING' : 'ACTIVE', gpu.x + 12, gpu.y + 38, state.phase === 'stopped' ? AMBER : MINT);
-
     drawGrid(graph);
     label('SCORE', graph.x, graph.y - 12);
     label('GPU TIME', graph.x + graph.width, graph.y + graph.height + 22, MUTED, 'right');
     drawOldCurve(graph);
-    drawHandoff(graph, gpu);
+    drawQueuedExperiments(graph, gpu);
     drawNextCurve(graph);
+
+    label('AUTOLAB / WATCHDOG', padding, padding + 8, PAPER);
+    label(statuses[state.phase], padding, padding + 34, state.phase === 'plateau' || state.phase === 'stopped' ? AMBER : MINT);
+    context.save();
+    context.shadowColor = MINT;
+    context.shadowBlur = state.gpuActivation * 24;
+    context.strokeStyle = state.phase === 'stopped' ? AMBER : MINT;
+    context.strokeRect(gpu.x, gpu.y, gpu.width, gpu.height);
+    context.restore();
+    label('GPU 04', gpu.x + 12, gpu.y + 21, PAPER);
+    label(state.phase === 'stopped' ? 'AVAILABLE' : state.phase === 'reassigned' ? 'ASSIGNING' : 'ACTIVE', gpu.x + 12, gpu.y + 38, state.phase === 'stopped' ? AMBER : MINT);
   }
 
   function frame(now) {
