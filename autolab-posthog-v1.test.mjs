@@ -234,6 +234,21 @@ test('local initialization and analytics failures cannot escape into the page', 
   assert.equal(initAutolabPostHog(broken), false);
 });
 
+test('partial setup failure cannot duplicate scripts, init calls, or listeners', () => {
+  const harness = createBrowserHarness();
+  const addEventListener = harness.documentObject.addEventListener;
+  harness.documentObject.addEventListener = function (type, listener, options) {
+    if (type === 'submit') throw new Error('listener registration blocked');
+    return addEventListener.call(this, type, listener, options);
+  };
+
+  assert.equal(initAutolabPostHog(harness), false);
+  assert.equal(initAutolabPostHog(harness), false);
+  assert.equal(harness.insertedScripts.length, 1);
+  assert.equal(harness.windowObject.posthog._i.length, 1);
+  assert.equal(harness.handlers.get('click').length, 1);
+});
+
 test('both static roots use one byte-identical analytics module', async () => {
   const [rootSource, contentSource] = await Promise.all([
     readFile(new URL('./autolab-posthog-v1.js', import.meta.url), 'utf8'),

@@ -180,7 +180,10 @@ export function initAutolabPostHog({
   documentObject = globalThis.document,
 } = {}) {
   if (!windowObject || !documentObject || !shouldLoadPostHog(windowObject.location)) return false;
-  if (windowObject[INITIALIZED]) return true;
+  if (Object.prototype.hasOwnProperty.call(windowObject, INITIALIZED)) {
+    return windowObject[INITIALIZED];
+  }
+  windowObject[INITIALIZED] = false;
 
   try {
     const posthog = installPostHogStub(windowObject, documentObject);
