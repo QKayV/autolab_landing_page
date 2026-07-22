@@ -41,24 +41,27 @@
 .product-copy h2 { max-width: 650px; margin: 0; font: 400 clamp(48px,5vw,78px)/.98 "IBM Plex Serif",serif; letter-spacing: -.048em; }
 .product-copy p { max-width: 48ch; margin: 25px 0 0; color: var(--muted); font: 400 16px/1.72 "IBM Plex Sans",sans-serif; }
 .technical-plate { min-height: 560px; padding: 68px 30px 48px; }
-.plate-index { position: absolute; inset: 0 0 auto; min-height: 39px; padding: 0 18px; border-bottom: 1px solid var(--line); background: rgba(247,245,240,.78); display: flex; align-items: center; justify-content: space-between; gap: 18px; color: var(--muted); font: 500 8px/1 "IBM Plex Mono",monospace; letter-spacing: .1em; }
-.plate-index small { color: var(--faint); font: inherit; letter-spacing: .04em; text-align: right; }
+.plate-index { position: absolute; inset: 0 0 auto; min-height: 39px; padding: 0 18px; border-bottom: 1px solid var(--line); background: rgba(247,245,240,.78); display: flex; align-items: center; justify-content: space-between; gap: 18px; color: var(--muted); font: 500 10px/1.3 "IBM Plex Mono",monospace; letter-spacing: .1em; }
+.plate-index small { color: var(--muted); font: inherit; letter-spacing: .04em; text-align: right; }
 
-.customer-boundary { position: relative; min-height: 430px; padding: 48px 22px 22px; border: 1px dashed rgba(20,20,20,.34); display: grid; grid-template-columns: minmax(0,.86fr) minmax(0,1.04fr) minmax(0,.9fr); gap: 25px; align-items: center; }
+.customer-boundary { position: relative; min-height: 430px; padding: 0 22px 22px; border: 1px solid rgba(20,20,20,.34); display: grid; grid-template-areas: "boundary-label boundary-label boundary-label" "sources scheduler pools"; grid-template-columns: minmax(0,.86fr) minmax(0,1.04fr) minmax(0,.9fr); grid-template-rows: auto 1fr; column-gap: 25px; row-gap: 12px; align-items: center; }
 .customer-boundary::before { content: ""; position: absolute; left: 13%; right: 13%; top: 50%; z-index: 0; border-top: 1px solid rgba(20,20,20,.2); }
-.boundary-label { position: absolute; top: 0; left: 0; padding: 10px 12px; border-right: 1px dashed rgba(20,20,20,.28); border-bottom: 1px dashed rgba(20,20,20,.28); background: var(--paper); color: var(--muted); font: 500 8px/1 "IBM Plex Mono",monospace; letter-spacing: .12em; }
+.boundary-label { grid-area: boundary-label; align-self: start; min-height: 40px; padding: 0 12px; border-bottom: 1px solid rgba(20,20,20,.28); background: var(--paper); color: var(--muted); display: flex; align-items: center; font: 500 10px/1.2 "IBM Plex Mono",monospace; letter-spacing: .12em; }
 .topology-sources,.compute-pools { position: relative; z-index: 1; display: grid; gap: 12px; }
+.topology-sources { grid-area: sources; }
 .topology-sources b,.compute-pools > div { min-width: 0; min-height: 72px; padding: 14px 12px; border-block: 1px solid rgba(20,20,20,.22); background: rgba(247,245,240,.93); display: grid; align-content: space-between; gap: 11px; }
 .topology-sources b { color: var(--ink); font: 500 9px/1 "IBM Plex Mono",monospace; letter-spacing: .08em; }
-.topology-sources small { color: var(--muted); font: 400 8px/1.35 "IBM Plex Mono",monospace; letter-spacing: 0; }
-.topology-scheduler { position: relative; z-index: 2; min-height: 208px; padding: 24px 16px; border: 1px solid var(--mint-deep); background: rgba(252,251,247,.96); display: grid; place-items: center; align-content: center; gap: 18px; text-align: center; }
+.topology-sources small { color: var(--muted); font: 400 10px/1.35 "IBM Plex Mono",monospace; letter-spacing: 0; }
+.topology-scheduler { grid-area: scheduler; position: relative; z-index: 2; min-height: 208px; padding: 24px 16px; border: 1px solid var(--mint-deep); background: rgba(252,251,247,.96); display: grid; place-items: center; align-content: center; gap: 18px; text-align: center; }
 .topology-scheduler::before,.topology-scheduler::after { content: ""; position: absolute; top: 50%; width: 25px; border-top: 1px solid var(--mint-deep); }
 .topology-scheduler::before { right: 100%; }
 .topology-scheduler::after { left: 100%; }
 .topology-scheduler > span { color: var(--mint-deep); font: 500 16px/1 "IBM Plex Mono",monospace; letter-spacing: .2em; }
 .topology-scheduler strong { color: var(--ink); font: 500 11px/1.35 "IBM Plex Mono",monospace; letter-spacing: .08em; }
-.topology-scheduler small { max-width: 18ch; color: var(--muted); font: 400 8px/1.45 "IBM Plex Mono",monospace; }
-.compute-pools > div { font: 500 8px/1 "IBM Plex Mono",monospace; letter-spacing: .1em; }
+.topology-scheduler small { max-width: 18ch; color: var(--muted); font: 400 10px/1.45 "IBM Plex Mono",monospace; }
+.topology-proposed-route { position: absolute; left: 100%; top: 34%; width: 25px; border-top: 1px dashed var(--mint-deep); opacity: .68; pointer-events: none; }
+.compute-pools { grid-area: pools; }
+.compute-pools > div { font: 500 10px/1 "IBM Plex Mono",monospace; letter-spacing: .1em; }
 .compute-pools span { color: var(--muted); }
 .compute-pools b { color: var(--mint-deep); font: 500 10px/1 "IBM Plex Mono",monospace; letter-spacing: .08em; }
 
@@ -67,18 +70,18 @@
 .anatomy-core,[data-anatomy-part] { position: relative; z-index: 1; min-width: 0; border: 1px solid rgba(20,20,20,.22); background: rgba(247,245,240,.94); }
 .anatomy-core { grid-area: 2 / 2; padding: 16px; border-color: #31433b; background: #0c1210; color: var(--mint); display: grid; place-items: center; align-content: center; gap: 11px; text-align: center; box-shadow: 0 16px 34px rgba(12,18,16,.16); }
 .anatomy-core span { font: 500 11px/1 "IBM Plex Mono",monospace; letter-spacing: .1em; }
-.anatomy-core small { color: #a9b0ac; font: 400 8px/1 "IBM Plex Mono",monospace; letter-spacing: .08em; }
+.anatomy-core small { color: #a9b0ac; font: 400 10px/1.2 "IBM Plex Mono",monospace; letter-spacing: .08em; }
 [data-anatomy-part] { padding: 14px; display: grid; align-content: space-between; gap: 9px; }
-[data-anatomy-part] > span { color: var(--muted); font: 500 8px/1.2 "IBM Plex Mono",monospace; letter-spacing: .08em; }
+[data-anatomy-part] > span { color: var(--muted); font: 500 10px/1.2 "IBM Plex Mono",monospace; letter-spacing: .08em; }
 [data-anatomy-part] > b { color: var(--ink); font: 500 10px/1.25 "IBM Plex Mono",monospace; }
-[data-anatomy-part] > small { color: var(--faint); font: 400 8px/1.25 "IBM Plex Mono",monospace; }
+[data-anatomy-part] > small { color: var(--muted); font: 400 10px/1.25 "IBM Plex Mono",monospace; }
 [data-anatomy-part="change"] { grid-area: 1 / 1; }
 [data-anatomy-part="gpu"] { grid-area: 1 / 3; border-color: rgba(12,138,95,.4); }
 [data-anatomy-part="gpu"] > b { color: var(--mint-deep); }
 [data-anatomy-part="trace"] { grid-area: 2 / 1; }
 [data-anatomy-part="logs"] { grid-area: 2 / 3; }
 [data-anatomy-part="checkpoint"] { grid-area: 3 / 1; }
-[data-anatomy-part="evaluation"] { grid-area: 3 / 3; border-style: dashed; }
+[data-anatomy-part="evaluation"] { grid-area: 3 / 3; border-color: rgba(20,20,20,.34); }
 [data-anatomy-part="change"]::after,[data-anatomy-part="gpu"]::after,[data-anatomy-part="checkpoint"]::after,[data-anatomy-part="evaluation"]::after { content: ""; position: absolute; width: calc(50% + 18px); height: calc(50% + 18px); pointer-events: none; }
 [data-anatomy-part="change"]::after { left: 50%; top: 100%; border-left: 1px solid rgba(20,20,20,.18); border-bottom: 1px solid rgba(20,20,20,.18); }
 [data-anatomy-part="gpu"]::after { right: 50%; top: 100%; border-right: 1px solid rgba(20,20,20,.18); border-bottom: 1px solid rgba(20,20,20,.18); }
@@ -152,12 +155,13 @@
   .technical-plate { min-height: 0; padding: 68px 18px 24px; }
   .plate-index { padding-inline: 12px; }
   .plate-index small { max-width: 22ch; }
-  .customer-boundary { min-height: 0; padding: 54px 16px 18px; grid-template-columns: 1fr; gap: 22px; }
+  .customer-boundary { min-height: 0; padding: 0 16px 18px; grid-template-areas: "boundary-label" "sources" "scheduler" "pools"; grid-template-columns: 1fr; grid-template-rows: auto auto auto auto; gap: 22px; }
   .customer-boundary::before { left: 50%; right: auto; top: 62px; bottom: 34px; width: 1px; border-top: 0; background: rgba(20,20,20,.2); }
   .topology-scheduler { min-height: 150px; }
   .topology-scheduler::before,.topology-scheduler::after { left: 50%; right: auto; top: auto; width: 1px; height: 23px; border-top: 0; border-left: 1px solid var(--mint-deep); }
   .topology-scheduler::before { bottom: 100%; }
   .topology-scheduler::after { top: 100%; }
+  .topology-proposed-route { left: calc(50% + 6px); top: 100%; width: 1px; height: 23px; border-top: 0; border-left: 1px dashed var(--mint-deep); }
   .anatomy-grid { min-height: 0; grid-template-columns: 1fr; grid-template-rows: none; gap: 12px; }
   .anatomy-grid::before,[data-anatomy-part]::after { display: none; }
   .anatomy-core,[data-anatomy-part] { grid-area: auto; min-height: 94px; }

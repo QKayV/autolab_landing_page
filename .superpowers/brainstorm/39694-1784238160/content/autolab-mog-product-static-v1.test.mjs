@@ -85,6 +85,84 @@ test('Product topology and experiment plates expose their static anatomy', async
   ]) assert.match(html, new RegExp(hook));
 });
 
+test('Product customer boundary keeps its semantic label in topology Grid flow', async () => {
+  const [html, css] = await Promise.all([
+    readFile(PRODUCT_URL, 'utf8'),
+    readFile(new URL('./autolab-mog-product-v1.css', import.meta.url), 'utf8'),
+  ]);
+
+  assert.match(
+    html,
+    /<div class="customer-boundary">\s*<span class="boundary-label">CUSTOMER ENVIRONMENT<\/span>/,
+  );
+  assert.match(
+    css,
+    /\.customer-boundary \{[^}]*display: grid;[^}]*grid-template-areas: "boundary-label boundary-label boundary-label" "sources scheduler pools";/,
+  );
+  assert.match(css, /\.boundary-label \{[^}]*grid-area: boundary-label;/);
+  assert.doesNotMatch(css, /\.boundary-label \{[^}]*position: absolute;/);
+  assert.match(
+    css,
+    /@media \(max-width: 720px\) \{[\s\S]*?\.customer-boundary \{[^}]*grid-template-areas: "boundary-label" "sources" "scheduler" "pools";/,
+  );
+});
+
+test('Product plate explanations use readable, compliant utility text', async () => {
+  const css = await readFile(
+    new URL('./autolab-mog-product-v1.css', import.meta.url),
+    'utf8',
+  );
+  const ruleBody = selector => {
+    const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return css.match(new RegExp(`(?:^|\\n)${escaped} \\{([^}]*)\\}`))?.[1] || '';
+  };
+  const readableSelectors = [
+    '.plate-index',
+    '.boundary-label',
+    '.topology-sources small',
+    '.topology-scheduler small',
+    '.anatomy-core small',
+    '[data-anatomy-part] > span',
+    '[data-anatomy-part] > small',
+  ];
+
+  for (const selector of readableSelectors) {
+    const declarations = ruleBody(selector);
+    assert.match(declarations, /font: [^;]*10px\//, `${selector} must use 10px utility text`);
+    assert.match(
+      declarations,
+      /color: (?:var\(--muted\)|#a9b0ac);/,
+      `${selector} must use a compliant annotation color`,
+    );
+    assert.doesNotMatch(declarations, /var\(--faint\)/, `${selector} must not use --faint for text`);
+  }
+  assert.match(ruleBody('.compute-pools > div'), /font: [^;]*10px\//);
+  assert.match(ruleBody('.plate-index small'), /color: var\(--muted\);/);
+});
+
+test('Product topology reserves dashed connectors for proposed work', async () => {
+  const [html, css] = await Promise.all([
+    readFile(PRODUCT_URL, 'utf8'),
+    readFile(new URL('./autolab-mog-product-v1.css', import.meta.url), 'utf8'),
+  ]);
+  const boundaryRule = css.match(/(?:^|\n)\.customer-boundary \{([^}]*)\}/)?.[1] || '';
+  const evaluationRule = css.match(
+    /(?:^|\n)\[data-anatomy-part="evaluation"\] \{([^}]*)\}/,
+  )?.[1] || '';
+
+  assert.match(html, /<i class="topology-proposed-route" aria-hidden="true"><\/i>/);
+  assert.match(
+    css,
+    /\.topology-proposed-route \{[^}]*position: absolute;[^}]*border-top: 1px dashed var\(--mint-deep\);/,
+  );
+  assert.match(
+    css,
+    /@media \(max-width: 720px\) \{[\s\S]*?\.topology-proposed-route \{[^}]*border-left: 1px dashed var\(--mint-deep\);/,
+  );
+  assert.doesNotMatch(boundaryRule, /dashed/);
+  assert.doesNotMatch(evaluationRule, /dashed/);
+});
+
 test('Product chapters preserve approved copy, figures, and image summaries', async () => {
   const html = await readFile(PRODUCT_URL, 'utf8');
   const text = visibleText(html);
