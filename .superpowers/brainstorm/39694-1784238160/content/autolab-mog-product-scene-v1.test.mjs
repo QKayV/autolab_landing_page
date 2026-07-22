@@ -12,6 +12,30 @@ const GLOBAL_KEYS = [
   'cancelAnimationFrame',
 ];
 let sceneImport = 0;
+const MONO_GLYPH_WIDTH_EM = 0.6;
+
+function estimatedMonoBounds(draw) {
+  const fontSize = Number(draw.font.match(/([\d.]+)px/)?.[1] ?? 9);
+  const width = draw.text.length * fontSize * MONO_GLYPH_WIDTH_EM;
+  const left = draw.textAlign === 'center'
+    ? draw.x - width / 2
+    : draw.textAlign === 'right'
+      ? draw.x - width
+      : draw.x;
+  return {
+    left,
+    right: left + width,
+    top: draw.y - fontSize,
+    bottom: draw.y + fontSize * 0.2,
+  };
+}
+
+function boundsOverlap(first, second) {
+  return first.left < second.right
+    && first.right > second.left
+    && first.top < second.bottom
+    && first.bottom > second.top;
+}
 
 function installSceneEnvironment({
   reducedMotion = false,
@@ -39,9 +63,23 @@ function installSceneEnvironment({
   const heightWrites = [];
   const transforms = [];
   const labels = [];
+  const textDraws = [];
+  const strokes = [];
+  const strokeRects = [];
+  const stateStack = [];
+  let currentPoint = null;
+  let currentSegments = [];
   let drawCount = 0;
 
   const context = {
+    fillStyle: '',
+    font: '',
+    globalAlpha: 1,
+    lineWidth: 1,
+    shadowBlur: 0,
+    shadowColor: '',
+    strokeStyle: '',
+    textAlign: 'left',
     setTransform(...values) {
       transforms.push(values);
     },
@@ -49,19 +87,71 @@ function installSceneEnvironment({
       drawCount += 1;
     },
     fillRect() {},
-    fillText(text) {
+    fillText(text, x, y) {
       labels.push(text);
+      textDraws.push({
+        text,
+        x,
+        y,
+        fillStyle: this.fillStyle,
+        font: this.font,
+        globalAlpha: this.globalAlpha,
+        textAlign: this.textAlign,
+      });
     },
-    beginPath() {},
-    moveTo() {},
-    lineTo() {},
-    stroke() {},
-    save() {},
+    beginPath() {
+      currentPoint = null;
+      currentSegments = [];
+    },
+    moveTo(x, y) {
+      currentPoint = { x, y };
+    },
+    lineTo(x, y) {
+      const nextPoint = { x, y };
+      if (currentPoint) currentSegments.push({ from: currentPoint, to: nextPoint });
+      currentPoint = nextPoint;
+    },
+    stroke() {
+      strokes.push({
+        segments: currentSegments.map(segment => ({
+          from: { ...segment.from },
+          to: { ...segment.to },
+        })),
+        strokeStyle: this.strokeStyle,
+        lineWidth: this.lineWidth,
+        shadowBlur: this.shadowBlur,
+        globalAlpha: this.globalAlpha,
+      });
+    },
+    save() {
+      stateStack.push({
+        fillStyle: this.fillStyle,
+        font: this.font,
+        globalAlpha: this.globalAlpha,
+        lineWidth: this.lineWidth,
+        shadowBlur: this.shadowBlur,
+        shadowColor: this.shadowColor,
+        strokeStyle: this.strokeStyle,
+        textAlign: this.textAlign,
+      });
+    },
     setLineDash() {},
-    restore() {},
+    restore() {
+      Object.assign(this, stateStack.pop());
+    },
     arc() {},
     fill() {},
-    strokeRect() {},
+    strokeRect(x, y, width, height) {
+      strokeRects.push({
+        x,
+        y,
+        width,
+        height,
+        strokeStyle: this.strokeStyle,
+        lineWidth: this.lineWidth,
+        shadowBlur: this.shadowBlur,
+      });
+    },
     translate() {},
     rotate() {},
     closePath() {},
@@ -160,6 +250,9 @@ function installSceneEnvironment({
     frames,
     heightWrites,
     labels,
+    strokeRects,
+    strokes,
+    textDraws,
     transforms,
     widthWrites,
     get drawCount() {
@@ -257,8 +350,9 @@ test('watchdog runs only in view and resumes one continuous cycle', async () => 
   }
 });
 
-test('watchdog reduced motion draws one final frame only after entry', async () => {
+test('watchdog reduced motion resolves one legible GPU reassignment after entry', async () => {
   const reduced = installSceneEnvironment({ reducedMotion: true });
+  let resolvedGeometry;
   try {
     await reduced.load();
     assert.equal(reduced.frames.size, 0);
@@ -276,9 +370,71 @@ test('watchdog reduced motion draws one final frame only after entry', async () 
     assert.ok(reduced.labels.includes('NEXT EXPERIMENT'));
     assert.ok(reduced.labels.includes('GPU 04'));
     assert.ok(reduced.labels.includes('ACTIVE'));
+
+    const gpu = reduced.strokeRects.at(-1);
+    assert.ok(gpu);
+    const gpuEdge = { x: gpu.x, y: gpu.y + gpu.height / 2 };
+    const sourceDraws = reduced.textDraws.filter(draw => draw.text === '▸');
+    const faintPaths = reduced.strokes.filter(
+      stroke => stroke.strokeStyle === 'rgba(126,139,133,.28)',
+    );
+    const selectedPaths = reduced.strokes.filter(
+      stroke => stroke.strokeStyle === '#2fce96' && stroke.lineWidth === 1.6,
+    );
+    const faintEndpoints = faintPaths.map(path => path.segments.at(-1)?.to);
+    const selectedEndpoint = selectedPaths[0]?.segments.at(-1)?.to;
+    resolvedGeometry = {
+      sourceCount: sourceDraws.length,
+      faintPathCount: faintPaths.length,
+      faintPathsConverge: faintEndpoints.every(
+        endpoint => endpoint?.x === faintEndpoints[0]?.x && endpoint?.y === faintEndpoints[0]?.y,
+      ),
+      faintPathsReachGpuEdge: faintEndpoints.every(
+        endpoint => endpoint?.x === gpuEdge.x && endpoint?.y === gpuEdge.y,
+      ),
+      selectedPathCount: selectedPaths.length,
+      selectedPathReachesGpuEdge: selectedEndpoint?.x === gpuEdge.x
+        && selectedEndpoint?.y === gpuEdge.y,
+      gpuGlowActive: gpu.shadowBlur > 0,
+    };
   } finally {
     reduced.restore();
   }
+
+  const compact = installSceneEnvironment({
+    reducedMotion: true,
+    width: 354,
+    height: 430,
+  });
+  let compactLabelsOverlap;
+  try {
+    await compact.load();
+    compact.intersect(true);
+    const status = compact.textDraws.find(draw => draw.text === 'EXP-015 / RUNNING');
+    const queue = compact.textDraws.find(draw => draw.text === 'QUEUED EXPERIMENTS');
+    assert.ok(status);
+    assert.ok(queue);
+    compactLabelsOverlap = boundsOverlap(
+      estimatedMonoBounds(status),
+      estimatedMonoBounds(queue),
+    );
+  } finally {
+    compact.restore();
+  }
+
+  assert.deepEqual({
+    ...resolvedGeometry,
+    compactLabelsOverlap,
+  }, {
+    sourceCount: 3,
+    faintPathCount: 3,
+    faintPathsConverge: true,
+    faintPathsReachGpuEdge: true,
+    selectedPathCount: 1,
+    selectedPathReachesGpuEdge: true,
+    gpuGlowActive: true,
+    compactLabelsOverlap: false,
+  });
 });
 
 test('watchdog resize clamps zero dimensions and reapplies its transform', async () => {

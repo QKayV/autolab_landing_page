@@ -126,7 +126,7 @@ function initWatchdogScene() {
     context.stroke();
   }
 
-  function drawQueuedExperiments(graph, gpu) {
+  function drawQueuedExperiments(graph, gpu, compact) {
     const visibility = Math.max(state.gpuRelease, state.queueConverge);
     if (visibility <= 0) return;
 
@@ -137,13 +137,13 @@ function initWatchdogScene() {
     }));
     const selected = sources[1];
     const target = {
-      x: gpu.x - 10,
+      x: gpu.x,
       y: gpu.y + gpu.height / 2,
     };
 
     context.save();
     context.globalAlpha = visibility;
-    label('QUEUED EXPERIMENTS', sources[0].x, graph.y - 46);
+    label('QUEUED EXPERIMENTS', sources[0].x, graph.y - (compact ? 32 : 46));
     sources.forEach((source, index) => {
       line(source.x + 7, source.y, target.x, target.y, 'rgba(126,139,133,.28)');
       label('▸', source.x, source.y + 3, index === 1 ? MINT : MUTED, 'center');
@@ -187,7 +187,7 @@ function initWatchdogScene() {
     label('SCORE', graph.x, graph.y - 12);
     label('GPU TIME', graph.x + graph.width, graph.y + graph.height + 22, MUTED, 'right');
     drawOldCurve(graph);
-    drawQueuedExperiments(graph, gpu);
+    drawQueuedExperiments(graph, gpu, compact);
     drawNextCurve(graph);
 
     label('AUTOLAB / WATCHDOG', padding, padding + 8, PAPER);
