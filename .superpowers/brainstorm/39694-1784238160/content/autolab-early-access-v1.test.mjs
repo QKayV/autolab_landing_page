@@ -25,24 +25,32 @@ test('missing endpoint fails without pretending to submit', async () => {
   assert.equal(calls, 0);
 });
 
-test('non-HTTPS endpoint fails before a request is made', async () => {
+test('cross-origin and non-HTTPS endpoints fail before a request is made', async () => {
   let calls = 0;
-  const result = await sendEarlyAccess({
-    endpoint: 'http://forms.example.test/early-access',
-    email: 'researcher@example.com',
-    source: 'homepage',
-    fetchImpl: async () => { calls += 1; },
-  });
-  assert.deepEqual(result, { ok: false, reason: 'invalid-endpoint' });
+  for (const endpoint of [
+    'https://forms.example.test/early-access',
+    'http://autolab.ai/api/interest',
+  ]) {
+    const result = await sendEarlyAccess({
+      endpoint,
+      baseUrl: 'https://autolab.ai',
+      email: 'researcher@example.com',
+      source: 'homepage',
+      fetchImpl: async () => { calls += 1; },
+    });
+    assert.deepEqual(result, { ok: false, reason: 'invalid-endpoint' });
+  }
   assert.equal(calls, 0);
 });
 
-test('successful submission sends the normalized payload once', async () => {
+test('successful submission resolves the same-origin endpoint and sends the normalized payload once', async () => {
   const calls = [];
   const result = await sendEarlyAccess({
-    endpoint: 'https://forms.example.test/early-access',
+    endpoint: '/api/interest',
+    baseUrl: 'https://autolab.ai',
     email: '  researcher@example.com  ',
     source: 'product',
+    website: '',
     timestamp: '2026-07-21T12:00:00.000Z',
     fetchImpl: async (...args) => {
       calls.push(args);
@@ -52,16 +60,19 @@ test('successful submission sends the normalized payload once', async () => {
 
   assert.deepEqual(result, { ok: true, reason: 'success' });
   assert.equal(calls.length, 1);
+  assert.equal(calls[0][0], 'https://autolab.ai/api/interest');
   assert.deepEqual(JSON.parse(calls[0][1].body), {
     email: 'researcher@example.com',
     source: 'product',
+    website: '',
     submittedAt: '2026-07-21T12:00:00.000Z',
   });
 });
 
 test('failed requests return failure instead of success', async () => {
   const result = await sendEarlyAccess({
-    endpoint: 'https://forms.example.test/early-access',
+    endpoint: '/api/interest',
+    baseUrl: 'https://autolab.ai',
     email: 'researcher@example.com',
     source: 'homepage',
     fetchImpl: async () => ({ ok: false }),
@@ -69,9 +80,16 @@ test('failed requests return failure instead of success', async () => {
   assert.deepEqual(result, { ok: false, reason: 'request-failed' });
 });
 
-function createFormHarness({ email = '', endpoint = '', fetchImpl = async () => ({ ok: true }) } = {}) {
+function createFormHarness({
+  email = '',
+  endpoint = '',
+  fetchImpl = async () => ({ ok: true }),
+  origin = 'https://autolab.ai',
+  website = '',
+} = {}) {
   const listeners = {};
   const input = { value: email, disabled: false, focused: false, focus() { this.focused = true; } };
+  const honeypot = { value: website };
   const button = { disabled: false };
   const status = { textContent: '' };
   const form = {
@@ -80,18 +98,20 @@ function createFormHarness({ email = '', endpoint = '', fetchImpl = async () => 
     querySelector(selector) {
       return {
         '[data-early-access-email]': input,
+        '[data-early-access-website]': honeypot,
         '[data-early-access-submit]': button,
         '[data-early-access-status]': status,
       }[selector];
     },
   };
   const root = {
-    defaultView: { fetch: fetchImpl },
+    defaultView: { fetch: fetchImpl, location: { origin } },
     querySelectorAll() { return [form]; },
   };
   initEarlyAccessForms(root);
   return {
     form,
+    honeypot,
     input,
     button,
     status,
@@ -113,7 +133,7 @@ test('form stays pending until one successful request completes', async () => {
   let calls = 0;
   const harness = createFormHarness({
     email: 'researcher@example.com',
-    endpoint: 'https://forms.example.test/early-access',
+    endpoint: '/api/interest',
     fetchImpl: async () => {
       calls += 1;
       return new Promise(resolve => { resolveRequest = resolve; });
@@ -135,7 +155,7 @@ test('form stays pending until one successful request completes', async () => {
 });
 
 test('missing endpoint and server failure remain editable and never show success', async () => {
-  for (const endpoint of ['', 'https://forms.example.test/early-access']) {
+  for (const endpoint of ['', '/api/interest']) {
     const harness = createFormHarness({
       email: 'researcher@example.com',
       endpoint,
@@ -147,4 +167,23 @@ test('missing endpoint and server failure remain editable and never show success
     assert.equal(harness.button.disabled, false);
     assert.equal(harness.input.disabled, false);
   }
+});
+
+test('form submission includes the honeypot and resolves against the page origin', async () => {
+  const calls = [];
+  const harness = createFormHarness({
+    email: 'researcher@example.com',
+    endpoint: '/api/interest',
+    origin: 'https://preview.autolab.ai',
+    website: 'leave-empty',
+    fetchImpl: async (...args) => {
+      calls.push(args);
+      return { ok: true };
+    },
+  });
+
+  await harness.submit();
+
+  assert.equal(calls[0][0], 'https://preview.autolab.ai/api/interest');
+  assert.equal(JSON.parse(calls[0][1].body).website, 'leave-empty');
 });
