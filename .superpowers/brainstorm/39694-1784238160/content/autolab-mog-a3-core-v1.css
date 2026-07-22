@@ -97,6 +97,46 @@ body[data-ending="slingshot"] .variant-copy[data-for="slingshot"],body[data-endi
 .gravity-pointer.visible { opacity: .9; }
 
 .research-metrics { position: absolute; z-index: 14; right: clamp(24px,4.2vw,64px); bottom: 34px; width: min(450px,35vw); transition: opacity .3s; }
+.research-status {
+  position: absolute;
+  z-index: 14;
+  right: clamp(24px,4.2vw,64px);
+  bottom: 34px;
+  width: min(520px,40vw);
+  min-height: 48px;
+  display: grid;
+  grid-template-columns: auto minmax(0,1fr);
+  align-items: center;
+  gap: 18px;
+  padding: 12px 15px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: rgba(252,251,247,.84);
+  backdrop-filter: blur(12px);
+  pointer-events: none;
+  transition: opacity .3s;
+}
+.research-status > span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--faint);
+  font: 500 10px/1 "IBM Plex Mono",monospace;
+  letter-spacing: .11em;
+}
+.research-status > span i {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--mint);
+  box-shadow: 0 0 12px rgba(47,206,150,.62);
+}
+.research-status strong {
+  color: var(--mint-deep);
+  font: 500 12px/1.25 "IBM Plex Mono",monospace;
+  letter-spacing: .06em;
+  text-align: right;
+}
 .compression-reticle { position: absolute; z-index: 9; left: 0; top: 0; width: 92px; height: 92px; opacity: 0; transform: translate(-50%,-50%) scale(1.5); pointer-events: none; }
 .compression-reticle::before,.compression-reticle::after { content: ""; position: absolute; inset: 0; border: 1px dashed rgba(47,206,150,.65); border-radius: 50%; }
 .compression-reticle::after { inset: 20%; border-style: solid; border-color: rgba(247,245,240,.28); }
@@ -115,6 +155,18 @@ body[data-ending="slingshot"] .variant-copy[data-for="slingshot"],body[data-endi
 .result-card.ready { pointer-events: auto; }
 body[data-ending="loop"] .result-card { top: 44%; }
 
+body[data-ending="rebirth"] .research-head {
+  grid-template-columns: 1fr min(250px,27vw) 46px;
+  font-size: 10px;
+}
+body[data-ending="rebirth"] .research-step .step { font-size: 10px; }
+body[data-ending="rebirth"] .research-step p { font-size: 15px; }
+body[data-ending="rebirth"] .research-key { font-size: 10px; line-height: 1.25; }
+body[data-ending="rebirth"] .semantic-legend { font-size: 10px; }
+body[data-ending="rebirth"] .diff-head,
+body[data-ending="rebirth"] .diff-foot { font-size: 9px; }
+body[data-ending="rebirth"] .diff-metrics span { font-size: 10px; }
+
 .research-run.is-dark .research-head { color: #8f9a95; border-color: rgba(247,245,240,.15); }
 .research-run.is-dark .research-head b,.research-run.is-dark .research-step .step,.research-run.is-dark .research-step h3 em { color: var(--mint); }
 .research-run.is-dark .research-progress { background: rgba(247,245,240,.13); }
@@ -128,6 +180,9 @@ body[data-ending="loop"] .result-card { top: 44%; }
 .research-run.is-dark .metric small { color: #78827d; }
 .research-run.is-dark .metric strong { color: var(--paper); }
 .research-run.is-dark .metric strong.mint { color: var(--mint); }
+.research-run.is-dark .research-status { border-color: rgba(247,245,240,.15); background: rgba(7,10,8,.72); }
+.research-run.is-dark .research-status > span { color: #78827d; }
+.research-run.is-dark .research-status strong { color: var(--mint); }
 
 .a3-outro { position: relative; z-index: 3; min-height: 100svh; display: grid; place-items: center; padding: 110px 24px; border-top: 1px solid var(--line); background: var(--paper); text-align: center; }
 .a3-outro h2 { max-width: 1050px; font: 500 clamp(54px,7vw,106px)/.93 "IBM Plex Serif",serif; letter-spacing: -.052em; }
@@ -143,15 +198,18 @@ body[data-ending="loop"] .result-card { top: 44%; }
   .research-run { height: 720vh; }
   .base-grid { mask-image: linear-gradient(180deg,transparent,#000 34%,#000); }
   .research-head { top: 78px; left: 16px; right: 16px; grid-template-columns: 1fr 100px 38px; gap: 11px; }
+  body[data-ending="rebirth"] .research-head { grid-template-columns: 1fr 100px 38px; }
   .research-head > span:nth-child(2) { display: none; }
   .research-story { left: 18px; right: 18px; top: 106px; width: auto; height: 36%; bottom: auto; }
   .research-step { justify-content: center; }
   .research-step h3 { max-width: 355px; font-size: 46px; }
   .research-step p { max-width: 340px; margin-top: 13px; font-size: 12px; }
+  body[data-ending="rebirth"] .research-step p { font-size: 14px; }
   .research-key { margin-top: 13px; }
   .semantic-legend { top: 45%; right: 14px; }
   .semantic-legend span:nth-child(n+3) { display: none; }
   .research-metrics { right: 12px; bottom: 43px; width: calc(100% - 24px); }
+  body[data-ending="rebirth"] .research-status { right: 12px; bottom: 43px; width: calc(100% - 24px); }
   .result-card,body[data-ending="loop"] .result-card { left: 16px; right: 16px; top: 64%; width: auto; transform-origin: center; }
   .impact-label { width: 165px; text-align: center; white-space: normal; transform: translateX(-50%); }
   .comparison-links { display: none; }

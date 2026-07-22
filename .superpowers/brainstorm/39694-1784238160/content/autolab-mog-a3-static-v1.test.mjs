@@ -213,6 +213,36 @@ test('rebirth research section has one h2 followed by six h3 stage headings', as
   assert.match(css, /\.research-head h2\s*\{[^}]*margin:\s*0[^}]*font:\s*inherit/s);
 });
 
+test('rebirth research instrument keeps operational copy legible', async () => {
+  const [css, scene] = await Promise.all([
+    readFile(new URL('./autolab-mog-a3-core-v1.css', import.meta.url), 'utf8'),
+    readFile(new URL('./autolab-mog-a3-scene-v1.js', import.meta.url), 'utf8'),
+  ]);
+
+  assert.match(
+    css,
+    /body\[data-ending="rebirth"\] \.research-head\s*\{[^}]*grid-template-columns:\s*1fr min\(250px,27vw\) 46px/s,
+  );
+  assert.match(
+    css,
+    /body\[data-ending="rebirth"\] \.research-step p\s*\{[^}]*font-size:\s*15px/s,
+  );
+  assert.match(
+    css,
+    /body\[data-ending="rebirth"\] \.research-key\s*\{[^}]*font-size:\s*10px/s,
+  );
+  assert.match(
+    css,
+    /body\[data-ending="rebirth"\] \.semantic-legend\s*\{[^}]*font-size:\s*10px/s,
+  );
+  assert.match(
+    css,
+    /body\[data-ending="rebirth"\] \.diff-metrics span\s*\{[^}]*font-size:\s*10px/s,
+  );
+  assert.match(css, /\.research-status strong\s*\{[^}]*font:[^;]*12px/s);
+  assert.match(scene, /ending === 'rebirth' \? 10 : 7/);
+});
+
 test('rebirth exposes the Product page and exact conversion targets', async () => {
   const html = await readFile(
     new URL('./autolab-mog-a3-rebirth-v1.html', import.meta.url),

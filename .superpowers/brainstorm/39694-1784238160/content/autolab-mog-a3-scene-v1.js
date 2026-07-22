@@ -587,11 +587,13 @@ function drawFrontierAxes(alpha) {
       context.stroke();
     });
   context.setLineDash([]);
-  context.font = '500 7px "IBM Plex Mono", monospace';
+  const axisLabelSize = ending === 'rebirth' ? 10 : 7;
+  const axisOffset = ending === 'rebirth' ? 22 : 18;
+  context.font = `500 ${axisLabelSize}px "IBM Plex Mono", monospace`;
   context.letterSpacing = '0.1em';
-  context.fillText('EXPERIMENT SPACE', experimentAxis.x - 66, experimentAxis.y + 18);
-  context.fillText('EVAL MIX', evalAxis.x - 8, evalAxis.y + 18);
-  context.fillText('PERFORMANCE', performanceAxis.x - 24, performanceAxis.y - 12);
+  context.fillText('EXPERIMENT SPACE', experimentAxis.x - 90, experimentAxis.y + axisOffset);
+  context.fillText('EVAL MIX', evalAxis.x - 8, evalAxis.y + axisOffset);
+  context.fillText('PERFORMANCE', performanceAxis.x - 32, performanceAxis.y - 14);
   context.restore();
 }
 
