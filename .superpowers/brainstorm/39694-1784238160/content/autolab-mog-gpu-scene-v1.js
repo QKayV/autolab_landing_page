@@ -3,6 +3,8 @@ import {
   GPU_NODE_COUNT,
   createGpuJobs,
   gpuArrivalFor,
+  gpuIntakeConfigFor,
+  gpuIntakePointFor,
   gpuLoadFor,
   gpuNodeFor,
   gpuSlotFor,
@@ -157,6 +159,28 @@ function traceFlow(target, layout, laneOffset = 0, from = 0, to = 1) {
   }
 }
 
+function traceIntake(layout, lane, laneCount, from = 0, to = 1) {
+  const bounds = {
+    startX: 14,
+    gateX: layout.gateX,
+    gateY: layout.gateY,
+    height,
+  };
+  const steps = 20;
+  const first = gpuIntakePointFor(from, lane, laneCount, bounds);
+  context.beginPath();
+  context.moveTo(first.x, first.y);
+  for (let index = 1; index <= steps; index += 1) {
+    const point = gpuIntakePointFor(
+      mix(from, to, index / steps),
+      lane,
+      laneCount,
+      bounds,
+    );
+    context.lineTo(point.x, point.y);
+  }
+}
+
 function drawArrow(point, angle, alpha, color = '#9baba3', scale = 1) {
   if (alpha <= 0.002) return;
   const length = 8 * scale;
@@ -180,36 +204,55 @@ function drawArrow(point, angle, alpha, color = '#9baba3', scale = 1) {
 
 function drawQueue(now, layout) {
   const queueAlpha = mix(0.68, 0.16, state.scaled);
-  const laneCount = layout.mobile ? 5 : 6;
-  const arrowCount = layout.mobile ? 6 : 10;
+  const { laneCount, arrowCount } = gpuIntakeConfigFor(layout.mobile);
+  const bounds = {
+    startX: 14,
+    gateX: layout.gateX,
+    gateY: layout.gateY,
+    height,
+  };
 
   context.save();
-  context.globalAlpha = queueAlpha * 0.34;
-  context.strokeStyle = '#56655e';
-  context.lineWidth = 0.6;
-  context.setLineDash([1, 7]);
+  context.globalAlpha = queueAlpha * 0.08;
+  context.strokeStyle = '#718078';
+  context.lineWidth = 0.55;
+  context.setLineDash([1, 9]);
   for (let lane = 0; lane < laneCount; lane += 1) {
-    const y = 48 + lane * ((height - 92) / Math.max(1, laneCount - 1));
-    context.beginPath();
-    context.moveTo(12, y);
-    context.lineTo(layout.gateX - 15, y);
+    traceIntake(layout, lane, laneCount);
     context.stroke();
   }
   context.restore();
 
   for (let index = 0; index < arrowCount; index += 1) {
-    const job = jobs[index];
-    const y = 48 + (job.lane % laneCount) *
-      ((height - 92) / Math.max(1, laneCount - 1));
-    const runway = Math.max(22, layout.gateX - 54);
-    const drift = reducedMotion
-      ? job.offset * runway
-      : (now * 0.018 + job.offset * 72) % runway;
+    const job = jobs[index % jobs.length];
+    const lane = index % laneCount;
+    const flow = reducedMotion
+      ? clamp(0.18 + job.offset * 0.72)
+      : (now * 0.000055 + job.offset + index / arrowCount * 0.72) % 1;
+    const point = gpuIntakePointFor(flow, lane, laneCount, bounds);
+    const ahead = gpuIntakePointFor(
+      Math.min(1, flow + 0.012),
+      lane,
+      laneCount,
+      bounds,
+    );
+    const trailStart = Math.max(0, flow - 0.09);
+    const focus = 0.42 + Math.sin(flow * Math.PI) * 0.58;
+    const color = job.winner ? '#2fce96' : '#81928a';
+
+    context.save();
+    context.globalAlpha = queueAlpha * focus * (0.08 + job.score * 0.08);
+    context.strokeStyle = color;
+    context.lineWidth = job.winner ? 1 : 0.65;
+    traceIntake(layout, lane, laneCount, trailStart, flow);
+    context.stroke();
+    context.restore();
+
     drawArrow(
-      { x: 18 + drift, y: y + Math.sin(index * 2.1 + now * 0.001) * 2.2 },
-      0,
-      queueAlpha * (0.32 + job.score * 0.34),
-      job.winner ? '#2fce96' : '#81928a',
+      point,
+      Math.atan2(ahead.y - point.y, ahead.x - point.x),
+      queueAlpha * focus * (0.32 + job.score * 0.38),
+      color,
       job.winner ? 1.12 : 0.82,
     );
   }
@@ -237,7 +280,7 @@ function drawScheduler(now, layout) {
   context.globalAlpha = 0.64 + pulse * 0.28;
   context.fillStyle = '#2fce96';
   context.shadowColor = '#2fce96';
-  context.shadowBlur = 16 + pulse * 12;
+  context.shadowBlur = 16 + pulse * 12 + state.intake * 8;
   context.fillRect(layout.gateX - 1, layout.gateY - 18, 2, 36);
   context.shadowBlur = 0;
   context.fillStyle = '#74847c';

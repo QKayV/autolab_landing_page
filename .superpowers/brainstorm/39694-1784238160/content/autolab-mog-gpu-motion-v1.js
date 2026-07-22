@@ -96,6 +96,44 @@ export function smoothScrollProgress(
     : Math.max(next, target);
 }
 
+export function gpuIntakeConfigFor(mobile) {
+  return mobile
+    ? { laneCount: 6, arrowCount: 18 }
+    : { laneCount: 8, arrowCount: 36 };
+}
+
+export function gpuIntakePointFor(
+  amount,
+  lane,
+  laneCount,
+  { startX, gateX, gateY, height },
+) {
+  const value = clamp(amount);
+  const safeLaneCount = Math.max(1, laneCount);
+  const laneY = safeLaneCount === 1
+    ? height / 2
+    : 48 + lane * ((height - 92) / (safeLaneCount - 1));
+  const span = gateX - startX;
+  const from = { x: startX, y: laneY };
+  const controlA = { x: startX + span * 0.42, y: laneY };
+  const controlB = {
+    x: gateX - span * 0.16,
+    y: gateY + (laneY - gateY) * 0.08,
+  };
+  const inverse = 1 - value;
+
+  return {
+    x: inverse ** 3 * from.x +
+      3 * inverse ** 2 * value * controlA.x +
+      3 * inverse * value ** 2 * controlB.x +
+      value ** 3 * gateX,
+    y: inverse ** 3 * from.y +
+      3 * inverse ** 2 * value * controlA.y +
+      3 * inverse * value ** 2 * controlB.y +
+      value ** 3 * gateY,
+  };
+}
+
 export function gpuStateFor(progress) {
   const value = clamp(progress);
   const intake = ease(value / GPU_TIMELINE.intake);

@@ -95,3 +95,31 @@ test('scroll smoothing is frame-rate independent and never overshoots', async ()
   assert.ok(Math.abs(oneFrame - fourFrames) < 1e-12);
   assert.equal(motion.smoothScrollProgress(0.8, 0.2, 1000), 0.2);
 });
+
+test('GPU intake uses a dense desktop field and a quieter mobile field', async () => {
+  const motion = await loadMotion();
+  assert.equal(typeof motion.gpuIntakeConfigFor, 'function');
+  assert.deepEqual(motion.gpuIntakeConfigFor(false), {
+    laneCount: 8,
+    arrowCount: 36,
+  });
+  assert.deepEqual(motion.gpuIntakeConfigFor(true), {
+    laneCount: 6,
+    arrowCount: 18,
+  });
+});
+
+test('every GPU intake lane converges exactly on the scheduler gate', async () => {
+  const motion = await loadMotion();
+  assert.equal(typeof motion.gpuIntakePointFor, 'function');
+  const bounds = { startX: 14, gateX: 310, gateY: 180, height: 360 };
+  const starts = Array.from({ length: 8 }, (_, lane) =>
+    motion.gpuIntakePointFor(0, lane, 8, bounds));
+  const ends = Array.from({ length: 8 }, (_, lane) =>
+    motion.gpuIntakePointFor(1, lane, 8, bounds));
+
+  assert.equal(new Set(starts.map(point => point.y)).size, 8);
+  for (const point of ends) {
+    assert.deepEqual(point, { x: 310, y: 180 });
+  }
+});
