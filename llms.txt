@@ -16,6 +16,7 @@ Key facts:
 ## Pages
 
 - [Home](https://www.autolab.ai/): product overview of the autoresearch platform
+- [Product](https://www.autolab.ai/product.html): illustrated technical explanation of the complete Autolab research loop
 - [What is autoresearch?](https://www.autolab.ai/autoresearch.html): definition, how agentic model training works, comparison with AutoML and experiment tracking
 - [Our vision](https://www.autolab.ai/manifesto.html): why AI research is becoming an engineering discipline
 - [Careers](https://www.autolab.ai/careers.html): open roles in San Francisco

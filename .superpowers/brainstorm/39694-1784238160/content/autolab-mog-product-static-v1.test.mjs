@@ -3,7 +3,7 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 
 const PRODUCT_URL = new URL('./autolab-mog-product-v1.html', import.meta.url);
-const HOME_URL = new URL('../../../../index.html', import.meta.url);
+const PRODUCTION_PRODUCT_URL = new URL('../../../../product.html', import.meta.url);
 
 const visibleText = html => html
   .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, ' ')
@@ -691,16 +691,16 @@ test('Product small deployment and onboarding labels use AA text tokens on Paper
   assert.match(ruleBody('.product-onboarding .mono-label'), /font: [^;]*10px\//);
 });
 
-test('Product FAQ matches the approved six-question homepage FAQ', async () => {
-  const [html, homeHtml, css] = await Promise.all([
+test('Product design source FAQ matches the approved production FAQ', async () => {
+  const [html, productionHtml, css] = await Promise.all([
     readFile(PRODUCT_URL, 'utf8'),
-    readFile(HOME_URL, 'utf8'),
+    readFile(PRODUCTION_PRODUCT_URL, 'utf8'),
     readFile(new URL('./autolab-mog-product-v1.css', import.meta.url), 'utf8'),
   ]);
   const productFaq = html.match(/<section class="product-faq"[\s\S]*?<\/section>/)?.[0] || '';
-  const homeFaq = homeHtml.match(/<section id="faq"[\s\S]*?<\/section>/)?.[0] || '';
+  const productionFaq = productionHtml.match(/<section class="product-faq"[\s\S]*?<\/section>/)?.[0] || '';
   const productText = visibleText(productFaq);
-  const homeText = visibleText(homeFaq);
+  const productionText = visibleText(productionFaq);
   const approvedFaq = [
     [
       'What is autoresearch?',
@@ -735,8 +735,8 @@ test('Product FAQ matches the approved six-question homepage FAQ', async () => {
     const questionIndex = productText.indexOf(question);
     assert.ok(questionIndex > previousQuestion, 'missing or unordered Product FAQ: ' + question);
     assert.ok(productText.includes(answer), 'Product answer differs: ' + question);
-    assert.ok(homeText.includes(question), 'homepage question differs: ' + question);
-    assert.ok(homeText.includes(answer), 'homepage answer differs: ' + question);
+    assert.ok(productionText.includes(question), 'production question differs: ' + question);
+    assert.ok(productionText.includes(answer), 'production answer differs: ' + question);
     previousQuestion = questionIndex;
   }
   assert.match(
