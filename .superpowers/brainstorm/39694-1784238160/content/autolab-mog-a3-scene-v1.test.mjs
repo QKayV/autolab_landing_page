@@ -118,6 +118,8 @@ function installSceneEnvironment({
     'metricBest',
     'metricALabel',
     'metricBLabel',
+    'researchStatus',
+    'statusPanel',
     'navStatus',
     'navStatusCopy',
     'resultCard',
@@ -174,6 +176,8 @@ function installSceneEnvironment({
         ['.rebirth-seed', elements.rebirthSeed],
         ['.loop-path', elements.loopPath],
         ['.loop-scan', elements.loopScan],
+        ['[data-research-status]', elements.researchStatus],
+        ['.research-status', elements.statusPanel],
         ['.research-metrics', elements.metricsPanel],
       ]).get(selector) ?? null;
     },
@@ -308,12 +312,8 @@ function installSceneEnvironment({
       callback(timestamp);
       return frameId;
     },
-    metrics() {
-      return {
-        a: `${elements.metricALabel.textContent} / ${elements.metricA.textContent}`,
-        b: `${elements.metricBLabel.textContent} / ${elements.metricB.textContent}`,
-        status: elements.metricBest.textContent,
-      };
+    status() {
+      return elements.researchStatus.textContent;
     },
     setDimensions(next) {
       viewportWidth = next.width;
@@ -341,45 +341,21 @@ function installSceneEnvironment({
   };
 }
 
-test('research metrics report qualitative operational phases', async () => {
+test('research status follows all six plain-language stages', async () => {
   const scene = installSceneEnvironment();
   try {
     await scene.load();
-    assert.deepEqual(scene.metrics(), {
-      a: 'QUEUE / QUEUED',
-      b: 'REPO / MAPPED',
-      status: 'SEARCHING',
-    });
-
-    for (const expected of [
-      {
-        progress: 0.4,
-        metrics: {
-          a: 'GPUS / RUNNING',
-          b: 'EXPERIMENTS / QUEUED',
-          status: 'SEARCHING',
-        },
-      },
-      {
-        progress: 0.65,
-        metrics: {
-          a: 'EVAL / RUNNING',
-          b: 'REST / STOPPED',
-          status: 'CANDIDATE',
-        },
-      },
-      {
-        progress: 0.8,
-        metrics: {
-          a: 'BEST / IMPROVED',
-          b: 'CHECKS / VERIFIED',
-          status: 'REVIEW',
-        },
-      },
+    for (const [progress, expected] of [
+      [0, 'SETTING THE GOAL'],
+      [0.2, 'PROPOSING EXPERIMENTS'],
+      [0.4, 'RUNNING ACROSS YOUR GPUS'],
+      [0.65, 'STOPPING WEAK RUNS EARLY'],
+      [0.8, "USING RESULTS TO CHOOSE WHAT'S NEXT"],
+      [0.9, 'BEST CHANGE READY FOR REVIEW'],
     ]) {
-      scene.setProgress(expected.progress);
+      scene.setProgress(progress);
       scene.dispatch('scroll');
-      assert.deepEqual(scene.metrics(), expected.metrics);
+      assert.equal(scene.status(), expected);
     }
   } finally {
     scene.restore();

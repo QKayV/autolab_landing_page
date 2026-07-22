@@ -69,26 +69,26 @@
         <div class="slingshot-tear" id="slingshot-tear" aria-hidden="true"></div>
         <canvas id="research-canvas" aria-hidden="true"></canvas>
 
-        <div class="research-head"><h2>Autolab / model improvement loop</h2><span>▸ experiment · lineage · ● winner</span><div class="research-progress"><i></i></div><b id="research-index">01 / 06</b></div>
+        <div class="research-head"><h2>Autolab / model improvement loop</h2><div class="research-progress"><i></i></div><b id="research-index">01 / 06</b></div>
         <div class="research-story">
           <article class="research-step active" data-step="0"><span class="step">Goal / 01</span><h3>Tell Autolab what to <em>improve.</em></h3><p>Choose the metric that matters, such as accuracy, cost, or latency.</p><span class="research-key">metric + constraints + evaluation</span></article>
           <article class="research-step" data-step="1"><span class="step">Explore / 02</span><h3>Turn ideas into <em>experiments.</em></h3><p>Agents read your code and create concrete changes they can test.</p><span class="research-key">▸ one vector = one experiment</span></article>
           <article class="research-step" data-step="2"><span class="step">Run / 03</span><h3>Run them across <em>your GPUs.</em></h3><p>Autolab sends each experiment to the next available machine.</p><span class="research-key">every available GPU joins the queue</span></article>
-          <article class="research-step" data-step="3"><span class="step">Stop / 04</span><h3>Stop wasted work <em>early.</em></h3><p>Runs stop when they have plateaued or are clearly going to fail.</p><span class="research-key">dead ends stop · evidence remains</span></article>
+          <article class="research-step" data-step="3"><span class="step">Stop / 04</span><h3>Stop wasted work <em>early.</em></h3><p>Runs stop when they have plateaued or are clearly going to fail.</p><span class="research-key">weak runs stop · every result improves the next</span></article>
           <article class="research-step" data-step="4"><span class="step">Learn / 05</span><h3>Choose what to try <em>next.</em></h3><p>Every result helps Autolab propose a better next experiment.</p><span class="research-key">result → next experiment</span></article>
           <article class="research-step" data-step="5"><span class="step">Return / 06</span><h3>Return the best <em>change.</em></h3><p>You get the winning code, its results, and the history behind it.</p><span class="research-key">winning change → human review</span></article>
         </div>
 
         <div class="event-horizon" id="event-horizon" aria-hidden="true"><div class="accretion-ring r3"></div><div class="accretion-ring r2"></div><div class="accretion-ring"></div><div class="horizon-disc"></div></div>
         <div class="impact-label" aria-hidden="true">EXP–0001 / FIELD ORIGIN</div>
-        <div class="semantic-legend" aria-hidden="true"><span>▸ one vector = one experiment</span><span>line = experiment history</span><span>↑ altitude = eval performance</span><span>● mint = frontier candidate</span></div>
+        <div class="semantic-legend" aria-hidden="true"><span>▸ EACH ARROW IS AN EXPERIMENT</span><span>● GREEN MARKS THE BEST RESULT</span></div>
         <div class="gravity-pointer" data-mode="gravity pull" aria-hidden="true"></div>
         <div class="compression-reticle" aria-hidden="true"></div>
         <div class="rebirth-seed" aria-hidden="true"></div>
         <svg class="loop-path" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="M70 58 C55 34 38 18 21 6"></path></svg>
         <div class="loop-scan" aria-hidden="true"></div>
 
-        <aside class="research-metrics metric-strip" aria-label="Research metrics"><span class="metric"><small id="metric-a-label">QUEUE</small><strong id="metric-a">QUEUED</strong></span><span class="metric"><small id="metric-b-label">REPO</small><strong id="metric-b">MAPPED</strong></span><span class="metric"><small>STATUS</small><strong class="mint" id="metric-best">SEARCHING</strong></span></aside>
+        <aside class="research-status" aria-label="Current research step"><span><i></i>NOW</span><strong id="research-status" data-research-status>SETTING THE GOAL</strong></aside>
 
         <article class="result-card diff-card" id="result-card">
           <div class="diff-head"><span>winner / exp-0138</span><b>ready for approval</b></div>
@@ -171,9 +171,6 @@
 
   <div class="flight-object" id="flight-object" aria-hidden="true"><div class="flight-core"></div><div class="flight-head"></div></div>
   <div class="flight-label" aria-hidden="true">EXP–0001 / RELEASED</div>
-  <nav class="comparison-links" aria-label="A3 endings"><a href="autolab-mog-a-impact-frontier-v2.html">A2</a><a aria-label="Slingshot ending" href="autolab-mog-a3-slingshot-v1.html#ending-preview">S</a><a class="active" aria-current="page" aria-label="Rebirth ending" href="autolab-mog-a3-rebirth-v1.html#ending-preview">R</a><a aria-label="Loop ending" href="autolab-mog-a3-loop-v1.html#ending-preview">L</a></nav>
-  <div class="concept-label variant-label"><strong>A3-R</strong> IMPLODE → REBIRTH</div>
-
   <script type="module" src="autolab-mog-a3-scene-v1.js"></script>
   <script type="module" src="autolab-mog-a3-onboarding-v1.js"></script>
   <script type="module" src="autolab-early-access-v1.js"></script>

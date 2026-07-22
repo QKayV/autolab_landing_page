@@ -57,11 +57,15 @@ for (const variant of variants) {
       /https:\/\/calendar\.superhuman\.com\/book\/11Wx5q95SPgTTclPo4\/KrRGA/,
     );
     assert.doesNotMatch(html, /<iframe/i);
-    for (const linkedVariant of variants) {
-      assert.match(
-        html,
-        new RegExp(`autolab-mog-a3-${linkedVariant}-v1\\.html#ending-preview`),
-      );
+    if (variant === 'rebirth') {
+      assert.doesNotMatch(html, /class="comparison-links"/);
+    } else {
+      for (const linkedVariant of variants) {
+        assert.match(
+          html,
+          new RegExp(`autolab-mog-a3-${linkedVariant}-v1\\.html#ending-preview`),
+        );
+      }
     }
   });
 }
@@ -117,9 +121,9 @@ test('rebirth outcome UI uses operational states instead of unsupported claims',
     .replace(/<style[\s\S]*?<\/style>/gi, ' ')
     .replace(/<[^>]+>/g, ' ')
     .replace(/\s+/g, ' ');
-  const metricUiText = [...scene.matchAll(
-    /metric(?:A|B|Best|ALabel|BLabel)\.textContent\s*=\s*([^;]+);/g,
-  )].map(match => match[1]).join('\n');
+  const statusUiText = scene.match(
+    /const RESEARCH_STATUS = Object\.freeze\(\[([\s\S]*?)\]\);/,
+  )?.[1] ?? '';
 
   assert.match(visibleText, /\$ autolab start --goal "beat baseline"/);
   for (const copy of [
@@ -144,17 +148,14 @@ test('rebirth outcome UI uses operational states instead of unsupported claims',
     /<div class="diff-metrics"><span>EVAL<b>IMPROVED<\/b><\/span><span>CHECKS<b>PASSED<\/b><\/span><span>STATUS<b>REVIEW<\/b><\/span><\/div>/,
   );
   for (const state of [
-    'QUEUED',
-    'MAPPED',
-    'RUNNING',
-    'STOPPED',
-    'SEARCHING',
-    'CANDIDATE',
-    'IMPROVED',
-    'VERIFIED',
-    'REVIEW',
+    'SETTING THE GOAL',
+    'PROPOSING EXPERIMENTS',
+    'RUNNING ACROSS YOUR GPUS',
+    'STOPPING WEAK RUNS EARLY',
+    "USING RESULTS TO CHOOSE WHAT'S NEXT",
+    'BEST CHANGE READY FOR REVIEW',
   ]) {
-    assert.match(metricUiText, new RegExp(`['\"]${state}['\"]`));
+    assert.match(statusUiText, new RegExp(state.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
   }
 
   assert.doesNotMatch(visibleText, /\ba real session\b/i);
@@ -163,7 +164,35 @@ test('rebirth outcome UI uses operational states instead of unsupported claims',
   assert.doesNotMatch(visibleText, /\bVAL_ACC\b|\bBEST\s*Δ\b|Δ\s*BASE/i);
   assert.doesNotMatch(visibleText, /\b(?:spawned|lineage\s*\/)\s*[\d,]+\s+experiments\b/i);
   assert.doesNotMatch(visibleText, /\b\d+\s+live agents\b|\b\d+\s+non-dominated experiments\b/i);
-  assert.doesNotMatch(metricUiText, /%|\b2\.3\b|\b1,000\b|\b742\b|\b999\b/);
+  assert.doesNotMatch(statusUiText, /%|\b2\.3\b|\b1,000\b|\b742\b|\b999\b/);
+});
+
+test('rebirth removes prototype UI and uses plain-language research cues', async () => {
+  const [html, scene] = await Promise.all([
+    readFile(new URL('./autolab-mog-a3-rebirth-v1.html', import.meta.url), 'utf8'),
+    readFile(new URL('./autolab-mog-a3-scene-v1.js', import.meta.url), 'utf8'),
+  ]);
+
+  assert.doesNotMatch(html, /class="comparison-links"/);
+  assert.doesNotMatch(html, /class="concept-label variant-label"/);
+  assert.doesNotMatch(html, /experiment · lineage · ● winner/);
+  assert.doesNotMatch(html, /dead ends stop · evidence remains/);
+  assert.doesNotMatch(html, /id="metric-(?:a|b|best|a-label|b-label)"/);
+  assert.match(html, /▸ EACH ARROW IS AN EXPERIMENT/i);
+  assert.match(html, /● GREEN MARKS THE BEST RESULT/i);
+  assert.match(html, /weak runs stop · every result improves the next/i);
+  assert.match(html, /id="research-status"[^>]*data-research-status/);
+
+  for (const status of [
+    'SETTING THE GOAL',
+    'PROPOSING EXPERIMENTS',
+    'RUNNING ACROSS YOUR GPUS',
+    'STOPPING WEAK RUNS EARLY',
+    "USING RESULTS TO CHOOSE WHAT'S NEXT",
+    'BEST CHANGE READY FOR REVIEW',
+  ]) {
+    assert.match(scene, new RegExp(status.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')));
+  }
 });
 
 test('rebirth research section has one h2 followed by six h3 stage headings', async () => {

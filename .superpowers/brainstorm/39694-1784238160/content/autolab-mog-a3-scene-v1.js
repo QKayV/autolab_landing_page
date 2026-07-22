@@ -12,6 +12,15 @@ import {
   navigationTelemetryFor,
 } from './autolab-mog-a3-motion-v1.js';
 
+const RESEARCH_STATUS = Object.freeze([
+  'SETTING THE GOAL',
+  'PROPOSING EXPERIMENTS',
+  'RUNNING ACROSS YOUR GPUS',
+  'STOPPING WEAK RUNS EARLY',
+  "USING RESULTS TO CHOOSE WHAT'S NEXT",
+  'BEST CHANGE READY FOR REVIEW',
+]);
+
 const ending = document.body.dataset.ending;
 if (!['slingshot', 'rebirth', 'loop'].includes(ending)) {
   throw new TypeError(`Unknown A3 ending: ${ending}`);
@@ -44,6 +53,7 @@ const metricB = document.querySelector('#metric-b');
 const metricBest = document.querySelector('#metric-best');
 const metricALabel = document.querySelector('#metric-a-label');
 const metricBLabel = document.querySelector('#metric-b-label');
+const researchStatus = run.querySelector('[data-research-status]');
 const navStatus = topbar.querySelector('.nav-status');
 const navStatusCopy = navStatus.querySelector('.nav-status-copy');
 const resultCard = document.querySelector('#result-card');
@@ -51,7 +61,8 @@ const slingshotTear = document.querySelector('#slingshot-tear');
 const rebirthSeed = run.querySelector('.rebirth-seed');
 const loopPath = run.querySelector('.loop-path');
 const loopScan = run.querySelector('.loop-scan');
-const metricsPanel = run.querySelector('.research-metrics');
+const metricsPanel = run.querySelector('.research-status') ??
+  run.querySelector('.research-metrics');
 
 let width = innerWidth;
 let height = innerHeight;
@@ -391,6 +402,11 @@ function updateField() {
 }
 
 function updateMetrics() {
+  if (researchStatus) {
+    researchStatus.textContent = RESEARCH_STATUS[stageFor(phase)];
+    return;
+  }
+
   if (progress < TIMELINE.orbit) {
     metricALabel.textContent = 'QUEUE';
     metricBLabel.textContent = 'REPO';
