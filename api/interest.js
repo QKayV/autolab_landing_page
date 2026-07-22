@@ -31,21 +31,23 @@ export function createInterestHandler({
 
     let body;
     try {
-      body = await request.json();
+      body = request.headers.get('content-type')?.startsWith('application/x-www-form-urlencoded')
+        ? Object.fromEntries(await request.formData())
+        : await request.json();
     } catch {
       return json({ ok: false }, 400);
     }
     if (!body || Array.isArray(body) || typeof body !== 'object') {
       return json({ ok: false }, 400);
     }
+    if (typeof body.website === 'string' && body.website.trim()) {
+      return json({ ok: true }, 201);
+    }
 
     const email = normalizeInterestEmail(body.email);
     const source = typeof body.source === 'string' ? body.source : '';
     if (!email || !SOURCES.has(source)) {
       return json({ ok: false }, 400);
-    }
-    if (String(body.website || '').trim()) {
-      return json({ ok: true }, 201);
     }
 
     const submittedAt = now();

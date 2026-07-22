@@ -6,10 +6,18 @@ import {
   sendEarlyAccess,
 } from './autolab-early-access-v1.js';
 
+function acceptedResponse() {
+  return new Response(JSON.stringify({ ok: true }), {
+    status: 201,
+    headers: { 'Content-Type': 'application/json' },
+  });
+}
+
 test('email validation accepts useful addresses and rejects incomplete input', () => {
   assert.equal(isValidEmail('researcher@example.com'), true);
   assert.equal(isValidEmail('  researcher@example.com  '), true);
   assert.equal(isValidEmail('researcher@'), false);
+  assert.equal(isValidEmail('a'.repeat(245) + '@example.com'), false);
   assert.equal(isValidEmail(''), false);
 });
 
@@ -54,7 +62,7 @@ test('successful submission resolves the same-origin endpoint and sends the norm
     timestamp: '2026-07-21T12:00:00.000Z',
     fetchImpl: async (...args) => {
       calls.push(args);
-      return { ok: true };
+      return acceptedResponse();
     },
   });
 
@@ -80,10 +88,27 @@ test('failed requests return failure instead of success', async () => {
   assert.deepEqual(result, { ok: false, reason: 'request-failed' });
 });
 
+test('only the API confirmation response counts as a successful capture', async () => {
+  for (const response of [
+    new Response('<html>fallback</html>', { status: 200 }),
+    new Response(JSON.stringify({ ok: false }), { status: 201 }),
+    new Response('not json', { status: 201 }),
+  ]) {
+    const result = await sendEarlyAccess({
+      endpoint: '/api/interest',
+      baseUrl: 'https://autolab.ai',
+      email: 'researcher@example.com',
+      source: 'homepage',
+      fetchImpl: async () => response,
+    });
+    assert.deepEqual(result, { ok: false, reason: 'request-failed' });
+  }
+});
+
 function createFormHarness({
   email = '',
   endpoint = '',
-  fetchImpl = async () => ({ ok: true }),
+  fetchImpl = async () => acceptedResponse(),
   origin = 'https://autolab.ai',
   website = '',
 } = {}) {
@@ -147,7 +172,7 @@ test('form stays pending until one successful request completes', async () => {
   await harness.submit();
   assert.equal(calls, 1);
 
-  resolveRequest({ ok: true });
+  resolveRequest(acceptedResponse());
   await submission;
   assert.equal(harness.form.dataset.state, 'success');
   assert.equal(harness.status.textContent, "You're on the list. We'll be in touch.");
@@ -178,7 +203,7 @@ test('form submission includes the honeypot and resolves against the page origin
     website: 'leave-empty',
     fetchImpl: async (...args) => {
       calls.push(args);
-      return { ok: true };
+      return acceptedResponse();
     },
   });
 

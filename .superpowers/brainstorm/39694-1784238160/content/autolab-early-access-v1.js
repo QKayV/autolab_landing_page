@@ -1,5 +1,6 @@
 export function isValidEmail(value) {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
+  const email = value.trim();
+  return email.length <= 254 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
 export async function sendEarlyAccess({
@@ -43,7 +44,11 @@ export async function sendEarlyAccess({
         submittedAt: timestamp,
       }),
     });
-    return response.ok
+    if (response.status !== 201) {
+      return { ok: false, reason: 'request-failed' };
+    }
+    const body = await response.json();
+    return body?.ok === true
       ? { ok: true, reason: 'success' }
       : { ok: false, reason: 'request-failed' };
   } catch {

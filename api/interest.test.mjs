@@ -18,6 +18,14 @@ function request(body, { method = 'POST' } = {}) {
   });
 }
 
+function formRequest(fields) {
+  return new Request('https://autolab.ai/api/interest', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams(fields),
+  });
+}
+
 function validBody(overrides = {}) {
   return JSON.stringify({
     email: '  Researcher@Example.com  ',
@@ -72,16 +80,20 @@ test('rejects malformed JSON and invalid fields without contacting PostHog', asy
   assert.equal(calls.length, 0);
 });
 
-test('a filled honeypot returns neutral success without creating an event', async () => {
+test('a filled honeypot returns neutral success before validating companion fields', async () => {
   let calls = 0;
   const handler = createInterestHandler({
     fetchImpl: async () => { calls += 1; },
   });
 
-  const response = await handler(request(validBody({ website: 'https://spam.example' })));
-
-  assert.equal(response.status, 201);
-  assert.deepEqual(await response.json(), { ok: true });
+  for (const body of [
+    JSON.stringify({ website: 'https://spam.example' }),
+    validBody({ email: 'invalid', source: 'invalid', website: 'spam' }),
+  ]) {
+    const response = await handler(request(body));
+    assert.equal(response.status, 201);
+    assert.deepEqual(await response.json(), { ok: true });
+  }
   assert.equal(calls, 0);
 });
 
@@ -118,6 +130,26 @@ test('successful submissions send one normalized interest event to PostHog', asy
       },
     },
   });
+});
+
+test('native form submissions capture the lead without placing email in the URL', async () => {
+  const calls = [];
+  const handler = createInterestHandler({
+    fetchImpl: async (...args) => {
+      calls.push(args);
+      return new Response('ok', { status: 200 });
+    },
+  });
+
+  const response = await handler(formRequest({
+    email: 'Researcher@Example.com',
+    source: 'homepage',
+    website: '',
+  }));
+
+  assert.equal(response.status, 201);
+  assert.equal(calls.length, 1);
+  assert.equal(JSON.parse(calls[0][1].body).properties.email, 'researcher@example.com');
 });
 
 test('PostHog rejection and network failure return a retryable service error', async () => {

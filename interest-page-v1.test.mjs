@@ -27,8 +27,12 @@ test('interest page submits only the approved fields through the site origin', a
 
   assert.match(form, /data-endpoint="\/api\/interest"/);
   assert.match(form, /data-source="interest_page"/);
+  assert.match(form, /action="\/api\/interest"/);
+  assert.match(form, /method="post"/);
   assert.match(form, /data-ph-no-capture/);
+  assert.match(html, /<input type="hidden" name="source" value="interest_page">/);
   assert.match(html, /data-early-access-email/);
+  assert.match(html, /id="interest-email"[^>]*maxlength="254"/);
   assert.match(html, /data-early-access-submit/);
   assert.match(html, /data-early-access-status[^>]*role="status"[^>]*aria-live="polite"/);
   assert.match(html, /data-early-access-website[^>]*tabindex="-1"[^>]*autocomplete="off"/);
@@ -75,4 +79,11 @@ test('interest page is accessible, responsive, and restrained', async () => {
   assert.match(html, /@media \(max-width: 720px\)/);
   assert.match(html, /href="https:\/\/calendar\.superhuman\.com\/book\//);
   assert.equal(html.includes('—'), false);
+});
+
+test('small interest page labels use AA contrast colors', async () => {
+  const html = await readFile(ROOT_PAGE, 'utf8');
+
+  assert.match(html, /\.eyebrow \{[\s\S]*?color: #0b7b55;/);
+  assert.match(html, /footer \{[\s\S]*?color: var\(--muted\);/);
 });

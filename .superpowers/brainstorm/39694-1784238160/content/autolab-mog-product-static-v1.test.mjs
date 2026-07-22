@@ -461,6 +461,9 @@ test('Product page shares navigation and early-access contracts', async () => {
   assert.match(html, /id="watchdog-canvas"/);
   assert.match(html, /href="\/interest\.html"[^>]*>Get early access/);
   assert.match(html, /id="early-access"[^>]*data-early-access[^>]*data-endpoint="\/api\/interest"/);
+  assert.match(html, /<form[^>]*id="early-access"[^>]*action="\/api\/interest"[^>]*method="post"/);
+  assert.match(html, /<input type="hidden" name="source" value="product">/);
+  assert.match(html, /id="early-access-email-product"[^>]*maxlength="254"/);
   assert.match(html, /autolab-early-access-v1\.js/);
 });
 

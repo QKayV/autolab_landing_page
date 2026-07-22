@@ -35,7 +35,6 @@
       --paper-low: #efede6;
       --ink: #141414;
       --muted: #6e6a5e;
-      --faint: #a29d8d;
       --line: #d8d4c8;
       --error: #a63d2f;
     }
@@ -150,7 +149,7 @@
       align-items: center;
       gap: 10px;
       margin-bottom: 26px;
-      color: var(--mint-deep);
+      color: #0b7b55;
       font: 500 10px/1 "IBM Plex Mono", monospace;
       letter-spacing: .13em;
       text-transform: uppercase;
@@ -395,7 +394,7 @@
       z-index: 2;
       right: 24px;
       bottom: 18px;
-      color: var(--faint);
+      color: var(--muted);
       font: 400 9px/1 "IBM Plex Mono", monospace;
       letter-spacing: .08em;
       text-transform: uppercase;
@@ -500,14 +499,15 @@
           <circle class="field-winner" cx="264" cy="102" r="5"></circle>
         </svg>
 
-        <form class="form-shell" data-early-access data-ph-no-capture data-endpoint="/api/interest" data-source="interest_page" novalidate>
+        <form class="form-shell" action="/api/interest" method="post" data-early-access data-ph-no-capture data-endpoint="/api/interest" data-source="interest_page" novalidate>
+          <input type="hidden" name="source" value="interest_page">
           <label for="interest-email">Email address</label>
           <div class="field-trap" aria-hidden="true">
             <label for="interest-website">Website</label>
             <input id="interest-website" data-early-access-website type="text" name="website" tabindex="-1" autocomplete="off">
           </div>
           <div class="interest-control">
-            <input id="interest-email" data-early-access-email type="email" name="email" autocomplete="email" inputmode="email" required placeholder="you@company.com">
+            <input id="interest-email" data-early-access-email type="email" name="email" autocomplete="email" inputmode="email" maxlength="254" required placeholder="you@company.com">
             <button data-early-access-submit type="submit">Request access ↗</button>
           </div>
           <p class="consent">By requesting access, you agree that Autolab may contact you about early access.</p>

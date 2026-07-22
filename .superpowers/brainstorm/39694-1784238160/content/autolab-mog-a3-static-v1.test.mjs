@@ -292,8 +292,11 @@ test('rebirth exposes an accessible early-access form and preserves onboarding',
   );
 
   assert.match(html, /<form[^>]*id="early-access"[^>]*data-early-access[^>]*data-endpoint="\/api\/interest"[^>]*data-source="homepage"/);
+  assert.match(html, /<form[^>]*id="early-access"[^>]*action="\/api\/interest"[^>]*method="post"/);
+  assert.match(html, /<input type="hidden" name="source" value="homepage">/);
   assert.match(html, /<label for="early-access-email-home">Email address<\/label>/);
   assert.match(html, /id="early-access-email-home"[^>]*data-early-access-email[^>]*type="email"/);
+  assert.match(html, /id="early-access-email-home"[^>]*maxlength="254"/);
   assert.match(html, /data-early-access-status[^>]*role="status"[^>]*aria-live="polite"/);
   assert.match(html, /id="onboarding-console"[^>]*data-onboarding-tabs/);
   assert.equal((html.match(/role="tab"/g) || []).length, 3);
