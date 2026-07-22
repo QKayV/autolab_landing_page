@@ -197,7 +197,7 @@ test('rebirth exposes the Product page and exact conversion targets', async () =
   assert.match(html, /href="#onboarding-console"[^>]*>\$ curl -fsSL/);
 });
 
-test('hero cycle reserves one unbroken word and period', async () => {
+test('hero cycle keeps your and the rotating word on one second line', async () => {
   const [html, css] = await Promise.all([
     readFile(new URL('./autolab-mog-a3-rebirth-v1.html', import.meta.url), 'utf8'),
     readFile(new URL('./autolab-mog-core-v1.css', import.meta.url), 'utf8'),
@@ -205,10 +205,15 @@ test('hero cycle reserves one unbroken word and period', async () => {
 
   assert.match(
     html,
-    /class="hero-cycle-word"><em data-hero-cycle>research<\/em><span class="hero-period">\.<\/span><\/span>/,
+    /<span>Supercharge<\/span>\s*<span class="hero-cycle-row"><span class="hero-cycle-prefix">your<\/span><span class="hero-cycle-line"/,
   );
+  assert.match(css, /\.hero-cycle-row\s*\{[^}]*display:\s*flex[^}]*white-space:\s*nowrap/s);
   assert.match(css, /\.hero-cycle-word\s*\{[^}]*white-space:\s*nowrap/s);
-  assert.match(css, /\.hero-cycle-word\s*\{[^}]*min-width:/s);
+  assert.match(css, /\.hero-cycle-word\s*\{[^}]*min-width:\s*3\.9em/s);
+  assert.match(
+    css,
+    /@media \(max-width:\s*540px\)[\s\S]*?\.hero-cycle-row\s*\{[^}]*font-size:\s*min\(1em,\s*calc\(\(100vw - 36px\) \/ 6\.1\)\)[^}]*\}[\s\S]*?\.hero-cycle-line small\s*\{[^}]*display:\s*none/s,
+  );
 });
 
 test('navigation telemetry is hidden by default and driven by the motion timeline', async () => {
