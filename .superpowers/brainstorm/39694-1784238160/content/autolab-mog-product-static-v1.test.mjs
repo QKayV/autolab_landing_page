@@ -275,7 +275,10 @@ test('Research memory preserves every outcome and proposes a next batch', async 
   assert.doesNotMatch(historyRule, /stroke-dasharray/);
   assert.match(proposalRule, /stroke: var\(--mint-deep\);/);
   assert.match(proposalRule, /stroke-dasharray:/);
-  assert.match(selectedRule, /color: var\(--mint-deep\);/);
+  assert.match(selectedRule, /border-color: var\(--mint-deep\);/);
+  assert.match(selectedRule, /background: rgba\(47,206,150,\.1\);/);
+  assert.match(selectedRule, /box-shadow: inset 3px 0 0 var\(--mint\);/);
+  assert.doesNotMatch(selectedRule, /(?:^|;)\s*color: var\(--mint-deep\);/);
 });
 
 test('Research packet makes the human review boundary concrete', async () => {
@@ -326,6 +329,87 @@ test('Research packet makes the human review boundary concrete', async () => {
     css,
     /@media \(max-width: 720px\) \{[\s\S]*?\.packet-stack \{[^}]*grid-template-columns: 1fr;/,
   );
+});
+
+test('Research packet sheets reserve non-overlapping desktop Grid tracks', async () => {
+  const css = await readFile(
+    new URL('./autolab-mog-product-v1.css', import.meta.url),
+    'utf8',
+  );
+  const selectors = [
+    '.packet-diff', '.packet-config', '.packet-evaluation', '.packet-logs',
+    '.packet-checkpoint', '.packet-lineage', '.packet-approval',
+  ];
+  const expectedColumns = new Map([
+    ['.packet-diff', [1, 7]],
+    ['.packet-config', [7, 10]],
+    ['.packet-evaluation', [10, 13]],
+    ['.packet-logs', [7, 10]],
+    ['.packet-checkpoint', [10, 13]],
+    ['.packet-lineage', [2, 7]],
+    ['.packet-approval', [7, 13]],
+  ]);
+  const ruleBody = selector => {
+    const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return css.match(new RegExp(`(?:^|\\n)${escaped} \\{([^}]*)\\}`))?.[1] || '';
+  };
+  const readRange = (declarations, property) => {
+    const match = declarations.match(new RegExp(`${property}: (\\d+) \\/ (\\d+);`));
+    assert.ok(match, `missing ${property}`);
+    return [Number(match[1]), Number(match[2])];
+  };
+  const rectangles = selectors.map(selector => {
+    const declarations = ruleBody(selector);
+    return {
+      selector,
+      columns: readRange(declarations, 'grid-column'),
+      rows: readRange(declarations, 'grid-row'),
+    };
+  });
+
+  for (let index = 0; index < rectangles.length; index += 1) {
+    const left = rectangles[index];
+    assert.deepEqual(left.columns, expectedColumns.get(left.selector));
+    for (const right of rectangles.slice(index + 1)) {
+      const rowsOverlap = Math.max(left.rows[0], right.rows[0]) < Math.min(left.rows[1], right.rows[1]);
+      const columnsOverlap = Math.max(left.columns[0], right.columns[0]) < Math.min(left.columns[1], right.columns[1]);
+      assert.ok(
+        !(rowsOverlap && columnsOverlap),
+        `${left.selector} and ${right.selector} share opaque Grid tracks`,
+      );
+    }
+  }
+
+  assert.match(
+    css,
+    /@media \(max-width: 720px\) \{[\s\S]*?\.packet-sheet,\.packet-diff,\.packet-config,\.packet-evaluation,\.packet-logs,\.packet-checkpoint,\.packet-lineage,\.packet-approval \{[^}]*grid-column: 1;[^}]*grid-row: auto;[^}]*transform: none;/,
+  );
+});
+
+test('Product research accents keep required small text readable', async () => {
+  const css = await readFile(
+    new URL('./autolab-mog-product-v1.css', import.meta.url),
+    'utf8',
+  );
+  const ruleBody = selector => {
+    const escaped = selector.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    return css.match(new RegExp(`(?:^|\\n)${escaped} \\{([^}]*)\\}`))?.[1] || '';
+  };
+  const readableText = new Map([
+    ['.lineage-result[data-lineage-selected] > span', 'var(--ink)'],
+    ['.lineage-result[data-lineage-selected] small', 'var(--muted)'],
+    ['[data-next-experiment] > span', 'var(--ink)'],
+    ['.diff-added', 'var(--ink)'],
+    ['.packet-evaluation > strong', 'var(--ink)'],
+  ]);
+
+  for (const [selector, token] of readableText) {
+    const declarations = ruleBody(selector);
+    assert.match(declarations, new RegExp(`color: ${token.replace(/[()\-]/g, '\\$&')};`));
+    assert.doesNotMatch(declarations, /(?:^|;)\s*color: var\(--mint-deep\);/);
+  }
+  assert.match(ruleBody('.diff-added'), /border-left-color: var\(--mint\);/);
+  assert.match(ruleBody('.packet-evaluation'), /border-left: 3px solid var\(--mint\);/);
 });
 
 test('Product page visible copy avoids em dashes', async () => {
