@@ -589,9 +589,20 @@ function drawFrontierAxes(alpha) {
   context.setLineDash([]);
   const axisLabelSize = ending === 'rebirth' ? 10 : 7;
   const axisOffset = ending === 'rebirth' ? 22 : 18;
+  const visibleWidth = document.documentElement.clientWidth || width;
   context.font = `500 ${axisLabelSize}px "IBM Plex Mono", monospace`;
   context.letterSpacing = '0.1em';
-  context.fillText('EXPERIMENT SPACE', experimentAxis.x - 90, experimentAxis.y + axisOffset);
+  if (ending === 'rebirth') {
+    context.textAlign = 'right';
+    context.fillText(
+      'EXPERIMENT SPACE',
+      Math.min(experimentAxis.x - 12, visibleWidth - 24),
+      experimentAxis.y + axisOffset,
+    );
+    context.textAlign = 'left';
+  } else {
+    context.fillText('EXPERIMENT SPACE', experimentAxis.x - 66, experimentAxis.y + axisOffset);
+  }
   context.fillText('EVAL MIX', evalAxis.x - 8, evalAxis.y + axisOffset);
   context.fillText('PERFORMANCE', performanceAxis.x - 32, performanceAxis.y - 14);
   context.restore();

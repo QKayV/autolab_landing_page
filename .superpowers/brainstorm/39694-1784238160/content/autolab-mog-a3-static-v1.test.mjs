@@ -241,6 +241,14 @@ test('rebirth research instrument keeps operational copy legible', async () => {
   );
   assert.match(css, /\.research-status strong\s*\{[^}]*font:[^;]*12px/s);
   assert.match(scene, /ending === 'rebirth' \? 10 : 7/);
+  assert.match(
+    scene,
+    /const visibleWidth = document\.documentElement\.clientWidth \|\| width;/,
+  );
+  assert.match(
+    scene,
+    /context\.textAlign = 'right';\s*context\.fillText\(\s*'EXPERIMENT SPACE',\s*Math\.min\(experimentAxis\.x - 12, visibleWidth - 24\)/s,
+  );
 });
 
 test('rebirth exposes the Product page and exact conversion targets', async () => {
