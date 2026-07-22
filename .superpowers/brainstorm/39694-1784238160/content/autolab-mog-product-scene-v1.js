@@ -143,7 +143,11 @@ function initWatchdogScene() {
 
     context.save();
     context.globalAlpha = visibility;
-    label('QUEUED EXPERIMENTS', sources[0].x, graph.y - (compact ? 32 : 46));
+    label(
+      'QUEUED EXPERIMENTS',
+      compact ? graph.x : sources[0].x,
+      graph.y - (compact ? 36 : 46),
+    );
     sources.forEach((source, index) => {
       line(source.x + 7, source.y, target.x, target.y, 'rgba(126,139,133,.28)');
       label('▸', source.x, source.y + 3, index === 1 ? MINT : MUTED, 'center');
@@ -196,6 +200,7 @@ function initWatchdogScene() {
     context.shadowColor = MINT;
     context.shadowBlur = state.gpuActivation * 24;
     context.strokeStyle = state.phase === 'stopped' ? AMBER : MINT;
+    context.lineWidth = 1;
     context.strokeRect(gpu.x, gpu.y, gpu.width, gpu.height);
     context.restore();
     label('GPU 04', gpu.x + 12, gpu.y + 21, PAPER);

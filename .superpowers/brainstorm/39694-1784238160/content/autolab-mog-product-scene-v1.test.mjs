@@ -37,6 +37,30 @@ function boundsOverlap(first, second) {
     && first.bottom > second.top;
 }
 
+function segmentIntersectsBounds(segment, bounds) {
+  let entry = 0;
+  let exit = 1;
+  for (const [axis, minimum, maximum] of [
+    ['x', bounds.left, bounds.right],
+    ['y', bounds.top, bounds.bottom],
+  ]) {
+    const origin = segment.from[axis];
+    const direction = segment.to[axis] - origin;
+    if (direction === 0) {
+      if (origin < minimum || origin > maximum) return false;
+      continue;
+    }
+    const intersections = [
+      (minimum - origin) / direction,
+      (maximum - origin) / direction,
+    ].sort((a, b) => a - b);
+    entry = Math.max(entry, intersections[0]);
+    exit = Math.min(exit, intersections[1]);
+    if (entry > exit) return false;
+  }
+  return true;
+}
+
 function installSceneEnvironment({
   reducedMotion = false,
   width = 640,
@@ -396,6 +420,7 @@ test('watchdog reduced motion resolves one legible GPU reassignment after entry'
       selectedPathReachesGpuEdge: selectedEndpoint?.x === gpuEdge.x
         && selectedEndpoint?.y === gpuEdge.y,
       gpuGlowActive: gpu.shadowBlur > 0,
+      gpuBorderWidth: gpu.lineWidth,
     };
   } finally {
     reduced.restore();
@@ -406,7 +431,7 @@ test('watchdog reduced motion resolves one legible GPU reassignment after entry'
     width: 354,
     height: 430,
   });
-  let compactLabelsOverlap;
+  let compactGeometry;
   try {
     await compact.load();
     compact.intersect(true);
@@ -414,17 +439,27 @@ test('watchdog reduced motion resolves one legible GPU reassignment after entry'
     const queue = compact.textDraws.find(draw => draw.text === 'QUEUED EXPERIMENTS');
     assert.ok(status);
     assert.ok(queue);
-    compactLabelsOverlap = boundsOverlap(
-      estimatedMonoBounds(status),
-      estimatedMonoBounds(queue),
+    const queueBounds = estimatedMonoBounds(queue);
+    const queuePaths = compact.strokes.filter(
+      stroke => stroke.strokeStyle === 'rgba(126,139,133,.28)'
+        || (stroke.strokeStyle === '#2fce96' && stroke.lineWidth === 1.6),
     );
+    compactGeometry = {
+      compactLabelsOverlap: boundsOverlap(
+        estimatedMonoBounds(status),
+        queueBounds,
+      ),
+      compactPathCrossesHeading: queuePaths.some(path => path.segments.some(
+        segment => segmentIntersectsBounds(segment, queueBounds),
+      )),
+    };
   } finally {
     compact.restore();
   }
 
   assert.deepEqual({
     ...resolvedGeometry,
-    compactLabelsOverlap,
+    ...compactGeometry,
   }, {
     sourceCount: 3,
     faintPathCount: 3,
@@ -433,7 +468,9 @@ test('watchdog reduced motion resolves one legible GPU reassignment after entry'
     selectedPathCount: 1,
     selectedPathReachesGpuEdge: true,
     gpuGlowActive: true,
+    gpuBorderWidth: 1,
     compactLabelsOverlap: false,
+    compactPathCrossesHeading: false,
   });
 });
 
