@@ -103,7 +103,7 @@ test('Product customer boundary keeps its semantic label in topology Grid flow',
   assert.doesNotMatch(css, /\.boundary-label \{[^}]*position: absolute;/);
   assert.match(
     css,
-    /@media \(max-width: 720px\) \{[\s\S]*?\.customer-boundary \{[^}]*grid-template-areas: "boundary-label" "sources" "scheduler" "pools";/,
+    /@media \(max-width: 900px\) \{[\s\S]*?\.customer-boundary \{[^}]*grid-template-areas: "boundary-label" "sources" "scheduler" "pools";/,
   );
 });
 
@@ -157,7 +157,7 @@ test('Product topology reserves dashed connectors for proposed work', async () =
   );
   assert.match(
     css,
-    /@media \(max-width: 720px\) \{[\s\S]*?\.topology-proposed-route \{[^}]*border-left: 1px dashed var\(--mint-deep\);/,
+    /@media \(max-width: 900px\) \{[\s\S]*?\.topology-proposed-route \{[^}]*border-left: 1px dashed var\(--mint-deep\);/,
   );
   assert.doesNotMatch(boundaryRule, /dashed/);
   assert.doesNotMatch(evaluationRule, /dashed/);
@@ -327,7 +327,7 @@ test('Research packet makes the human review boundary concrete', async () => {
   );
   assert.match(
     css,
-    /@media \(max-width: 720px\) \{[\s\S]*?\.packet-stack \{[^}]*grid-template-columns: 1fr;/,
+    /@media \(max-width: 900px\) \{[\s\S]*?\.packet-stack \{[^}]*grid-template-columns: 1fr;/,
   );
 });
 
@@ -382,7 +382,7 @@ test('Research packet sheets reserve non-overlapping desktop Grid tracks', async
 
   assert.match(
     css,
-    /@media \(max-width: 720px\) \{[\s\S]*?\.packet-sheet,\.packet-diff,\.packet-config,\.packet-evaluation,\.packet-logs,\.packet-checkpoint,\.packet-lineage,\.packet-approval \{[^}]*grid-column: 1;[^}]*grid-row: auto;[^}]*transform: none;/,
+    /@media \(max-width: 900px\) \{[\s\S]*?\.packet-sheet,\.packet-diff,\.packet-config,\.packet-evaluation,\.packet-logs,\.packet-checkpoint,\.packet-lineage,\.packet-approval \{[^}]*grid-column: 1;[^}]*grid-row: auto;[^}]*transform: none;/,
   );
 });
 
@@ -765,4 +765,118 @@ test('Product watchdog renderer is connected without synthetic claims', async ()
   assert.match(scene, /new ResizeObserver/);
   assert.doesNotMatch(scene, /—/);
   assert.doesNotMatch(claims, /\b\d+(?:\.\d+)?(?:%|x)\b/i);
+});
+
+test('Product chapter reveals animate only restrained diagram accents', async () => {
+  const [html, css] = await Promise.all([
+    readFile(PRODUCT_URL, 'utf8'),
+    readFile(new URL('./autolab-mog-product-v1.css', import.meta.url), 'utf8'),
+  ]);
+  const collectRevealRules = state => [...css.matchAll(new RegExp(
+    `([^{}]*\\[data-explainer-chapter\\]\\[data-reveal="${state}"\\][^{}]*)\\{([^}]*)\\}`,
+    'g',
+  ))];
+  const pendingRules = collectRevealRules('pending');
+  const resolvedRules = collectRevealRules('resolved');
+  const pendingSelectors = pendingRules.map(match => match[1]).join('\n');
+  const pendingDeclarations = pendingRules.map(match => match[2]).join('\n');
+  const resolvedSource = resolvedRules.map(match => `${match[1]} ${match[2]}`).join('\n');
+
+  assert.doesNotMatch(html, /data-reveal=/);
+  for (const accent of [
+    'topology-proposed-route',
+    'anatomy-grid::before',
+    'lineage-proposal-route',
+    'packet-sheet',
+  ]) {
+    assert.ok(pendingSelectors.includes(accent), `missing pending reveal accent: ${accent}`);
+    assert.ok(resolvedSource.includes(accent), `missing resolved reveal accent: ${accent}`);
+  }
+  assert.doesNotMatch(pendingSelectors, /product-copy|\bh1\b|\bh2\b|\bp\b|button|\.mono-label/);
+  assert.doesNotMatch(pendingDeclarations, /opacity:\s*0(?:[;\s}]|$)/);
+
+  const durations = [...resolvedSource.matchAll(/(\d+)ms/g)].map(match => Number(match[1]));
+  assert.ok(durations.length >= 4, 'each reveal group needs a finite transition');
+  assert.ok(durations.every(duration => duration <= 700), 'reveals must finish within 700ms');
+
+  const reducedMotion = css.slice(css.indexOf('@media (prefers-reduced-motion: reduce)'));
+  assert.match(reducedMotion, /\.route-dash \{[^}]*animation: none;/);
+  assert.match(reducedMotion, /\[data-explainer-chapter\][\s\S]*transition: none !important;/);
+});
+
+test('Product diagrams return to document flow below 900px', async () => {
+  const css = await readFile(
+    new URL('./autolab-mog-product-v1.css', import.meta.url),
+    'utf8',
+  );
+  const below1080 = css.slice(
+    css.indexOf('@media (max-width: 1080px)'),
+    css.indexOf('@media (max-width: 900px)'),
+  );
+  const below900 = css.slice(
+    css.indexOf('@media (max-width: 900px)'),
+    css.indexOf('@media (max-width: 720px)'),
+  );
+
+  assert.match(below1080, /\.product-hero,\.product-chapter,\.product-chapter\.reverse,\.product-access \{[^}]*grid-template-columns: 1fr;/);
+  assert.match(below1080, /\.product-chapter\.reverse \.product-copy \{[^}]*grid-row: 1;/);
+  assert.match(below1080, /\.product-chapter\.reverse > figure,\.product-chapter\.reverse > :last-child \{[^}]*grid-row: 2;/);
+  assert.match(below900, /\.system-cutaway \{[^}]*grid-template-columns: 1fr;[^}]*grid-template-rows: repeat\(3,minmax\(0,1fr\)\);/);
+  assert.match(below900, /\.circuit-inputs,\.circuit-autolab,\.circuit-output \{[^}]*grid-column: 1;/);
+  assert.match(below900, /\.customer-boundary \{[^}]*grid-template-areas: "boundary-label" "sources" "scheduler" "pools";[^}]*grid-template-columns: 1fr;/);
+  assert.match(below900, /\.anatomy-grid \{[^}]*grid-template-columns: 1fr;/);
+  assert.match(below900, /\.anatomy-core,\[data-anatomy-part\] \{[^}]*grid-area: auto;/);
+  assert.match(below900, /\.lineage-system \{[^}]*grid-template-columns: 1fr;/);
+  assert.match(below900, /\.lineage-routes \{[^}]*display: none;/);
+  assert.match(below900, /\.packet-stack \{[^}]*grid-template-columns: 1fr;/);
+  assert.match(below900, /\.packet-sheet,\.packet-diff,\.packet-config,\.packet-evaluation,\.packet-logs,\.packet-checkpoint,\.packet-lineage,\.packet-approval \{[^}]*grid-row: auto;/);
+  assert.match(below900, /\.deployment-system \{[^}]*grid-template-areas: "customer" "managed" "control";[^}]*grid-template-columns: 1fr;/);
+  assert.match(below900, /\.deployment-connectors \{[^}]*display: none;/);
+});
+
+test('Product plates contain mobile overflow inside the authored control', async () => {
+  const css = await readFile(
+    new URL('./autolab-mog-product-v1.css', import.meta.url),
+    'utf8',
+  );
+  const below540 = css.slice(
+    css.indexOf('@media (max-width: 540px)'),
+    css.indexOf('@media (max-width: 430px)'),
+  );
+
+  assert.match(css, /\.product-page \{[^}]*overflow-x: clip;/);
+  assert.match(
+    below540,
+    /\.product-hero,\.product-chapter,\.product-onboarding,\.product-faq,\.product-access \{[^}]*width: calc\(100vw - 36px\);/,
+  );
+  assert.match(
+    below540,
+    /\.system-cutaway,\.technical-plate,\.watchdog-instrument,\.experiment-queue,\.product-diff,\.compute-map,\.product-onboarding \.onboarding-console \{[^}]*max-width: 100%;[^}]*min-width: 0;/,
+  );
+  assert.match(below540, /\.plate-index,[^{]+\{[^}]*overflow-wrap: anywhere;/);
+  assert.match(
+    below540,
+    /\.product-onboarding \.onboarding-tabs \{[^}]*max-width: 100%;[^}]*overflow-x: auto;[^}]*overscroll-behavior-inline: contain;/,
+  );
+  assert.match(below540, /\.product-onboarding \.onboarding-tabs button \{[^}]*flex: 0 0 auto;/);
+});
+
+test('Product qualitative copy and explainer controller avoid synthetic claims and ongoing work', async () => {
+  const [html, explainer, scene] = await Promise.all([
+    readFile(PRODUCT_URL, 'utf8'),
+    readFile(new URL('./autolab-mog-product-explainer-v2.js', import.meta.url), 'utf8'),
+    readFile(new URL('./autolab-mog-product-scene-v1.js', import.meta.url), 'utf8'),
+  ]);
+  const generatedCopy = `${visibleText(html)} ${explainer} ${scene}`;
+  const savingsClaim = /\b(?:save|saved|saving|savings|reduce|reduced|reduction)\b[^.!?\n]{0,48}\b\d+(?:\.\d+)?\s*(?:gpu(?:-hours?)?|hours?|runs?|experiments?|dollars?)\b|\b\d+(?:\.\d+)?\s*(?:gpu(?:-hours?)?|hours?|runs?|experiments?|dollars?)\b[^.!?\n]{0,48}\b(?:save|saved|saving|savings|reduce|reduced|reduction)\b/i;
+
+  assert.match(
+    html,
+    /<script type="module" src="autolab-mog-product-explainer-v2\.js"><\/script>/,
+  );
+  assert.doesNotMatch(generatedCopy, /—/);
+  assert.doesNotMatch(generatedCopy, /\b\d+(?:\.\d+)?\s*(?:%|x)\b/i);
+  assert.doesNotMatch(generatedCopy, savingsClaim);
+  assert.doesNotMatch(explainer, /requestAnimationFrame|setTimeout|setInterval/);
+  assert.doesNotMatch(explainer, /addEventListener\s*\(\s*['"]scroll['"]|\.onscroll\b/);
 });

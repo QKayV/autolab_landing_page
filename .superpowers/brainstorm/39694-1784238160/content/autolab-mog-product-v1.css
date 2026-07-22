@@ -1,4 +1,4 @@
-.product-page { background: var(--paper); color: var(--ink); }
+.product-page { overflow-x: clip; background: var(--paper); color: var(--ink); }
 .product-page main { overflow: clip; }
 .product-page .mono-label { display: block; margin-bottom: 18px; color: var(--muted); font: 500 9px/1 "IBM Plex Mono",monospace; letter-spacing: .14em; text-transform: uppercase; }
 .product-page .eyebrow-mint { color: var(--mint-deep); }
@@ -204,6 +204,21 @@
 .product-access .early-access-form[data-state="failure"] .early-access-status { color: #f0a38e; }
 .product-access .early-access-demo { color: #a9b0ac; }
 
+[data-explainer-chapter][data-reveal="pending"] .topology-scheduler::before,
+[data-explainer-chapter][data-reveal="pending"] .topology-scheduler::after,
+[data-explainer-chapter][data-reveal="pending"] .topology-proposed-route { opacity: .2; transform: scale(.6); }
+[data-explainer-chapter][data-reveal="resolved"] .topology-scheduler::before,
+[data-explainer-chapter][data-reveal="resolved"] .topology-scheduler::after,
+[data-explainer-chapter][data-reveal="resolved"] .topology-proposed-route { transition: opacity 420ms ease-out,transform 620ms cubic-bezier(.22,.61,.36,1); }
+[data-explainer-chapter][data-reveal="pending"] .anatomy-grid::before,
+[data-explainer-chapter][data-reveal="pending"] [data-anatomy-part]::after { opacity: .24; transform: scale(.7); }
+[data-explainer-chapter][data-reveal="resolved"] .anatomy-grid::before,
+[data-explainer-chapter][data-reveal="resolved"] [data-anatomy-part]::after { transition: opacity 440ms ease-out,transform 560ms cubic-bezier(.22,.61,.36,1); }
+[data-explainer-chapter][data-reveal="pending"] .lineage-proposal-route { opacity: .28; transform: translateX(-8px); }
+[data-explainer-chapter][data-reveal="resolved"] .lineage-proposal-route { transition: opacity 460ms ease-out,transform 620ms cubic-bezier(.22,.61,.36,1); }
+[data-explainer-chapter][data-reveal="pending"] .packet-sheet { transform: translateY(8px); }
+[data-explainer-chapter][data-reveal="resolved"] .packet-sheet { transition: transform 560ms cubic-bezier(.22,.61,.36,1); }
+
 @media (max-width: 1080px) {
   .product-hero,.product-chapter,.product-chapter.reverse,.product-access { grid-template-columns: 1fr; }
   .product-onboarding { grid-template-columns: 1fr; }
@@ -220,12 +235,6 @@
   .product-faq { grid-template-columns: 1fr; }
   .product-onboarding-console-column { min-width: 0; }
   .product-onboarding,.product-faq { min-height: 0; padding: 92px 0; }
-}
-
-@media (max-width: 720px) {
-  .product-hero,.product-chapter,.product-onboarding,.product-faq,.product-access { width: calc(100vw - 36px); }
-  .product-hero h1 { font-size: clamp(56px,16vw,78px); }
-  .product-copy h2 { font-size: clamp(44px,13vw,58px); }
   .system-cutaway { min-height: 960px; padding: 68px 24px 92px; grid-template-columns: 1fr; grid-template-rows: repeat(3,minmax(0,1fr)); gap: 46px; }
   .circuit-zone { padding: 32px 11px 10px; gap: 5px; }
   .circuit-zone b { min-height: 30px; }
@@ -271,10 +280,23 @@
   .deployment-managed { width: 100%; }
   .deployment-control-plane { min-height: 170px; }
   .deployment-connectors { display: none; }
+}
+
+@media (max-width: 720px) {
+  .product-hero h1 { font-size: clamp(56px,16vw,78px); }
+  .product-copy h2 { font-size: clamp(44px,13vw,58px); }
   .product-onboarding .onboarding-panel { min-height: 260px; padding: 32px 22px; }
   .product-onboarding .onboarding-panel pre { font-size: 12px; }
   .product-faq summary { min-height: 74px; font-size: 16px; }
   .product-access { margin-bottom: 18px; padding: 72px 24px; }
+}
+
+@media (max-width: 540px) {
+  .product-hero,.product-chapter,.product-onboarding,.product-faq,.product-access { width: calc(100vw - 36px); }
+  .system-cutaway,.technical-plate,.watchdog-instrument,.experiment-queue,.product-diff,.compute-map,.product-onboarding .onboarding-console { width: 100%; max-width: 100%; min-width: 0; }
+  .plate-index,.plate-index small,.boundary-label,.lineage-index,.lineage-index small,.packet-index,.packet-index small,.lineage-column-label,.deployment-boundary-head span,.deployment-boundary-head small,.deployment-customer-nodes span,.deployment-managed > span,.product-page .mono-label,.product-onboarding .onboarding-access-label { overflow-wrap: anywhere; }
+  .product-onboarding .onboarding-tabs { width: 100%; max-width: 100%; overflow-x: auto; overscroll-behavior-inline: contain; }
+  .product-onboarding .onboarding-tabs button { flex: 0 0 auto; }
 }
 
 @media (max-width: 430px) {
@@ -291,4 +313,8 @@
 
 @media (prefers-reduced-motion: reduce) {
   .route-dash { animation: none; stroke-dashoffset: -982; }
+  .product-page [data-explainer-chapter],
+  .product-page [data-explainer-chapter] *,
+  .product-page [data-explainer-chapter] *::before,
+  .product-page [data-explainer-chapter] *::after { transition: none !important; }
 }
