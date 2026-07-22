@@ -180,12 +180,12 @@ export function initAutolabPostHog({
   documentObject = globalThis.document,
 } = {}) {
   if (!windowObject || !documentObject || !shouldLoadPostHog(windowObject.location)) return false;
-  if (Object.prototype.hasOwnProperty.call(windowObject, INITIALIZED)) {
-    return windowObject[INITIALIZED];
-  }
-  windowObject[INITIALIZED] = false;
 
   try {
+    if (Object.prototype.hasOwnProperty.call(windowObject, INITIALIZED)) {
+      return windowObject[INITIALIZED];
+    }
+    windowObject[INITIALIZED] = false;
     const posthog = installPostHogStub(windowObject, documentObject);
     posthog.init(POSTHOG_PROJECT_TOKEN, POSTHOG_CONFIG);
     wireFunnelEvents(windowObject, documentObject);

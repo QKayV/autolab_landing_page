@@ -249,6 +249,15 @@ test('partial setup failure cannot duplicate scripts, init calls, or listeners',
   assert.equal(harness.handlers.get('click').length, 1);
 });
 
+test('an unwriteable window state cannot throw into the page', () => {
+  const harness = createBrowserHarness();
+  Object.preventExtensions(harness.windowObject);
+
+  assert.doesNotThrow(() => initAutolabPostHog(harness));
+  assert.equal(initAutolabPostHog(harness), false);
+  assert.equal(harness.insertedScripts.length, 0);
+});
+
 test('both static roots use one byte-identical analytics module', async () => {
   const [rootSource, contentSource] = await Promise.all([
     readFile(new URL('./autolab-posthog-v1.js', import.meta.url), 'utf8'),
