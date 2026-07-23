@@ -23,4 +23,5 @@ Key facts:
 - [Careers](https://www.autolab.ai/careers.html): open roles in San Francisco
 - [Research](https://www.autolab.ai/research/): blog posts and research by the Autolab team
 - [How to pick the best model for autoresearch](https://www.autolab.ai/research/blog-1-how-to-pick-the-best-model/): why single runs lie, why rankings do not transfer between problems, and which metric to optimize
+- [Running model comparison](https://www.autolab.ai/research/best-model/): continuously updated benchmark of frontier models on real autoresearch tasks
 - [Docs](https://docs.autolab.ai): product documentation

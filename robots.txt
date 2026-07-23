@@ -1,40 +1,65 @@
 # autolab.ai — all crawlers welcome, including AI assistants.
+# /.superpowers/ and /docs/ are internal working files, not site content.
 
 User-agent: *
 Allow: /
+Disallow: /.superpowers/
+Disallow: /docs/
 
 # AI / answer-engine crawlers (explicitly allowed)
 User-agent: GPTBot
 Allow: /
+Disallow: /.superpowers/
+Disallow: /docs/
 
 User-agent: OAI-SearchBot
 Allow: /
+Disallow: /.superpowers/
+Disallow: /docs/
 
 User-agent: ChatGPT-User
 Allow: /
+Disallow: /.superpowers/
+Disallow: /docs/
 
 User-agent: ClaudeBot
 Allow: /
+Disallow: /.superpowers/
+Disallow: /docs/
 
 User-agent: Claude-User
 Allow: /
+Disallow: /.superpowers/
+Disallow: /docs/
 
 User-agent: anthropic-ai
 Allow: /
+Disallow: /.superpowers/
+Disallow: /docs/
 
 User-agent: PerplexityBot
 Allow: /
+Disallow: /.superpowers/
+Disallow: /docs/
 
 User-agent: Google-Extended
 Allow: /
+Disallow: /.superpowers/
+Disallow: /docs/
 
 User-agent: Applebot-Extended
 Allow: /
+Disallow: /.superpowers/
+Disallow: /docs/
 
 User-agent: cohere-ai
 Allow: /
+Disallow: /.superpowers/
+Disallow: /docs/
 
 User-agent: Bytespider
 Allow: /
+Disallow: /.superpowers/
+Disallow: /docs/
 
 Sitemap: https://www.autolab.ai/sitemap.xml
