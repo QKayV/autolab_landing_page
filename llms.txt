@@ -11,13 +11,16 @@ Key facts:
 - Autolab can optimize whatever the user's eval measures: accuracy, training cost, inference latency, throughput.
 - Install: `curl -fsSL app.autolab.ai/install.sh | sh`, then `autolab init` and `autolab start`. Integrations exist for Claude Code and Codex.
 - Built by ML researchers from MIT, Harvard, Stanford, Google DeepMind, Imperial College London, Reality Labs, Uber, and AWS. Based in San Francisco, California.
+- Community: Discord at https://discord.gg/2ZVZmE8Ppb
 - Contact: team@autolab.ai
 
 ## Pages
 
 - [Home](https://www.autolab.ai/): product overview of the autoresearch platform
 - [Product](https://www.autolab.ai/product.html): illustrated technical explanation of the complete Autolab research loop
-- [What is autoresearch?](https://www.autolab.ai/autoresearch.html): definition, how agentic model training works, comparison with AutoML and experiment tracking
+- [What is autoresearch?](https://www.autolab.ai/autoresearch.html): definition, how agentic model training works, comparison with AutoML
 - [Our vision](https://www.autolab.ai/manifesto.html): why AI research is becoming an engineering discipline
 - [Careers](https://www.autolab.ai/careers.html): open roles in San Francisco
+- [Research](https://www.autolab.ai/research/): blog posts and research by the Autolab team
+- [How to pick the best model for autoresearch](https://www.autolab.ai/research/blog-1-how-to-pick-the-best-model/): why single runs lie, why rankings do not transfer between problems, and which metric to optimize
 - [Docs](https://docs.autolab.ai): product documentation

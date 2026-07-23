@@ -8,7 +8,7 @@
 <meta name="description" content="Autoresearch is AI agents running the ML research loop: planning experiments, writing code, training models, and iterating on results. How it works, how it differs from AutoML, and how to start.">
 <link rel="canonical" href="https://www.autolab.ai/autoresearch.html">
 <meta property="og:title" content="What Is Autoresearch? Agentic AI Model Training, Explained">
-<meta property="og:description" content="Autoresearch is AI agents running the ML research loop: planning experiments, writing code, training models, and iterating on results — with humans setting the goals.">
+<meta property="og:description" content="Autoresearch is AI agents running the ML research loop: planning experiments, writing code, training models, and iterating on results, with humans setting the goals.">
 <meta property="og:type" content="article">
 <meta property="og:url" content="https://www.autolab.ai/autoresearch.html">
 <meta property="og:site_name" content="Autolab">
@@ -16,7 +16,7 @@
 <meta property="og:image" content="https://www.autolab.ai/og.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Autolab — the autoresearch platform for agentic AI model training">
+<meta property="og:image:alt" content="Autolab, the autoresearch platform for agentic AI model training">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="What Is Autoresearch? Agentic AI Model Training, Explained">
 <meta name="twitter:description" content="AI agents running the ML research loop: planning experiments, writing code, training models, and iterating on results.">
@@ -24,7 +24,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;0,600;1,400;1,500&display=swap" rel="stylesheet">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230A0A0A'/%3E%3Ctext x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' font-family='monospace' font-weight='600' font-size='22' fill='%2334d399'%3E/%3C/text%3E%3C/svg%3E">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%230A0A0A'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='monospace' font-weight='500' font-size='20' fill='%2334d399'%3E/%3C/text%3E%3C/svg%3E">
 <link rel="icon" href="/favicon.ico" sizes="32x32">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <script type="application/ld+json">
@@ -38,8 +38,8 @@
       "description": "Autoresearch is AI agents running the machine learning research loop: planning experiments, writing code, training models, and iterating on results, with humans setting the goals.",
       "author": { "@type": "Organization", "name": "Autolab", "url": "https://www.autolab.ai/" },
       "publisher": { "@id": "https://www.autolab.ai/#organization" },
-      "datePublished": "2026-07-20",
-      "dateModified": "2026-07-20",
+      "datePublished": "2026-07-15",
+      "dateModified": "2026-07-15",
       "mainEntityOfPage": "https://www.autolab.ai/autoresearch.html",
       "image": "https://www.autolab.ai/og.png",
       "about": { "@id": "https://www.autolab.ai/autoresearch.html#term" }
@@ -48,7 +48,7 @@
       "@type": "DefinedTerm",
       "@id": "https://www.autolab.ai/autoresearch.html#term",
       "name": "Autoresearch",
-      "description": "The use of autonomous AI agents to run the machine learning research loop — proposing experiments, writing code, training and evaluating models, and deciding what to try next — while humans set the goals and evaluation criteria.",
+      "description": "The use of autonomous AI agents to run the machine learning research loop: proposing experiments, writing code, training and evaluating models, and deciding what to try next, while humans set the goals and evaluation criteria.",
       "url": "https://www.autolab.ai/autoresearch.html"
     },
     {
@@ -102,61 +102,100 @@ ul.plain li::before{content:'';position:absolute;left:2px;top:14px;width:5px;hei
 .footer .fl{display:flex;gap:22px}
 .footer a{color:inherit;text-decoration:none}
 .footer a:hover{color:var(--mint-deep)}
+.xcard{background:#FCFBF7;border:1px solid #DCD8CA;border-radius:6px;padding:18px 22px;max-width:640px;margin:22px 0}
+.xcard .xhead{font:400 13px/1.4 'IBM Plex Mono',monospace;color:#8A857A;margin-bottom:8px}
+.xcard .xhead b{color:#1A1916;font-weight:500}
+.xcard p{font:italic 400 15.5px/1.65 'IBM Plex Serif',serif;color:#3B3934;margin:0 0 10px}
+.xcard a{font:400 12.5px/1 'IBM Plex Mono',monospace;color:var(--mint-deep);text-decoration:none}
+.xcard a:hover{text-decoration:underline}
+.fromgrid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:36px;align-items:start;max-width:1180px;margin:22px 0 8px}
+@media (max-width:860px){.fromgrid{grid-template-columns:1fr}}
+.tweetshot{margin:0}
+.tweetshot img{width:100%;height:auto;display:block;border:1px solid #DCD8CA;border-radius:10px}
+.tweetshot figcaption{font:400 12px/1.6 'IBM Plex Mono',monospace;color:#8A857A;margin-top:8px}
+.evogrid{display:grid;grid-template-columns:1fr;gap:14px;margin:22px 0 8px}
+.ecard{display:block;background:#FCFBF7;border:1px solid #DCD8CA;border-radius:6px;padding:16px 18px;text-decoration:none;transition:border-color .15s,box-shadow .15s,transform .15s}
+.ecard:hover{border-color:#b9d9cb;box-shadow:0 3px 10px rgba(20,20,20,.05);transform:translateY(-1px)}
+.ecard .et{display:block;font:500 15.5px/1.3 'IBM Plex Serif',serif;color:var(--mint-deep);margin-bottom:2px}
+.ecard .es{display:block;font:400 11px/1.6 'IBM Plex Mono',monospace;color:#8A857A;margin-bottom:8px}
+.ecard p{font:400 13.5px/1.6 'IBM Plex Sans',sans-serif;color:#3B3934;margin:0}
+sup.ref{font:500 10px/1 'IBM Plex Mono',monospace;color:var(--mint-deep)}
+ol.refs{margin:14px 0 0;padding-left:0;list-style:none;max-width:78ch}
+ol.refs li{font:400 13px/1.7 'IBM Plex Sans',sans-serif;color:#6E6A5E;margin-bottom:8px}
+ol.refs a{color:var(--mint-deep)}
+@media (prefers-reduced-motion:reduce){.ecard{transition:none}.ecard:hover{transform:none}}
 @media (max-width:640px){.inner{padding:0 20px}.nav{padding:0 20px}}
 </style>
 </head>
 <body>
-<header class="topbar"><nav class="nav" aria-label="Main"><a class="wordlink" href="index.html"><div class="wordmark">autolab▮</div></a><div class="navlinks"><a class="navbtn" href="index.html">← back to autolab</a></div></nav></header>
+<header class="topbar"><nav class="nav" aria-label="Main"><a class="wordlink" href="index.html"><div class="wordmark">autolab▮</div></a><div class="navlinks"><a href="research/index.html">research</a><a class="navbtn" href="index.html">← back to autolab</a></div></nav></header>
 <div class="inner">
 <article style="padding-top:70px">
-  <div class="eyebrow">AUTORESEARCH, EXPLAINED</div>
+  <div class="eyebrow">AUTORESEARCH, EXPLAINED · 2026-07-15</div>
   <h1 class="pageh1">What is autoresearch?</h1>
 
-  <p class="lede">Autoresearch is the use of autonomous AI agents to run the machine learning research loop itself: proposing experiments, writing the code, training and evaluating models, and deciding what to try next — while humans set the goals.</p>
-
-  <div class="deffn">
-    <div class="dt">DEFINITION</div>
-    <p>autoresearch <em>(n.)</em> — machine learning research carried out by autonomous AI agents that plan, implement, run, and analyze experiments end to end, with humans specifying the objective and the evaluation that defines success.</p>
-  </div>
+  <p class="lede">Autoresearch is the use of autonomous AI agents to run the machine learning research loop itself: proposing experiments, writing the code, training and evaluating models, and deciding what to try next, while humans set the goals.</p>
 
   <h2>Why it exists</h2>
-  <p class="body">Modern ML progress is bottlenecked by experiment throughput, not ideas. A researcher can hold ten hypotheses in their head but can only babysit a handful of training runs at a time; meanwhile the GPUs they aren't using sit idle. The best results now come from systematic experimentation at scale — the labs that win run the most informative experiments per unit of compute.</p>
-  <p class="body">Autoresearch closes that gap. AI agents are already good at writing training code; given structured feedback about what happened during a run — losses, gradients, evals, logs — they can also decide what to try next. That turns one researcher's goal into hundreds of parallel, self-correcting experiments.</p>
+  <p class="body">The motivation is simple: training a neural network is hard. There are many levers and knobs to turn, many hacks and tricks you need to know, and the design space is huge. You have to run many experiments before you find the right combination, and often you do not even know what the design space is.</p>
+  <p class="body">Autoresearch automates that search. AI agents are already good at writing training code, and the LLMs behind them have been trained on a lot of data, including many of the papers and articles describing the hacks that make neural networks work. Given structured feedback about what happened during a run (losses, gradients, evals, logs) they can also decide what to try next. That turns one researcher's goal into a self-correcting loop of experiments.</p>
+
+  <h2>Where the idea comes from</h2>
+  <div class="fromgrid">
+  <div>
+  <p class="body">At its core, autoresearch is simple: a prompt that tells an AI agent to iterate on a task, plus an eval that scores every attempt. The name went mainstream in March 2026, when Andrej Karpathy released a repo with exactly that setup<sup class="ref">[1]</sup>: a single GPU LLM training script of about 630 lines (a stripped down nanochat core) plus a Markdown prompt. The agent reads the prompt, edits the training script, trains for 5 minutes, keeps the change if validation loss improves, and repeats overnight.</p>
+  <p class="body">But the idea of using LLMs to automatically train models and discover algorithms has a longer history and a research community behind it. People have been thinking about this for a while: among other early works, DeepMind's FunSearch put LLM-driven program search in Nature back in 2023<sup class="ref">[3]</sup>. AlphaEvolve scaled the recipe in 2025 and found, among other things, a faster way to multiply matrices, the first improvement over Strassen's algorithm in 56 years<sup class="ref">[2]</sup>. Sakana AI's ShinkaEvolve open sourced a sample-efficient take on the same loop a few months later<sup class="ref">[4]</sup>. Some of the results:</p>
+  <div class="evogrid">
+    <a class="ecard" href="https://deepmind.google/blog/alphaevolve-a-gemini-powered-coding-agent-for-designing-advanced-algorithms/" target="_blank" rel="noopener">
+      <span class="et">AlphaEvolve</span><span class="es">GOOGLE DEEPMIND · 2025</span>
+      <p>Multiplies 4x4 complex matrices in 48 scalar multiplications, improving on Strassen's 49 from 1969. Also the origin of the circle packing task we use in our benchmarks.</p></a>
+    <a class="ecard" href="https://deepmind.google/discover/blog/funsearch-making-new-discoveries-in-mathematical-sciences-using-large-language-models/" target="_blank" rel="noopener">
+      <span class="et">FunSearch</span><span class="es">GOOGLE DEEPMIND · 2023</span>
+      <p>Discovered new constructions for the cap set problem, the first result from an LLM search loop published in Nature.</p></a>
+    <a class="ecard" href="https://sakana.ai/shinka-evolve/" target="_blank" rel="noopener">
+      <span class="et">ShinkaEvolve</span><span class="es">SAKANA AI · 2025</span>
+      <p>Open source program evolution that reaches state of the art on circle packing in about 150 evaluations instead of thousands.</p></a>
+  </div>
+  </div>
+  <figure class="tweetshot">
+    <a href="https://x.com/karpathy/status/2030371219518931079" target="_blank" rel="noopener"><img src="karpathy-autoresearch.png" alt="Andrej Karpathy's X post introducing the autoresearch repo, with a chart of 83 experiments and 15 kept improvements" loading="lazy"></a>
+    <figcaption>Karpathy announcing autoresearch, Mar 7, 2026. Click to open on X.</figcaption>
+  </figure>
+  </div>
 
   <h2>How agentic model training works</h2>
   <p class="body">Agentic training of models means the agents drive the full training loop, not just a search over hyperparameters. In a typical autoresearch run:</p>
   <ul class="plain">
-    <li><b>You state the goal.</b> Beat this baseline, cut this latency, test these three ideas — plus the eval script that defines the metric.</li>
+    <li><b>You state the goal.</b> Beat this baseline, cut this latency, test these three ideas, plus the eval script that defines the metric.</li>
     <li><b>Agents plan the experiments.</b> They read the repository and propose concrete changes: learning-rate sweeps, data mixes, architecture tweaks, tokenizers, optimizers, quantization and serving configs.</li>
     <li><b>Every experiment runs as a real commit.</b> Code, environment, metrics, logs, and checkpoints are captured, so every result is reproducible and inspectable.</li>
     <li><b>Results steer the next round.</b> Failed runs are diagnosed (NaN losses, OOMs, divergence) and retried or pruned; winners are scaled up and merged.</li>
     <li><b>Nothing ships unless the metric moves.</b> The eval you wrote is the only judge.</li>
   </ul>
 
-  <h2>Autoresearch vs. AutoML vs. experiment tracking</h2>
+  <h2>Autoresearch vs. AutoML</h2>
   <div class="tablewrap">
   <table class="cmp">
     <thead><tr><th>APPROACH</th><th>WHAT IT DOES</th><th>WHAT IT CAN'T DO</th></tr></thead>
     <tbody>
-      <tr><td>Experiment tracking</td><td>Logs metrics and artifacts from runs a human launches; dashboards for humans to analyze.</td><td>Doesn't decide, launch, or fix anything. The human is still the loop.</td></tr>
-      <tr><td>AutoML / HPO</td><td>Searches a predefined space — hyperparameters, sometimes architectures — with fixed strategies.</td><td>Can't write new code, change the data pipeline, or pursue an open-ended research goal.</td></tr>
+      <tr><td>AutoML / HPO</td><td>Searches a predefined space (hyperparameters, sometimes architectures) with fixed strategies.</td><td>Can't write new code, change the data pipeline, or pursue an open-ended research goal.</td></tr>
       <tr><td>Autoresearch</td><td>Agents write real code in your repo, run and score experiments on your infrastructure, and iterate toward a goal.</td><td>Doesn't replace judgment: humans still choose the goals and the evals that define success.</td></tr>
     </tbody>
   </table>
   </div>
 
   <h2>What an autoresearch platform provides</h2>
-  <p class="body">Running a thousand agents against one goal takes more than a prompt. An autoresearch platform like <a href="index.html">Autolab</a> supplies the infrastructure layer:</p>
+  <p class="body">Running hundreds of agents against one goal takes more than a prompt. An autoresearch platform like <a href="index.html">Autolab</a> supplies the infrastructure layer:</p>
   <ul class="plain">
-    <li><b>Orchestration</b> — scheduling thousands of concurrent experiments across heterogeneous GPU fleets, keeping no GPU idle.</li>
-    <li><b>Telemetry and context</b> — logging everything that happens during training and compressing it into the structured context agents need to make good decisions.</li>
-    <li><b>Reproducibility</b> — every experiment pinned as a commit: code, environment, data, metrics, checkpoints.</li>
-    <li><b>Evaluation discipline</b> — every change scored against your evals, with a readout that ranks what worked and why.</li>
-    <li><b>Security</b> — everything runs on your cluster or your cloud account; code, data, and weights never leave your network.</li>
+    <li><b>Orchestration:</b> scheduling hundreds of concurrent experiments across heterogeneous GPU fleets, keeping no GPU idle.</li>
+    <li><b>Telemetry and context:</b> logging everything that happens during training and compressing it into the structured context agents need to make good decisions.</li>
+    <li><b>Reproducibility:</b> every experiment pinned as a commit: code, environment, data, metrics, checkpoints.</li>
+    <li><b>Evaluation discipline:</b> every change scored against your evals, with a readout that ranks what worked and why.</li>
+    <li><b>Security:</b> everything runs on your cluster or your cloud account; code, data, and weights never leave your network.</li>
   </ul>
 
   <h2>What teams use it for</h2>
-  <p class="body">Autoresearch applies wherever a number needs to move and experiments are the way to move it: pre-training and fine-tuning of language models, post-training recipes (SFT, RL, distillation), computer vision and robotics model training, and inference optimization — quantization, kernels, and serving configs tuned for latency and cost.</p>
+  <p class="body">Autoresearch applies wherever a number needs to move and experiments are the way to move it: pre-training and fine-tuning of language models, post-training recipes (SFT, RL, distillation), computer vision and robotics model training, and inference optimization: quantization, kernels, and serving configs tuned for latency and cost.</p>
 
   <h2>Start running autoresearch <em>today</em></h2>
   <p class="body">Autolab installs in one line, points at the eval script that prints your metric, and starts the agents on your own compute.</p>
@@ -165,10 +204,18 @@ ul.plain li::before{content:'';position:absolute;left:2px;top:14px;width:5px;hei
     <a class="btn ghost" href="index.html">See the platform</a>
   </div>
   <div class="install">$ curl -fsSL app.autolab.ai/install.sh | sh</div>
+
+  <h2>References</h2>
+  <ol class="refs">
+    <li>[1] Karpathy, A. autoresearch: AI agents running research on single-GPU nanochat training. GitHub repository, March 2026. <a href="https://github.com/karpathy/autoresearch" target="_blank" rel="noopener">github.com/karpathy/autoresearch</a>; announcement: <a href="https://x.com/karpathy/status/2030371219518931079" target="_blank" rel="noopener">x.com/karpathy</a></li>
+    <li>[2] Novikov, A. et al. AlphaEvolve: A coding agent for scientific and algorithmic discovery. Google DeepMind, 2025. <a href="https://deepmind.google/blog/alphaevolve-a-gemini-powered-coding-agent-for-designing-advanced-algorithms/" target="_blank" rel="noopener">deepmind.google</a></li>
+    <li>[3] Romera-Paredes, B. et al. Mathematical discoveries from program search with large language models. Nature 625, 468-475, 2024. <a href="https://www.nature.com/articles/s41586-023-06924-6" target="_blank" rel="noopener">nature.com</a></li>
+    <li>[4] Lange, R. T. et al. ShinkaEvolve: Towards Open-Ended and Sample-Efficient Program Evolution. Sakana AI, arXiv:2509.19349, 2025. <a href="https://arxiv.org/abs/2509.19349" target="_blank" rel="noopener">arxiv.org/abs/2509.19349</a></li>
+  </ol>
 </article>
 </div>
 <div class="inner">
-<div class="footer"><span>autolab▮ © 2026</span><div class="fl"><a href="index.html">autolab</a><a href="manifesto.html">vision</a><a href="https://docs.autolab.ai">docs</a><a href="careers.html">careers</a><a href="mailto:team@autolab.ai">contact</a></div></div>
+<div class="footer"><span>autolab▮ © 2026</span><div class="fl"><a href="index.html">autolab</a><a href="research/index.html">research</a><a href="manifesto.html">vision</a><a href="https://discord.gg/2ZVZmE8Ppb" target="_blank" rel="noopener">discord</a><a href="https://docs.autolab.ai">docs</a><a href="careers.html">careers</a><a href="mailto:team@autolab.ai">contact</a></div></div>
 </div>
 <script type="module" src="autolab-posthog-v1.js"></script>
 </body></html>
