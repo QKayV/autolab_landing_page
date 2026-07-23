@@ -1,0 +1,4 @@
+# Internal working files — never deploy to production
+.superpowers
+docs
+*.test.mjs
