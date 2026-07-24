@@ -50,7 +50,7 @@ test('Vercel root publishes the approved Rebirth homepage and Product page', asy
   ]);
 
   assert.match(home, /<body data-ending="rebirth">/);
-  assert.match(home, /EACH ARROW IS AN EXPERIMENT/);
+  assert.match(home, /Autolab \/ model improvement loop/);
   assert.match(home, /href="product\.html"[^>]*>Product<\/a>/);
   assert.match(product, /<body class="product-page">/);
   assert.match(product, /href="\/" class="wordmark"/);

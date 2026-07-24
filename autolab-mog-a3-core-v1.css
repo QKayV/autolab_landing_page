@@ -89,9 +89,6 @@ body[data-ending="slingshot"] .variant-copy[data-for="slingshot"],body[data-endi
 .accretion-ring.r3 { inset: -12%; --ring-rotate:23deg; --ring-y:.24; border-style: dashed; opacity: .5; }
 .impact-label { position: absolute; z-index: 10; opacity: 0; color: var(--mint); font: 500 8px/1.5 "IBM Plex Mono",monospace; letter-spacing: .11em; text-transform: uppercase; pointer-events: none; white-space: nowrap; }
 
-.semantic-legend { position: absolute; z-index: 12; right: clamp(24px,4.2vw,64px); top: 152px; display: grid; gap: 8px; opacity: 0; color: #8fa099; font: 500 7px/1 "IBM Plex Mono",monospace; letter-spacing: .1em; text-transform: uppercase; transition: opacity .3s; }
-.semantic-legend span { padding: 7px 9px; border: 1px solid rgba(247,245,240,.14); background: rgba(7,10,8,.54); }
-.research-run[data-stage="2"] .semantic-legend,.research-run[data-stage="3"] .semantic-legend,.research-run[data-stage="4"] .semantic-legend { opacity: 1; }
 .gravity-pointer { position: absolute; z-index: 15; width: 46px; height: 46px; margin: -23px 0 0 -23px; border: 1px solid var(--mint); border-radius: 50%; opacity: 0; pointer-events: none; box-shadow: 0 0 0 8px rgba(47,206,150,.06),0 0 28px rgba(47,206,150,.16); }
 .gravity-pointer::after { content: attr(data-mode); position: absolute; left: 54px; top: 18px; color: var(--mint); font: 500 7px/1 "IBM Plex Mono",monospace; letter-spacing: .1em; text-transform: uppercase; white-space: nowrap; }
 .gravity-pointer.visible { opacity: .9; }
@@ -162,7 +159,6 @@ body[data-ending="rebirth"] .research-head {
 body[data-ending="rebirth"] .research-step .step { font-size: 10px; }
 body[data-ending="rebirth"] .research-step p { font-size: 15px; }
 body[data-ending="rebirth"] .research-key { font-size: 10px; line-height: 1.25; }
-body[data-ending="rebirth"] .semantic-legend { font-size: 10px; }
 body[data-ending="rebirth"] .diff-head,
 body[data-ending="rebirth"] .diff-foot { font-size: 9px; }
 body[data-ending="rebirth"] .diff-metrics span { font-size: 10px; }
@@ -205,9 +201,8 @@ body[data-ending="rebirth"] .diff-metrics span { font-size: 10px; }
   .research-step h3 { max-width: 355px; font-size: 46px; }
   .research-step p { max-width: 340px; margin-top: 13px; font-size: 12px; }
   body[data-ending="rebirth"] .research-step p { font-size: 14px; }
-  .research-key { margin-top: 13px; }
-  .semantic-legend { top: calc(36% + 118px); right: 14px; }
-  .semantic-legend span:nth-child(n+3) { display: none; }
+  .research-key { margin-top: 13px; max-width: 100%; }
+  .research-step[data-step="2"] .research-key { display: none; }
   .research-metrics { right: 12px; bottom: 43px; width: calc(100% - 24px); }
   body[data-ending="rebirth"] .research-status { right: 12px; bottom: 43px; width: calc(100% - 24px); }
   .result-card,body[data-ending="loop"] .result-card { left: 16px; right: 16px; top: 64%; width: auto; transform-origin: center; }
@@ -227,7 +222,6 @@ body[data-ending="rebirth"] .diff-metrics span { font-size: 10px; }
   .research-step p,
   body[data-ending="rebirth"] .research-step p { font-size: 12px; margin-top: 10px; max-width: 300px; }
   .research-key { margin-top: 10px; }
-  .semantic-legend { display: none; }
   .result-card,
   body[data-ending="loop"] .result-card { top: 50%; }
   .research-status,
