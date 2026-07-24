@@ -198,24 +198,32 @@
 
 @media (max-width: 900px) {
   .gpu-efficiency { height: 300vh; min-height: 2100px; }
-  .gpu-stage { --gpu-scale-x: .95; --gpu-scale-y: .975; --gpu-radius: 19px; }
-  .gpu-copy { top: 82px; left: 18px; right: 18px; }
+  .gpu-stage { --gpu-scale-x: .95; --gpu-scale-y: .975; --gpu-radius: 19px; display: flex; flex-direction: column; }
+  .gpu-copy { position: static; flex: 0 0 auto; margin: 82px 18px 0; }
   .gpu-copy .mono-label { margin-bottom: 15px; }
   .gpu-copy h2 { max-width: 520px; font-size: clamp(48px,13.5vw,66px); }
   .gpu-copy p { max-width: 520px; margin-top: 17px; font-size: 13px; }
-  .gpu-instrument { left: 14px; right: 14px; top: 350px; bottom: 30px; min-height: 360px; }
+  .gpu-instrument { position: relative; inset: auto; flex: 1 1 auto; min-height: 230px; margin: 20px 14px 24px; }
   .gpu-instrument-foot { gap: 12px; }
   .gpu-instrument-foot span:nth-of-type(n+2) { display: none; }
 }
 
 @media (max-width: 540px) {
-  .gpu-copy { top: 76px; }
+  .gpu-copy { margin-top: 76px; }
   .gpu-copy h2 { font-size: clamp(46px,13vw,54px); }
   .gpu-copy p { max-width: 345px; line-height: 1.52; }
-  .gpu-instrument { top: 340px; bottom: 24px; }
+  .gpu-instrument { margin: 16px 14px 22px; }
   .gpu-instrument-head { padding: 0 12px; }
   .gpu-instrument-head > span:first-child { max-width: 150px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .gpu-instrument-foot { padding: 0 12px; font-size: 7px; }
+}
+
+@media (max-width: 900px) and (max-height: 520px) {
+  .gpu-stage { flex-direction: row; align-items: stretch; }
+  .gpu-copy { flex: 0 0 44%; align-self: center; margin: 70px 10px 20px 18px; }
+  .gpu-copy h2 { font-size: 34px; }
+  .gpu-copy p { margin-top: 12px; font-size: 12px; }
+  .gpu-instrument { margin: 64px 14px 16px 0; min-height: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {

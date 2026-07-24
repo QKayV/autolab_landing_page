@@ -13,17 +13,19 @@ import {
 } from './autolab-mog-gpu-motion-v1.js';
 
 const section = document.querySelector('[data-gpu-section]');
+const sticky = section?.querySelector('.gpu-sticky');
 const stage = section?.querySelector('.gpu-stage');
 const canvas = section?.querySelector('#gpu-canvas');
 const phaseLabel = section?.querySelector('[data-gpu-phase]');
 const counter = section?.querySelector('[data-gpu-counter]');
 
-if (!section || !stage || !canvas || !phaseLabel || !counter) {
+if (!section || !sticky || !stage || !canvas || !phaseLabel || !counter) {
   throw new Error('GPU efficiency scene markup is incomplete');
 }
 
 const context = canvas.getContext('2d');
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const mobileLayout = matchMedia('(max-width: 900px)');
 const jobs = createGpuJobs(GPU_NODE_COUNT * EXPERIMENTS_PER_GPU, 0xA710AB);
 const jobsByNode = Array.from({ length: GPU_NODE_COUNT }, (_, node) =>
   jobs.filter(job => gpuNodeFor(job.index) === node));
@@ -91,13 +93,14 @@ function cubicPoint(from, controlA, controlB, to, amount) {
 
 function layoutForCanvas() {
   const mobile = width < 620;
-  columns = mobile ? 3 : 6;
-  const rows = mobile ? 4 : 2;
   const margin = mobile ? 12 : 30;
   const gridX = mobile ? width * 0.39 : width * 0.42;
   const gridY = mobile ? 38 : 40;
   const gridWidth = width - gridX - margin;
   const gridHeight = height - gridY - (mobile ? 26 : 24);
+  const tall = gridHeight > gridWidth * 0.66;
+  columns = mobile || tall ? 3 : 6;
+  const rows = mobile || tall ? 4 : 2;
   const gap = mobile ? 7 : 10;
   const cellWidth = (gridWidth - gap * (columns - 1)) / columns;
   const cellHeight = (gridHeight - gap * (rows - 1)) / rows;
@@ -535,10 +538,12 @@ function updateStageState() {
 
   const opening = ease(progress / 0.13);
   const closing = ease((progress - 0.89) / 0.11);
-  const baseInset = innerWidth < 900 ? 10 : 38;
-  const baseRadius = innerWidth < 900 ? 19 : 26;
-  const baseScaleX = clamp((innerWidth - baseInset * 2) / innerWidth, 0.82, 1);
-  const baseScaleY = clamp((innerHeight - baseInset * 2) / innerHeight, 0.82, 1);
+  const stageWidth = Math.max(1, sticky.clientWidth);
+  const stageHeight = Math.max(1, sticky.clientHeight);
+  const baseInset = mobileLayout.matches ? 10 : 38;
+  const baseRadius = mobileLayout.matches ? 19 : 26;
+  const baseScaleX = clamp((stageWidth - baseInset * 2) / stageWidth, 0.82, 1);
+  const baseScaleY = clamp((stageHeight - baseInset * 2) / stageHeight, 0.82, 1);
   const openScaleX = mix(baseScaleX, 1, opening);
   const openScaleY = mix(baseScaleY, 1, opening);
   const scaleX = mix(openScaleX, baseScaleX, closing);
@@ -628,7 +633,7 @@ function resize() {
 
 function updateScroll() {
   const rect = section.getBoundingClientRect();
-  const distance = Math.max(1, section.offsetHeight - innerHeight);
+  const distance = Math.max(1, section.offsetHeight - sticky.offsetHeight);
   targetProgress = reducedMotion ? 1 : clamp(-rect.top / distance);
   scheduleFrame();
 }

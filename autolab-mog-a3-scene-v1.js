@@ -27,6 +27,8 @@ if (!['slingshot', 'rebirth', 'loop'].includes(ending)) {
 }
 
 const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+const mobileLayout = matchMedia('(max-width: 900px)');
+const shortViewport = matchMedia('(max-height: 500px)');
 const run = document.querySelector('#research-run');
 const sticky = run.querySelector('.research-sticky');
 const canvas = document.querySelector('#research-canvas');
@@ -64,8 +66,8 @@ const loopScan = run.querySelector('.loop-scan');
 const metricsPanel = run.querySelector('.research-status') ??
   run.querySelector('.research-metrics');
 
-let width = innerWidth;
-let height = innerHeight;
+let width = sticky.clientWidth || innerWidth;
+let height = sticky.clientHeight || innerHeight;
 let pixelRatio = 1;
 let progress = 0;
 let phase = 'release';
@@ -91,7 +93,7 @@ const pointer = {
   moved: false,
 };
 
-const experimentCount = innerWidth < 760 ? 112 : 240;
+const experimentCount = mobileLayout.matches ? 112 : 240;
 const blueprints = createExperimentBlueprints(experimentCount, 0xA3701AB);
 const populationKey = blueprints.map(experiment => experiment.id).join('|');
 const particles = blueprints.map(blueprint => ({
@@ -107,8 +109,8 @@ const particles = blueprints.map(blueprint => ({
 const mix = (from, to, amount) => from + (to - from) * amount;
 
 function resize() {
-  width = innerWidth;
-  height = innerHeight;
+  width = sticky.clientWidth || innerWidth;
+  height = sticky.clientHeight || innerHeight;
   pixelRatio = Math.min(devicePixelRatio || 1, 2);
   const pixelWidth = Math.round(width * pixelRatio);
   const pixelHeight = Math.round(height * pixelRatio);
@@ -134,7 +136,7 @@ function cubicBezier(amount, p0, p1, p2, p3) {
 }
 
 function launchPath(amount) {
-  const mobile = width < 760;
+  const mobile = mobileLayout.matches;
   return cubicBezier(
     amount,
     launch,
@@ -163,7 +165,7 @@ function frontierCamera() {
 
 function projectFrontier(u, v, z) {
   const camera = frontierCamera();
-  const scale = Math.min(width, height) * (width < 760 ? 0.34 : 0.36) * camera.zoom;
+  const scale = Math.min(width, height) * (mobileLayout.matches ? 0.34 : 0.36) * camera.zoom;
   const cosine = Math.cos(camera.yaw);
   const sine = Math.sin(camera.yaw);
   const rotatedU = u * cosine - v * sine;
@@ -218,7 +220,7 @@ function currentVariantState() {
 function resolveResult(amount, rotation = -4) {
   const resolved = amount > 0.985 ? 1 : amount;
   const inset = mix(49, 0, resolved);
-  const horizontalShift = width < 760 ? '0' : '-50%';
+  const horizontalShift = mobileLayout.matches ? '0' : '-50%';
   resultCard.style.opacity = String(resolved);
   resultCard.style.transform = `translate(${horizontalShift},-50%) scale(${mix(0.06, 1, resolved)}) rotate(${mix(rotation, 0, resolved)}deg)`;
   resultCard.style.clipPath = `inset(${inset}% ${inset}% ${inset}% ${inset}%)`;
@@ -325,7 +327,7 @@ function syncLaunchPoint() {
 }
 
 function updateLoopPathGeometry() {
-  const mobile = width < 760;
+  const mobile = mobileLayout.matches;
   const firstControl = {
     x: launch.x + (mobile ? 22 : 66),
     y: launch.y + height * 0.2,
@@ -394,8 +396,8 @@ function updateField() {
   eventHorizon.style.top = `${origin.y}px`;
   eventHorizon.style.opacity = String(horizonIn);
   eventHorizon.style.transform = `translate(-50%,-50%) scale(${horizonIn * horizonScale})`;
-  impactLabel.style.left = `${origin.x + (width < 760 ? 0 : 92)}px`;
-  impactLabel.style.top = `${origin.y + (width < 760 ? 92 : 62)}px`;
+  impactLabel.style.left = `${origin.x + (mobileLayout.matches ? 0 : 92)}px`;
+  impactLabel.style.top = `${origin.y + (mobileLayout.matches ? 92 : 62)}px`;
   impactLabel.style.opacity = String(
     Math.sin(clamp((progress - 0.11) / 0.18) * Math.PI) * darkIn,
   );
@@ -444,12 +446,12 @@ function updateNavigationTelemetry() {
 
 function updatePointer() {
   const rect = run.getBoundingClientRect();
-  const inRun = rect.top <= 0 && rect.bottom >= innerHeight;
+  const inRun = rect.top <= 0 && rect.bottom >= height;
   pointerMode = phase === 'orbit'
     ? 'gravity'
     : ['gradient', 'pressure'].includes(phase) ? 'surface' : 'none';
   pointer.inside = pointer.moved && inRun && pointerMode !== 'none' &&
-    pointer.x > (width < 760 ? 0 : width * 0.36);
+    pointer.x > (mobileLayout.matches ? 0 : width * 0.36);
   pointer.strength = pointer.inside && !reducedMotion ? 1 : 0;
   pointer.nx = pointer.x / width * 2 - 1;
   pointer.ny = pointer.y / height * 2 - 1;
@@ -463,12 +465,13 @@ function updateScroll() {
   topbar.classList.toggle('island', scrollY > 80);
 
   const rect = run.getBoundingClientRect();
-  const inRun = rect.top <= 0 && rect.bottom >= innerHeight;
-  progress = clamp(-rect.top / Math.max(1, run.offsetHeight - innerHeight));
+  const inRun = rect.top <= 0 && rect.bottom >= height;
+  progress = clamp(-rect.top / Math.max(1, run.offsetHeight - height));
   phase = phaseFor(progress);
   endingProgress = clamp((progress - TIMELINE.compression) / (1 - TIMELINE.compression));
-  origin = { x: width * (width < 760 ? 0.55 : 0.7), y: height * (width < 760 ? 0.62 : 0.58) };
-  result = { x: width * (width < 760 ? 0.5 : 0.62), y: height * (width < 760 ? 0.64 : 0.54) };
+  const stacked = mobileLayout.matches && !shortViewport.matches;
+  origin = { x: width * (stacked ? 0.55 : 0.7), y: height * (stacked ? 0.62 : 0.58) };
+  result = { x: width * (stacked ? 0.5 : 0.62), y: height * (stacked ? 0.64 : 0.54) };
 
   topbar.classList.toggle('armed', rect.top < height * 0.42 && rect.top > -height * 0.08);
   updateFlight(inRun);
@@ -614,8 +617,8 @@ function drawFrontierSurface(alpha) {
     y: pointer.ny,
     strength: pointer.strength,
   };
-  const rows = width < 760 ? 9 : 13;
-  const columns = width < 760 ? 11 : 16;
+  const rows = mobileLayout.matches ? 9 : 13;
+  const columns = mobileLayout.matches ? 11 : 16;
   context.save();
   context.globalAlpha = alpha;
   context.globalCompositeOperation = 'screen';
@@ -849,7 +852,7 @@ function targetForParticle(particle, now) {
     reducedMotion,
   };
   const pose = poseForExperiment(particle.blueprint, scene);
-  const radius = Math.min(width, height) * (width < 760 ? 0.41 : 0.48);
+  const radius = Math.min(width, height) * (mobileLayout.matches ? 0.41 : 0.48);
   const born = ease((progress - 0.105) / 0.17);
   const surfaceMix = frontierAmount();
   const orbitPoint = {
@@ -1066,6 +1069,7 @@ addEventListener('scroll', () => {
   scheduleFrame();
 }, { passive: true });
 addEventListener('pointermove', event => {
+  if (event.pointerType !== 'mouse') return;
   pointer.x = event.clientX;
   pointer.y = event.clientY;
   pointer.moved = true;

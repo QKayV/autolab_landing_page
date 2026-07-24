@@ -13,7 +13,7 @@
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
-html { scroll-behavior: auto; }
+html { scroll-behavior: auto; overflow-x: clip; }
 body {
   background: var(--paper);
   color: var(--ink);
@@ -516,12 +516,12 @@ a:focus-visible,button:focus-visible { outline: 2px solid var(--mint-deep); outl
   .nav-center { display: none; }
   .nav-shell { height: 64px; padding: 0 18px; grid-template-areas: "brand action"; grid-template-columns: 1fr auto; }
   .topbar.island .nav-shell { top: 9px; height: 54px; width: calc(100% - 20px); }
-  .hero { min-height: auto; grid-template-columns: 1fr; gap: 48px; padding: 116px 18px 72px; }
+  .hero { min-height: auto; grid-template-columns: minmax(0,1fr); gap: 48px; padding: 116px 18px 72px; }
   h1 { font-size: clamp(50px,15vw,74px); }
   .hero-sub { margin: 24px 0; font-size: 16px; }
   .terminal { transform: none; }
   .terminal-body { min-height: 330px; padding: 18px; font-size: 10px; }
-  .get-started { min-height: auto; padding: 110px 18px 130px; grid-template-columns: 1fr; gap: 54px; }
+  .get-started { min-height: auto; padding: 110px 18px 130px; grid-template-columns: minmax(0,1fr); gap: 54px; }
   .get-started-copy h2 { font-size: clamp(52px,14vw,72px); }
   .onboarding-panel { min-height: 230px; padding: 26px 20px; }
   .onboarding-panel pre { font-size: 11px; }

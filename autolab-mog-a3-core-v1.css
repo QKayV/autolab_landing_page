@@ -156,7 +156,7 @@ body[data-ending="slingshot"] .variant-copy[data-for="slingshot"],body[data-endi
 body[data-ending="loop"] .result-card { top: 44%; }
 
 body[data-ending="rebirth"] .research-head {
-  grid-template-columns: 1fr min(250px,27vw) 46px;
+  grid-template-columns: 1fr min(250px,27vw) auto;
   font-size: 10px;
 }
 body[data-ending="rebirth"] .research-step .step { font-size: 10px; }
@@ -197,8 +197,8 @@ body[data-ending="rebirth"] .diff-metrics span { font-size: 10px; }
   .a3-handoff p { max-width: 290px; margin-top: 38px; }
   .research-run { height: 720vh; }
   .base-grid { mask-image: linear-gradient(180deg,transparent,#000 34%,#000); }
-  .research-head { top: 78px; left: 16px; right: 16px; grid-template-columns: 1fr 100px 38px; gap: 11px; }
-  body[data-ending="rebirth"] .research-head { grid-template-columns: 1fr 100px 38px; }
+  .research-head { top: 78px; left: 16px; right: 16px; grid-template-columns: minmax(0,1fr) 100px auto; gap: 11px; }
+  body[data-ending="rebirth"] .research-head { grid-template-columns: minmax(0,1fr) 100px auto; }
   .research-head > span:nth-child(2) { display: none; }
   .research-story { left: 18px; right: 18px; top: 106px; width: auto; height: 36%; bottom: auto; }
   .research-step { justify-content: center; }
@@ -206,13 +206,36 @@ body[data-ending="rebirth"] .diff-metrics span { font-size: 10px; }
   .research-step p { max-width: 340px; margin-top: 13px; font-size: 12px; }
   body[data-ending="rebirth"] .research-step p { font-size: 14px; }
   .research-key { margin-top: 13px; }
-  .semantic-legend { top: 45%; right: 14px; }
+  .semantic-legend { top: calc(36% + 118px); right: 14px; }
   .semantic-legend span:nth-child(n+3) { display: none; }
   .research-metrics { right: 12px; bottom: 43px; width: calc(100% - 24px); }
   body[data-ending="rebirth"] .research-status { right: 12px; bottom: 43px; width: calc(100% - 24px); }
   .result-card,body[data-ending="loop"] .result-card { left: 16px; right: 16px; top: 64%; width: auto; transform-origin: center; }
   .impact-label { width: 165px; text-align: center; white-space: normal; transform: translateX(-50%); }
   .comparison-links { display: none; }
+}
+
+@media (max-width: 540px) {
+  .research-head,
+  body[data-ending="rebirth"] .research-head { grid-template-columns: minmax(0,1fr) auto; }
+  .research-progress { display: none; }
+}
+
+@media (max-width: 900px) and (max-height: 500px) {
+  .research-story { top: 92px; bottom: auto; height: 46%; width: min(430px,58vw); right: auto; }
+  .research-step h3 { font-size: 30px; }
+  .research-step p,
+  body[data-ending="rebirth"] .research-step p { font-size: 12px; margin-top: 10px; max-width: 300px; }
+  .research-key { margin-top: 10px; }
+  .semantic-legend { display: none; }
+  .result-card,
+  body[data-ending="loop"] .result-card { top: 50%; }
+  .research-status,
+  body[data-ending="rebirth"] .research-status { right: 12px; bottom: 14px; width: min(430px,calc(100% - 24px)); }
+}
+
+@media (hover: none) {
+  .gravity-pointer { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
