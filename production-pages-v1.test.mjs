@@ -114,6 +114,30 @@ test('production Product FAQ matches the approved visible and structured copy', 
   }
 });
 
+test('landing headers expose the full navigation in the mobile menu', async () => {
+  const pages = [
+    ['homepage', await readOrEmpty(HOME_URL)],
+    ['product', await readOrEmpty(PRODUCT_URL)],
+  ];
+  const expectedLinks = [
+    ['Product', /product\.html/],
+    ['How it works', /#research-run/],
+    ['Research', /(?:research\/index\.html|\/research\/)/],
+    ['Docs', /https:\/\/docs\.autolab\.ai/],
+    ['Careers', /careers\.html/],
+    ['Discord', /https:\/\/discord\.gg\/2ZVZmE8Ppb/],
+  ];
+
+  for (const [page, html] of pages) {
+    const menu = html.match(/<details class="mobile-nav">[\s\S]*?<\/details>/)?.[0] || '';
+    assert.match(menu, /<summary aria-label="Open main navigation">Menu<\/summary>/, page + ' missing mobile menu trigger');
+    for (const [label, hrefPattern] of expectedLinks) {
+      assert.ok(menu.includes('>' + label + '</a>'), page + ' mobile menu missing ' + label);
+      assert.match(menu, hrefPattern, page + ' mobile menu missing href for ' + label);
+    }
+  }
+});
+
 test('promoted modules stay byte-identical to the approved design sources', async () => {
   const promotedAssets = [
     'autolab-mog-core-v1.css',

@@ -168,6 +168,56 @@ button { color: inherit; font: inherit; }
   transition: transform .22s ease,box-shadow .22s ease;
 }
 .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 22px rgba(20,20,20,.16); }
+.mobile-nav {
+  grid-area: menu;
+  justify-self: end;
+  position: relative;
+  display: none;
+  font: 500 10px/1 "IBM Plex Mono",monospace;
+}
+.mobile-nav summary {
+  list-style: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 52px;
+  height: 40px;
+  padding: 0 12px;
+  border: 1px solid rgba(20,20,20,.18);
+  border-radius: 8px;
+  background: rgba(252,251,247,.92);
+  color: var(--ink);
+  cursor: pointer;
+  user-select: none;
+}
+.mobile-nav summary::-webkit-details-marker { display: none; }
+.mobile-nav[open] summary { border-color: rgba(20,20,20,.35); }
+.mobile-nav-links {
+  position: absolute;
+  z-index: 2;
+  top: calc(100% + 10px);
+  right: 0;
+  width: min(230px, calc(100vw - 36px));
+  padding: 8px;
+  border: 1px solid rgba(20,20,20,.2);
+  border-radius: 8px;
+  background: var(--paper-high);
+  box-shadow: 0 18px 45px rgba(20,20,20,.14), 0 2px 8px rgba(20,20,20,.06);
+  backdrop-filter: blur(18px) saturate(140%);
+}
+.mobile-nav-links a {
+  display: flex;
+  align-items: center;
+  min-height: 38px;
+  padding: 0 10px;
+  border-radius: 5px;
+  color: var(--muted);
+}
+.mobile-nav-links a:hover,
+.mobile-nav-links a[aria-current="page"] {
+  background: rgba(47,206,150,.11);
+  color: var(--ink);
+}
 
 .hero {
   position: relative;
@@ -514,8 +564,10 @@ a:focus-visible,button:focus-visible { outline: 2px solid var(--mint-deep); outl
 
 @media (max-width: 900px) {
   .nav-center { display: none; }
-  .nav-shell { height: 64px; padding: 0 18px; grid-template-areas: "brand action"; grid-template-columns: 1fr auto; }
+  .nav-shell { height: 64px; padding: 0 18px; grid-template-areas: "brand menu action"; grid-template-columns: minmax(82px,1fr) auto auto; column-gap: 10px; }
   .topbar.island .nav-shell { top: 9px; height: 54px; width: calc(100% - 20px); }
+  .mobile-nav { display: block; }
+  .nav-cta { padding: 11px 12px; }
   .hero { min-height: auto; grid-template-columns: minmax(0,1fr); gap: 48px; padding: 116px 18px 72px; }
   h1 { font-size: clamp(50px,15vw,74px); }
   .hero-sub { margin: 24px 0; font-size: 16px; }
