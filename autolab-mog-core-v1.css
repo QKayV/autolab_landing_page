@@ -312,6 +312,18 @@ h1 em { color: var(--mint-deep); font-weight: 400; }
   font: 400 clamp(16px,1.3vw,19px)/1.55 "IBM Plex Sans",sans-serif;
 }
 .hero-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.hero-discord {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--mint-deep);
+  font: 500 12px/1 "IBM Plex Mono",monospace;
+  letter-spacing: .04em;
+}
+.hero-discord span { transition: transform .2s ease; }
+.hero-discord:hover span { transform: translate(2px,-2px); }
+@media (max-width: 640px) { .hero-discord { margin-left: 0; } }
 .button {
   min-width: 158px;
   display: inline-flex;
