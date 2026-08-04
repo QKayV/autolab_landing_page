@@ -82,9 +82,6 @@ export function analyticsEventForClick(target) {
   if (href.includes('calendar.superhuman.com/book/')) {
     return detail('demo_cta_clicked', { destination: 'calendar' });
   }
-  if (href.includes('docs.autolab.ai')) {
-    return detail('docs_link_clicked', { destination: 'docs' });
-  }
   if (href.toLowerCase().startsWith('mailto:')) {
     return detail('contact_link_clicked', { channel: 'email' });
   }

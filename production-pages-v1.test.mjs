@@ -123,7 +123,6 @@ test('landing headers expose the full navigation in the mobile menu', async () =
     ['Product', /product\.html/],
     ['How it works', /#research-run/],
     ['Research', /(?:research\/index\.html|\/research\/)/],
-    ['Docs', /https:\/\/docs\.autolab\.ai/],
     ['Careers', /careers\.html/],
     ['Discord', /https:\/\/discord\.gg\/2ZVZmE8Ppb/],
   ];
