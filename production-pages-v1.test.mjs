@@ -54,7 +54,7 @@ test('Vercel root publishes the approved Rebirth homepage and Product page', asy
   assert.match(home, /href="product\.html"[^>]*>Product<\/a>/);
   assert.match(product, /<body class="product-page">/);
   assert.match(product, /href="\/" class="wordmark"/);
-  assert.doesNotMatch(`${home}\n${product}`, /\.superpowers\/|autolab-mog-(?:a3-rebirth|product)-v1\.html/);
+  assert.doesNotMatch(`${home}\n${product}`, /\.superpowers\/|autolab-(?:mog-)?(?:a3-rebirth|product)-v1\.html/);
 });
 
 test('production pages retain SEO metadata and expose only existing local assets', async () => {
@@ -139,19 +139,19 @@ test('landing headers expose the full navigation in the mobile menu', async () =
 
 test('promoted modules stay byte-identical to the approved design sources', async () => {
   const promotedAssets = [
-    'autolab-mog-core-v1.css',
-    'autolab-mog-a3-core-v1.css',
-    'autolab-mog-gpu-v1.css',
-    'autolab-mog-product-v1.css',
-    'autolab-mog-a3-motion-v1.js',
-    'autolab-mog-a3-scene-v1.js',
-    'autolab-mog-a3-onboarding-v1.js',
-    'autolab-mog-hero-cycle-v1.js',
-    'autolab-mog-gpu-motion-v1.js',
-    'autolab-mog-gpu-scene-v1.js',
-    'autolab-mog-product-motion-v1.js',
-    'autolab-mog-product-scene-v1.js',
-    'autolab-mog-product-explainer-v2.js',
+    'autolab-core-v1.css',
+    'autolab-a3-core-v1.css',
+    'autolab-gpu-v1.css',
+    'autolab-product-v1.css',
+    'autolab-a3-motion-v1.js',
+    'autolab-a3-scene-v1.js',
+    'autolab-a3-onboarding-v1.js',
+    'autolab-hero-cycle-v1.js',
+    'autolab-gpu-motion-v1.js',
+    'autolab-gpu-scene-v1.js',
+    'autolab-product-motion-v1.js',
+    'autolab-product-scene-v1.js',
+    'autolab-product-explainer-v2.js',
   ];
 
   for (const asset of promotedAssets) {
