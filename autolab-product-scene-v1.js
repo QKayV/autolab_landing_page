@@ -2,7 +2,7 @@ import {
   WATCHDOG_CYCLE_MS,
   watchdogCurveAt,
   watchdogStateFor,
-} from './autolab-mog-product-motion-v1.js';
+} from './autolab-product-motion-v1.js';
 
 const MINT = '#2fce96';
 const AMBER = '#d8a447';

@@ -10,7 +10,7 @@ import {
   poseForExperiment,
   endingPose,
   navigationTelemetryFor,
-} from './autolab-mog-a3-motion-v1.js';
+} from './autolab-a3-motion-v1.js';
 
 const RESEARCH_STATUS = Object.freeze([
   'SETTING THE GOAL',

@@ -10,7 +10,7 @@ import {
   gpuSlotFor,
   gpuStateFor,
   smoothScrollProgress,
-} from './autolab-mog-gpu-motion-v1.js';
+} from './autolab-gpu-motion-v1.js';
 
 const section = document.querySelector('[data-gpu-section]');
 const sticky = section?.querySelector('.gpu-sticky');
