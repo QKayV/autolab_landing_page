@@ -1,3 +1,4 @@
+const REDIRECT_DELAY_MS = 1200;
 const FIELDS = ['name', 'role', 'company', 'email', 'useCase'];
 
 export function isValidEmail(value) {
@@ -84,6 +85,9 @@ export function initDemoForm(root = document) {
     form.hidden = true;
     done.hidden = false;
     link.focus();
+    // Same-tab redirect: a popup opened after an async response would be blocked.
+    // The pause lets the thank-you register; the button stays as a fallback.
+    view.setTimeout(() => view.location.assign(result.scheduleUrl), REDIRECT_DELAY_MS);
   });
 }
 
