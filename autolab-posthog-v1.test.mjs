@@ -165,6 +165,7 @@ test('click mapping covers the approved high-value funnel actions', () => {
     [clickTarget({ href: 'https://forms.gle/example', roleId: 'infrastructure-engineer' }), 'career_application_clicked', { role: 'infrastructure-engineer' }],
     [clickTarget({ href: '#early-access' }), 'early_access_opened', { target: 'early_access' }],
     [clickTarget({ href: '/interest.html' }), 'early_access_opened', { target: 'interest_page' }],
+    [clickTarget({ href: 'https://app.autolab.ai' }), 'early_access_opened', { target: 'app' }],
     [clickTarget({ href: '#onboarding-console' }), 'onboarding_opened', { target: 'onboarding' }],
     [clickTarget({ tabText: 'Claude Code' }), 'onboarding_method_selected', { method: 'claude_code' }],
   ];

@@ -93,6 +93,9 @@ export function analyticsEventForClick(target) {
   if (href === '/interest.html' || href === 'interest.html') {
     return detail('early_access_opened', { target: 'interest_page' });
   }
+  if (href.startsWith('https://app.autolab.ai')) {
+    return detail('early_access_opened', { target: 'app' });
+  }
   if (href === '#early-access') {
     return detail('early_access_opened', { target: 'early_access' });
   }

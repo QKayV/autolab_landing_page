@@ -195,6 +195,8 @@
 .product-access h2 { margin: 0; font: 400 clamp(52px,5.2vw,82px)/.95 "IBM Plex Serif",serif; letter-spacing: -.05em; }
 .product-access h2 em { color: var(--mint); font-weight: 400; }
 .product-access > div p { max-width: 38ch; color: #a9b0ac; font: 400 15px/1.7 "IBM Plex Sans",sans-serif; }
+.product-access > .button { justify-self: end; }
+.product-access > div p { margin-top: 26px; }
 .product-access .early-access-control input { border-color: #46514c; background: rgba(255,255,255,.04); color: var(--paper); }
 .product-access .early-access-control input:focus-visible { border-color: var(--mint); outline: 2px solid var(--mint); outline-offset: 3px; box-shadow: 0 0 0 5px rgba(47,206,150,.18); }
 .product-access .early-access-form label { color: #b8c1bc; }
@@ -318,3 +320,5 @@
   .product-page [data-explainer-chapter] *::before,
   .product-page [data-explainer-chapter] *::after { transition: none !important; }
 }
+
+@media (max-width: 900px) { .product-access > .button { justify-self: start; } }
