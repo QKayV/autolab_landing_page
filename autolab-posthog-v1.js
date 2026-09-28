@@ -79,6 +79,9 @@ export function analyticsEventForClick(target) {
   if (!link) return null;
   const href = String(link.getAttribute('href') || '');
 
+  if (href === '/demo.html') {
+    return detail('demo_cta_clicked', { destination: 'demo_form' });
+  }
   if (href.includes('calendar.superhuman.com/book/')) {
     return detail('demo_cta_clicked', { destination: 'calendar' });
   }

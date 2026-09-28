@@ -77,7 +77,7 @@ test('interest page is accessible, responsive, and restrained', async () => {
   assert.match(html, /:focus-visible/);
   assert.match(html, /@media \(prefers-reduced-motion: reduce\)/);
   assert.match(html, /@media \(max-width: 720px\)/);
-  assert.match(html, /href="https:\/\/calendar\.superhuman\.com\/book\//);
+  assert.match(html, /href="\/demo\.html"/);
   assert.equal(html.includes('—'), false);
 });
 

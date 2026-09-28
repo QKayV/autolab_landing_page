@@ -160,6 +160,7 @@ test('analytics config is anonymous and excludes replay and form fields', () => 
 
 test('click mapping covers the approved high-value funnel actions', () => {
   const cases = [
+    [clickTarget({ href: '/demo.html' }), 'demo_cta_clicked', { destination: 'demo_form' }],
     [clickTarget({ href: 'https://calendar.superhuman.com/book/abc' }), 'demo_cta_clicked', { destination: 'calendar' }],
     [clickTarget({ href: 'mailto:team@autolab.ai' }), 'contact_link_clicked', { channel: 'email' }],
     [clickTarget({ href: 'https://forms.gle/example', roleId: 'infrastructure-engineer' }), 'career_application_clicked', { role: 'infrastructure-engineer' }],

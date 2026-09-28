@@ -3,23 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Get early access | Autolab</title>
-  <meta name="description" content="Request early access to Autolab, the autonomous research platform for improving AI models on your GPUs.">
+  <title>Book a demo | Autolab</title>
+  <meta name="description" content="Book a demo of Autolab, the autonomous research platform for improving AI models on your GPUs. Tell us about your use case and pick a time.">
   <meta name="robots" content="index,follow">
-  <link rel="canonical" href="https://www.autolab.ai/interest.html">
-  <meta property="og:title" content="Get early access | Autolab">
-  <meta property="og:description" content="Request early access to Autolab and put autonomous AI research to work on your GPUs.">
+  <link rel="canonical" href="https://www.autolab.ai/demo.html">
+  <meta property="og:title" content="Book a demo | Autolab">
+  <meta property="og:description" content="Book a demo of Autolab and see autonomous AI research running on your GPUs.">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="en_US">
-  <meta property="og:url" content="https://www.autolab.ai/interest.html">
+  <meta property="og:url" content="https://www.autolab.ai/demo.html">
   <meta property="og:site_name" content="Autolab">
   <meta property="og:image" content="https://www.autolab.ai/og.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Autolab autonomous AI research">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Get early access | Autolab">
-  <meta name="twitter:description" content="Request early access to Autolab and put autonomous AI research to work on your GPUs.">
+  <meta name="twitter:title" content="Book a demo | Autolab">
+  <meta name="twitter:description" content="Book a demo of Autolab and see autonomous AI research running on your GPUs.">
   <meta name="twitter:image" content="https://www.autolab.ai/og.png">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%230A0A0A'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='monospace' font-weight='500' font-size='20' fill='%2334d399'%3E/%3C/text%3E%3C/svg%3E">
 <link rel="icon" href="/favicon.ico">
@@ -203,8 +203,7 @@
     .instrument {
       position: relative;
       overflow: hidden;
-      min-height: 540px;
-      padding: 28px;
+      padding: 76px 28px 28px;
       display: flex;
       flex-direction: column;
       justify-content: flex-end;
@@ -232,36 +231,6 @@
       color: var(--mint);
     }
 
-    .field {
-      position: absolute;
-      inset: 52px 18px auto;
-      width: calc(100% - 36px);
-      height: 205px;
-      opacity: .92;
-    }
-
-    .field-grid {
-      stroke: rgba(247, 245, 240, .07);
-      stroke-width: 1;
-    }
-
-    .field-flow {
-      fill: none;
-      stroke: rgba(247, 245, 240, .42);
-      stroke-width: 1.2;
-      stroke-dasharray: 5 7;
-      animation: flow 4.8s linear infinite;
-    }
-
-    .field-flow:nth-of-type(even) { animation-duration: 6.2s; }
-
-    .field-winner {
-      fill: var(--mint);
-      filter: drop-shadow(0 0 10px rgba(47, 206, 150, .8));
-    }
-
-    @keyframes flow { to { stroke-dashoffset: -48; } }
-
     .form-shell {
       position: relative;
       z-index: 3;
@@ -281,33 +250,39 @@
       text-transform: uppercase;
     }
 
-    .interest-control {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) auto;
-      gap: 8px;
-      transition: opacity .25s ease;
-    }
+    .demo-fields { display: grid; gap: 18px; transition: opacity .25s ease; }
 
-    input[type="email"] {
+    .demo-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+    .demo-field label { margin-bottom: 9px; }
+
+    input[type="text"],
+    input[type="email"],
+    textarea {
+      width: 100%;
       min-width: 0;
-      height: 52px;
       padding: 0 15px;
       border: 1px solid rgba(247, 245, 240, .24);
       border-radius: 10px;
       outline: none;
       background: rgba(247, 245, 240, .07);
       color: var(--paper);
-      font: 400 15px/1 "IBM Plex Sans", sans-serif;
+      font: 400 15px/1.5 "IBM Plex Sans", sans-serif;
       transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
     }
 
-    input[type="email"]::placeholder { color: rgba(247, 245, 240, .36); }
+    input[type="text"], input[type="email"] { height: 50px; }
+    textarea { min-height: 110px; padding: 13px 15px; resize: vertical; }
 
-    input[type="email"]:focus-visible {
+    input::placeholder, textarea::placeholder { color: rgba(247, 245, 240, .36); }
+
+    input:focus-visible, textarea:focus-visible {
       border-color: var(--mint);
       background: rgba(247, 245, 240, .10);
       box-shadow: 0 0 0 3px rgba(47, 206, 150, .22);
     }
+
+    input[aria-invalid="true"], textarea[aria-invalid="true"] { border-color: #ff9b8c; }
 
     button {
       min-height: 52px;
@@ -350,14 +325,36 @@
       font: 500 11px/1.5 "IBM Plex Mono", monospace;
     }
 
-    form[data-state="success"] .interest-control {
-      opacity: .28;
-      pointer-events: none;
-    }
-
-    form[data-state="success"] .interest-status { color: var(--mint); }
     form[data-state="failure"] .interest-status,
     form[data-state="invalid"] .interest-status { color: #ff9b8c; }
+
+    .demo-submit { width: 100%; margin-top: 20px; }
+
+    .demo-done[hidden], .form-shell form[hidden] { display: none; }
+
+    .demo-done h2 {
+      margin: 0 0 10px;
+      font: 500 32px/1.05 "IBM Plex Serif", serif;
+      letter-spacing: -.03em;
+    }
+
+    .demo-done p { margin: 0 0 22px; color: rgba(247, 245, 240, .68); font-size: 15px; line-height: 1.6; }
+
+    .demo-schedule {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 52px;
+      border-radius: 10px;
+      background: var(--mint);
+      color: #082d22;
+      font: 600 12px/1 "IBM Plex Mono", monospace;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .demo-schedule:hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(47, 206, 150, .20); }
+    .demo-schedule:focus-visible { outline: 2px solid var(--paper); outline-offset: 3px; }
 
     .field-trap {
       position: absolute;
@@ -398,10 +395,7 @@
         gap: 48px;
       }
       .copy { max-width: 760px; }
-      .instrument {
-        width: min(620px, 100%);
-        min-height: 500px;
-      }
+      .instrument { width: min(620px, 100%); }
       footer { position: static; padding: 0 24px 22px; text-align: right; }
     }
 
@@ -422,14 +416,12 @@
         margin-top: 30px;
       }
       .instrument {
-        min-height: 480px;
-        padding: 18px;
+        padding: 64px 18px 18px;
         border-radius: 18px;
       }
       .instrument-head { inset: 18px 18px auto; }
-      .field { inset-inline: 8px; width: calc(100% - 16px); }
       .form-shell { padding: 18px; }
-      .interest-control { grid-template-columns: 1fr; }
+      .demo-row { grid-template-columns: 1fr; }
       button { width: 100%; }
     }
 
@@ -448,71 +440,72 @@
 
   <header class="nav-shell">
     <a class="wordmark" href="/" aria-label="Autolab home">autolab</a>
-    <span class="nav-label">Early access / private beta</span>
-    <a class="nav-demo" href="/demo.html">Book a demo ↗</a>
+    <span class="nav-label">Book a demo</span>
+    <a class="nav-demo" href="https://app.autolab.ai" target="_blank" rel="noopener">Get early access ↗</a>
   </header>
 
   <main>
-    <section class="interest-layout" aria-labelledby="interest-title">
+    <section class="interest-layout" aria-labelledby="demo-title">
       <div class="copy">
-        <span class="eyebrow">Join the research loop</span>
-        <h1 id="interest-title">Get early access to <em>Autolab.</em></h1>
-        <p class="intro">Connect your code, evaluations, and GPUs. Autolab runs experiments, stops wasted work, and uses every result to decide what to try next.</p>
-        <div class="research-note" aria-label="Autolab workflow">
-          <span><i></i>Connect compute</span>
-          <span><i></i>Run experiments</span>
-          <span><i></i>Review winners</span>
+        <span class="eyebrow">Talk to the team</span>
+        <h1 id="demo-title">See Autolab on <em>your problem.</em></h1>
+        <p class="intro">Tell us a little about you and what you want to improve. Then pick a time that works and we will come prepared.</p>
+        <div class="research-note" aria-label="What happens next">
+          <span><i></i>Share your use case</span>
+          <span><i></i>Pick a time</span>
+          <span><i></i>Meet the team</span>
         </div>
       </div>
 
       <div class="instrument">
-        <div class="instrument-head"><span>Autolab / access queue</span><span>● accepting requests</span></div>
+        <div class="instrument-head"><span>Autolab / demo request</span><span>● booking open</span></div>
 
-        <svg class="field" viewBox="0 0 520 205" role="img" aria-label="Experiment paths converging on a selected result">
-          <defs>
-            <marker id="arrow" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="5" markerHeight="5" orient="auto">
-              <path d="M0 0L8 4L0 8Z" fill="rgba(247,245,240,.46)"></path>
-            </marker>
-          </defs>
-          <g class="field-grid">
-            <path d="M0 40H520M0 82H520M0 124H520M0 166H520"></path>
-            <path d="M70 0V205M150 0V205M230 0V205M310 0V205M390 0V205M470 0V205"></path>
-          </g>
-          <g marker-end="url(#arrow)">
-            <path class="field-flow" d="M10 22C120 20 168 42 258 102"></path>
-            <path class="field-flow" d="M18 72C126 70 190 78 258 102"></path>
-            <path class="field-flow" d="M16 128C128 132 190 122 258 102"></path>
-            <path class="field-flow" d="M28 184C132 174 188 146 258 102"></path>
-            <path class="field-flow" d="M506 26C408 32 346 60 270 102"></path>
-            <path class="field-flow" d="M512 92C414 88 350 92 270 102"></path>
-            <path class="field-flow" d="M500 176C400 162 338 136 270 102"></path>
-          </g>
-          <circle class="field-winner" cx="264" cy="102" r="5"></circle>
-        </svg>
+        <div class="form-shell">
+          <form action="/api/demo" method="post" data-demo-form data-ph-no-capture novalidate>
+            <div class="field-trap" aria-hidden="true">
+              <label for="demo-website">Website</label>
+              <input id="demo-website" type="text" name="website" tabindex="-1" autocomplete="off">
+            </div>
+            <div class="demo-fields">
+              <div class="demo-row">
+                <div class="demo-field">
+                  <label for="demo-name">Your name</label>
+                  <input id="demo-name" type="text" name="name" autocomplete="name" maxlength="120" required placeholder="Ada Lovelace">
+                </div>
+                <div class="demo-field">
+                  <label for="demo-role">Your role</label>
+                  <input id="demo-role" type="text" name="role" autocomplete="organization-title" maxlength="120" required placeholder="ML lead">
+                </div>
+              </div>
+              <div class="demo-field">
+                <label for="demo-email">Work email</label>
+                <input id="demo-email" type="email" name="email" autocomplete="email" inputmode="email" maxlength="254" required placeholder="you@company.com">
+              </div>
+              <div class="demo-field">
+                <label for="demo-use-case">Tell us about your use case</label>
+                <textarea id="demo-use-case" name="useCase" maxlength="2000" required placeholder="What are you trying to improve, and what do you run today?"></textarea>
+              </div>
+            </div>
+            <button class="demo-submit" data-demo-submit type="submit">Continue to scheduling →</button>
+            <p class="consent">We use this only to prepare for your call and to contact you about Autolab.</p>
+            <p class="interest-status" data-demo-status role="status" aria-live="polite"></p>
+          </form>
 
-        <form class="form-shell" action="/api/interest" method="post" data-early-access data-ph-no-capture data-endpoint="/api/interest" data-source="interest_page" novalidate>
-          <input type="hidden" name="source" value="interest_page">
-          <label for="interest-email">Email address</label>
-          <div class="field-trap" aria-hidden="true">
-            <label for="interest-website">Website</label>
-            <input id="interest-website" data-early-access-website type="text" name="website" tabindex="-1" autocomplete="off">
+          <div class="demo-done" data-demo-done hidden>
+            <h2 data-demo-greeting>Thanks.</h2>
+            <p>Your details are in. Pick a time that works for you and we will see you there.</p>
+            <a class="demo-schedule" data-demo-schedule href="/demo.html" target="_blank" rel="noopener">Pick a time <span aria-hidden="true">↗</span></a>
           </div>
-          <div class="interest-control">
-            <input id="interest-email" data-early-access-email type="email" name="email" autocomplete="email" inputmode="email" maxlength="254" required placeholder="you@company.com">
-            <button data-early-access-submit type="submit">Request access ↗</button>
-          </div>
-          <p class="consent">By requesting access, you agree that Autolab may contact you about early access.</p>
-          <p class="interest-status" data-early-access-status role="status" aria-live="polite"></p>
-        </form>
+        </div>
 
-        <p class="demo-fallback">Already running research at scale? <a href="/demo.html">Book a demo</a>. Or <a href="https://discord.gg/2ZVZmE8Ppb" target="_blank" rel="noopener">join our Discord</a>.</p>
+        <p class="demo-fallback">Prefer to try it first? <a href="https://app.autolab.ai" target="_blank" rel="noopener">Get early access</a>. Or <a href="https://discord.gg/2ZVZmE8Ppb" target="_blank" rel="noopener">join our Discord</a>.</p>
       </div>
     </section>
   </main>
 
   <footer>Autolab / San Francisco</footer>
 
-  <script type="module" src="/autolab-early-access-v1.js"></script>
+  <script type="module" src="/autolab-demo-v1.js"></script>
   <script type="module" src="/autolab-posthog-v1.js"></script>
 </body>
 </html>
