@@ -25,97 +25,16 @@
 <link rel="icon" href="/favicon.ico">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="autolab-core-v1.css">
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --mint: #2fce96;
-      --mint-deep: #0c8a5f;
-      --mint-pale: #dff5ec;
-      --paper: #f7f5f0;
-      --paper-high: #fcfbf7;
-      --paper-low: #efede6;
-      --ink: #141414;
-      --muted: #6e6a5e;
-      --line: #d8d4c8;
-      --error: #a63d2f;
-    }
-
-    * { box-sizing: border-box; }
-
     html { background: var(--paper); }
 
     body {
       min-height: 100svh;
-      margin: 0;
       background:
         radial-gradient(circle at 82% 24%, rgba(47, 206, 150, .10), transparent 25rem),
         var(--paper);
-      color: var(--ink);
-      font-family: "IBM Plex Sans", sans-serif;
-      -webkit-font-smoothing: antialiased;
-    }
-
-    a { color: inherit; text-decoration: none; }
-
-    ::selection { background: rgba(47, 206, 150, .32); }
-
-    .grain {
-      position: fixed;
-      inset: 0;
-      z-index: 10;
-      pointer-events: none;
-      opacity: .16;
-      mix-blend-mode: multiply;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.15'/%3E%3C/svg%3E");
-    }
-
-    .nav-shell {
-      position: fixed;
-      z-index: 20;
-      top: 18px;
-      left: 50%;
-      width: min(880px, calc(100% - 28px));
-      min-height: 60px;
-      padding: 10px 12px 10px 20px;
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      align-items: center;
-      border: 1px solid rgba(20, 20, 20, .20);
-      border-radius: 18px;
-      background: rgba(252, 251, 247, .88);
-      box-shadow: 0 18px 48px rgba(20, 20, 20, .10);
-      backdrop-filter: blur(18px) saturate(140%);
-      transform: translateX(-50%);
-    }
-
-    .wordmark {
-      justify-self: start;
-      display: inline-flex;
-      align-items: center;
-      font: 500 20px/1 "IBM Plex Mono", monospace;
-      letter-spacing: -.045em;
-    }
-
-    .nav-label {
-      color: var(--muted);
-      font: 500 10px/1 "IBM Plex Mono", monospace;
-      letter-spacing: .10em;
-      text-transform: uppercase;
-    }
-
-    .nav-demo {
-      justify-self: end;
-      padding: 12px 15px;
-      border-radius: 9px;
-      background: var(--ink);
-      color: var(--paper);
-      font: 500 10px/1 "IBM Plex Mono", monospace;
-      transition: transform .2s ease, box-shadow .2s ease;
-    }
-
-    .nav-demo:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 8px 22px rgba(20, 20, 20, .16);
     }
 
     main {
@@ -127,7 +46,7 @@
       place-items: center;
     }
 
-    .interest-layout {
+    .demo-layout {
       width: min(1140px, 100%);
       display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(390px, .78fr);
@@ -146,22 +65,12 @@
       text-transform: uppercase;
     }
 
-    .eyebrow::before {
-      content: "";
-      width: 18px;
-      border-top: 1px solid currentColor;
-    }
+    .eyebrow::before { content: ""; width: 18px; border-top: 1px solid currentColor; }
 
     h1 {
       max-width: 730px;
-      margin: 0;
       font: 500 clamp(56px, 7vw, 102px)/.93 "IBM Plex Serif", serif;
       letter-spacing: -.05em;
-    }
-
-    h1 em {
-      color: var(--mint-deep);
-      font-weight: 400;
     }
 
     .intro {
@@ -172,7 +81,7 @@
       line-height: 1.62;
     }
 
-    .research-note {
+    .demo-steps {
       margin-top: 38px;
       padding-top: 18px;
       display: grid;
@@ -186,13 +95,9 @@
       text-transform: uppercase;
     }
 
-    .research-note span {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-    }
+    .demo-steps span { display: inline-flex; align-items: center; gap: 8px; }
 
-    .research-note i {
+    .demo-steps i {
       width: 5px;
       height: 5px;
       border-radius: 50%;
@@ -200,61 +105,38 @@
       box-shadow: 0 0 0 4px rgba(47, 206, 150, .13);
     }
 
-    .instrument {
-      position: relative;
-      overflow: hidden;
-      padding: 76px 28px 28px;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-end;
-      border: 1px solid rgba(247, 245, 240, .15);
-      border-radius: 24px;
-      background: var(--ink);
-      color: var(--paper);
-      box-shadow: 0 32px 80px rgba(20, 20, 20, .19);
+    .demo-card {
+      padding: 26px 28px 30px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: var(--paper-low);
+      box-shadow: 0 24px 60px rgba(20, 20, 20, .07);
     }
 
-    .instrument-head {
-      position: absolute;
-      z-index: 2;
-      inset: 22px 24px auto;
+    .demo-card-head {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      color: rgba(247, 245, 240, .58);
+      margin-bottom: 26px;
+      color: var(--muted);
       font: 500 9px/1 "IBM Plex Mono", monospace;
       letter-spacing: .11em;
       text-transform: uppercase;
     }
 
-    .instrument-head span:last-child {
-      color: var(--mint);
-    }
-
-    .form-shell {
-      position: relative;
-      z-index: 3;
-      padding: 24px;
-      border: 1px solid rgba(247, 245, 240, .16);
-      border-radius: 16px;
-      background: rgba(20, 20, 20, .82);
-      backdrop-filter: blur(14px);
-    }
+    .demo-card-head span:last-child { color: var(--mint-deep); }
 
     label {
       display: block;
-      margin-bottom: 10px;
-      color: rgba(247, 245, 240, .72);
+      margin-bottom: 9px;
+      color: var(--muted);
       font: 500 10px/1 "IBM Plex Mono", monospace;
       letter-spacing: .08em;
       text-transform: uppercase;
     }
 
-    .demo-fields { display: grid; gap: 18px; transition: opacity .25s ease; }
-
+    .demo-fields { display: grid; gap: 18px; }
     .demo-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-
-    .demo-field label { margin-bottom: 9px; }
 
     input[type="text"],
     input[type="email"],
@@ -262,83 +144,56 @@
       width: 100%;
       min-width: 0;
       padding: 0 15px;
-      border: 1px solid rgba(247, 245, 240, .24);
+      border: 1px solid rgba(20, 20, 20, .16);
       border-radius: 10px;
       outline: none;
-      background: rgba(247, 245, 240, .07);
-      color: var(--paper);
+      background: var(--paper-high);
+      color: var(--ink);
       font: 400 15px/1.5 "IBM Plex Sans", sans-serif;
-      transition: border-color .2s ease, box-shadow .2s ease, background .2s ease;
+      transition: border-color .2s ease, box-shadow .2s ease;
     }
 
     input[type="text"], input[type="email"] { height: 50px; }
     textarea { min-height: 110px; padding: 13px 15px; resize: vertical; }
 
-    input::placeholder, textarea::placeholder { color: rgba(247, 245, 240, .36); }
+    input::placeholder, textarea::placeholder { color: var(--faint); }
+
+    input:hover, textarea:hover { border-color: rgba(20, 20, 20, .3); }
 
     input:focus-visible, textarea:focus-visible {
-      border-color: var(--mint);
-      background: rgba(247, 245, 240, .10);
-      box-shadow: 0 0 0 3px rgba(47, 206, 150, .22);
+      border-color: var(--mint-deep);
+      box-shadow: 0 0 0 3px rgba(47, 206, 150, .25);
     }
 
-    input[aria-invalid="true"], textarea[aria-invalid="true"] { border-color: #ff9b8c; }
+    input[aria-invalid="true"], textarea[aria-invalid="true"] { border-color: #a63d2f; }
 
     button {
+      width: 100%;
       min-height: 52px;
+      margin-top: 20px;
       padding: 0 18px;
       border: 0;
       border-radius: 10px;
-      background: var(--mint);
-      color: #082d22;
+      background: var(--ink);
+      color: var(--paper);
       cursor: pointer;
-      font: 600 11px/1 "IBM Plex Mono", monospace;
+      font: 500 11px/1 "IBM Plex Mono", monospace;
       transition: transform .2s ease, box-shadow .2s ease, opacity .2s ease;
     }
 
-    button:hover:not(:disabled) {
-      transform: translateY(-1px);
-      box-shadow: 0 10px 28px rgba(47, 206, 150, .20);
-    }
+    button:hover:not(:disabled) { transform: translateY(-1px); box-shadow: 0 10px 26px rgba(20, 20, 20, .18); }
+    button:disabled { cursor: wait; opacity: .55; }
 
-    button:focus-visible {
-      outline: 2px solid var(--paper);
-      outline-offset: 3px;
-    }
+    .consent { margin: 12px 0 0; color: var(--muted); font-size: 11px; line-height: 1.5; }
 
-    button:disabled {
-      cursor: wait;
-      opacity: .58;
-    }
+    .demo-status { min-height: 20px; margin: 14px 0 0; color: var(--muted); font: 500 11px/1.5 "IBM Plex Mono", monospace; }
+    form[data-state="failure"] .demo-status,
+    form[data-state="invalid"] .demo-status { color: #a63d2f; }
 
-    .consent {
-      margin: 12px 0 0;
-      color: rgba(247, 245, 240, .48);
-      font-size: 11px;
-      line-height: 1.5;
-    }
+    .demo-done[hidden], form[hidden] { display: none; }
 
-    .interest-status {
-      min-height: 20px;
-      margin: 14px 0 0;
-      color: rgba(247, 245, 240, .72);
-      font: 500 11px/1.5 "IBM Plex Mono", monospace;
-    }
-
-    form[data-state="failure"] .interest-status,
-    form[data-state="invalid"] .interest-status { color: #ff9b8c; }
-
-    .demo-submit { width: 100%; margin-top: 20px; }
-
-    .demo-done[hidden], .form-shell form[hidden] { display: none; }
-
-    .demo-done h2 {
-      margin: 0 0 10px;
-      font: 500 32px/1.05 "IBM Plex Serif", serif;
-      letter-spacing: -.03em;
-    }
-
-    .demo-done p { margin: 0 0 22px; color: rgba(247, 245, 240, .68); font-size: 15px; line-height: 1.6; }
+    .demo-done h2 { margin: 0 0 10px; font: 500 32px/1.05 "IBM Plex Serif", serif; letter-spacing: -.03em; }
+    .demo-done p { margin: 0 0 22px; color: var(--muted); font-size: 15px; line-height: 1.6; }
 
     .demo-schedule {
       display: flex;
@@ -353,29 +208,7 @@
       transition: transform .2s ease, box-shadow .2s ease;
     }
 
-    .demo-schedule:hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(47, 206, 150, .20); }
-    .demo-schedule:focus-visible { outline: 2px solid var(--paper); outline-offset: 3px; }
-
-    .field-trap {
-      position: absolute;
-      left: -10000px;
-      width: 1px;
-      height: 1px;
-      overflow: hidden;
-    }
-
-    .demo-fallback {
-      position: relative;
-      z-index: 3;
-      margin-top: 17px;
-      color: rgba(247, 245, 240, .56);
-      font: 400 11px/1.5 "IBM Plex Mono", monospace;
-    }
-
-    .demo-fallback a {
-      color: var(--paper);
-      border-bottom: 1px solid rgba(247, 245, 240, .35);
-    }
+    .demo-schedule:hover { transform: translateY(-1px); box-shadow: 0 10px 28px rgba(47, 206, 150, .3); }
 
     footer {
       position: fixed;
@@ -388,117 +221,93 @@
       text-transform: uppercase;
     }
 
+    .field-trap { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+
     @media (max-width: 900px) {
       main { padding-top: 112px; }
-      .interest-layout {
-        grid-template-columns: 1fr;
-        gap: 48px;
-      }
-      .copy { max-width: 760px; }
-      .instrument { width: min(620px, 100%); }
+      .demo-layout { grid-template-columns: 1fr; gap: 48px; }
+      .demo-card { width: min(620px, 100%); }
       footer { position: static; padding: 0 24px 22px; text-align: right; }
     }
 
     @media (max-width: 720px) {
-      .nav-shell {
-        grid-template-columns: 1fr auto;
-        min-height: 56px;
-        padding-left: 17px;
-      }
-      .nav-label { display: none; }
-      .nav-demo { padding: 11px 13px; }
-      main { padding: 100px 18px 34px; }
+      main { padding: 100px 18px 40px; }
       h1 { font-size: clamp(48px, 15vw, 72px); }
       .intro { margin-top: 22px; font-size: 16px; }
-      .research-note {
-        grid-template-columns: 1fr;
-        gap: 10px;
-        margin-top: 30px;
-      }
-      .instrument {
-        padding: 64px 18px 18px;
-        border-radius: 18px;
-      }
-      .instrument-head { inset: 18px 18px auto; }
-      .form-shell { padding: 18px; }
+      .demo-steps { grid-template-columns: 1fr; gap: 10px; margin-top: 30px; }
+      .demo-card { padding: 20px 18px 24px; border-radius: 16px; }
       .demo-row { grid-template-columns: 1fr; }
-      button { width: 100%; }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *, *::before, *::after {
-        scroll-behavior: auto !important;
-        animation-duration: .001ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: .001ms !important;
-      }
     }
   </style>
 </head>
 <body>
   <div class="grain" aria-hidden="true"></div>
 
-  <header class="nav-shell">
-    <a class="wordmark" href="/" aria-label="Autolab home">autolab</a>
-    <span class="nav-label">Book a demo</span>
-    <a class="nav-demo" href="https://app.autolab.ai" target="_blank" rel="noopener">Get early access ↗</a>
+  <header class="topbar" id="topbar">
+    <div class="nav-shell">
+      <a href="/" class="wordmark">autolab</a>
+      <div class="nav-center">
+        <nav class="nav-links" aria-label="Main navigation"><a href="product.html">Product</a><a href="#research-run">How it works</a><a href="/research/">Research</a><a href="careers.html">Careers</a></nav>
+      </div>
+      <details class="mobile-nav">
+        <summary aria-label="Open main navigation">Menu</summary>
+        <nav class="mobile-nav-links" aria-label="Mobile navigation"><a href="product.html">Product</a><a href="#research-run">How it works</a><a href="/research/">Research</a><a href="careers.html">Careers</a><a class="mobile-social" href="https://github.com/autolab-ai/hills" target="_blank" rel="noopener" data-github-link><svg class="mobile-social-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>GitHub<span class="mobile-stars"><svg class="nav-star-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.751.751 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25z"/></svg><b data-github-stars>20</b></span></a><a class="mobile-social" href="https://discord.gg/2ZVZmE8Ppb" target="_blank" rel="noopener"><svg class="mobile-social-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>Discord</a></nav>
+      </details>
+      <div class="nav-actions"><a class="nav-social nav-github" href="https://github.com/autolab-ai/hills" target="_blank" rel="noopener" data-github-link aria-label="autolab-ai/hills on GitHub, 20 stars"><svg class="nav-social-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg><span class="nav-star"><svg class="nav-star-icon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path fill="currentColor" d="M8 .25a.75.75 0 01.673.418l1.882 3.815 4.21.612a.75.75 0 01.416 1.279l-3.046 2.97.719 4.192a.751.751 0 01-1.088.791L8 12.347l-3.766 1.98a.75.75 0 01-1.088-.79l.72-4.194L.818 6.374a.75.75 0 01.416-1.28l4.21-.611L7.327.668A.75.75 0 018 .25z"/></svg><b data-github-stars>20</b></span></a><a class="nav-social nav-discord" href="https://discord.gg/2ZVZmE8Ppb" target="_blank" rel="noopener" aria-label="Join our Discord"><svg class="nav-social-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg></a><a class="nav-cta" href="/demo.html">Book a demo <span>↗</span></a></div>
+    </div>
   </header>
 
   <main>
-    <section class="interest-layout" aria-labelledby="demo-title">
+    <section class="demo-layout" aria-labelledby="demo-title">
       <div class="copy">
         <span class="eyebrow">Talk to the team</span>
         <h1 id="demo-title">See Autolab on <em>your problem.</em></h1>
         <p class="intro">Tell us a little about you and what you want to improve. Then pick a time that works and we will come prepared.</p>
-        <div class="research-note" aria-label="What happens next">
+        <div class="demo-steps" aria-label="What happens next">
           <span><i></i>Share your use case</span>
           <span><i></i>Pick a time</span>
           <span><i></i>Meet the team</span>
         </div>
       </div>
 
-      <div class="instrument">
-        <div class="instrument-head"><span>Autolab / demo request</span><span>● booking open</span></div>
+      <div class="demo-card">
+        <div class="demo-card-head"><span>Autolab / demo request</span><span>● booking open</span></div>
 
-        <div class="form-shell">
-          <form action="/api/demo" method="post" data-demo-form data-ph-no-capture novalidate>
-            <div class="field-trap" aria-hidden="true">
-              <label for="demo-website">Website</label>
-              <input id="demo-website" type="text" name="website" tabindex="-1" autocomplete="off">
-            </div>
-            <div class="demo-fields">
-              <div class="demo-row">
-                <div class="demo-field">
-                  <label for="demo-name">Your name</label>
-                  <input id="demo-name" type="text" name="name" autocomplete="name" maxlength="120" required placeholder="Ada Lovelace">
-                </div>
-                <div class="demo-field">
-                  <label for="demo-role">Your role</label>
-                  <input id="demo-role" type="text" name="role" autocomplete="organization-title" maxlength="120" required placeholder="ML lead">
-                </div>
-              </div>
-              <div class="demo-field">
-                <label for="demo-email">Work email</label>
-                <input id="demo-email" type="email" name="email" autocomplete="email" inputmode="email" maxlength="254" required placeholder="you@company.com">
-              </div>
-              <div class="demo-field">
-                <label for="demo-use-case">Tell us about your use case</label>
-                <textarea id="demo-use-case" name="useCase" maxlength="2000" required placeholder="What are you trying to improve, and what do you run today?"></textarea>
-              </div>
-            </div>
-            <button class="demo-submit" data-demo-submit type="submit">Continue to scheduling →</button>
-            <p class="consent">We use this only to prepare for your call and to contact you about Autolab.</p>
-            <p class="interest-status" data-demo-status role="status" aria-live="polite"></p>
-          </form>
-
-          <div class="demo-done" data-demo-done hidden>
-            <h2 data-demo-greeting>Thanks.</h2>
-            <p>Your details are in. Pick a time that works for you and we will see you there.</p>
-            <a class="demo-schedule" data-demo-schedule href="/demo.html" target="_blank" rel="noopener">Pick a time <span aria-hidden="true">↗</span></a>
+        <form action="/api/demo" method="post" data-demo-form data-ph-no-capture novalidate>
+          <div class="field-trap" aria-hidden="true">
+            <label for="demo-website">Website</label>
+            <input id="demo-website" type="text" name="website" tabindex="-1" autocomplete="off">
           </div>
-        </div>
+          <div class="demo-fields">
+            <div class="demo-row">
+              <div>
+                <label for="demo-name">Your name</label>
+                <input id="demo-name" type="text" name="name" autocomplete="name" maxlength="120" required placeholder="Ada Lovelace">
+              </div>
+              <div>
+                <label for="demo-role">Your role</label>
+                <input id="demo-role" type="text" name="role" autocomplete="organization-title" maxlength="120" required placeholder="ML lead">
+              </div>
+            </div>
+            <div>
+              <label for="demo-email">Work email</label>
+              <input id="demo-email" type="email" name="email" autocomplete="email" inputmode="email" maxlength="254" required placeholder="you@company.com">
+            </div>
+            <div>
+              <label for="demo-use-case">Tell us about your use case</label>
+              <textarea id="demo-use-case" name="useCase" maxlength="2000" required placeholder="What are you trying to improve, and what do you run today?"></textarea>
+            </div>
+          </div>
+          <button data-demo-submit type="submit">Continue to scheduling →</button>
+          <p class="consent">We use this only to prepare for your call and to contact you about Autolab.</p>
+          <p class="demo-status" data-demo-status role="status" aria-live="polite"></p>
+        </form>
 
-        <p class="demo-fallback">Prefer to try it first? <a href="https://app.autolab.ai" target="_blank" rel="noopener">Get early access</a>. Or <a href="https://discord.gg/2ZVZmE8Ppb" target="_blank" rel="noopener">join our Discord</a>.</p>
+        <div class="demo-done" data-demo-done hidden>
+          <h2 data-demo-greeting>Thanks.</h2>
+          <p>Your details are in. Pick a time that works for you and we will see you there.</p>
+          <a class="demo-schedule" data-demo-schedule href="/demo.html" target="_blank" rel="noopener">Pick a time <span aria-hidden="true">↗</span></a>
+        </div>
       </div>
     </section>
   </main>
@@ -506,6 +315,7 @@
   <footer>Autolab / San Francisco</footer>
 
   <script type="module" src="/autolab-demo-v1.js"></script>
+  <script type="module" src="/autolab-github-stars-v1.js"></script>
   <script type="module" src="/autolab-posthog-v1.js"></script>
 </body>
 </html>
