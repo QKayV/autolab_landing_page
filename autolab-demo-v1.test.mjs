@@ -6,14 +6,15 @@ import { isValidEmail, missingField, sendDemoRequest } from './autolab-demo-v1.j
 const values = (overrides = {}) => ({
   name: 'Ada Lovelace',
   role: 'ML lead',
+  company: 'Analytical Engines',
   email: 'ada@example.com',
   useCase: 'Faster fine-tuning.',
   ...overrides,
 });
 
-test('all four fields are required and email must look valid', () => {
+test('all five fields are required and email must look valid', () => {
   assert.equal(missingField(values()), null);
-  for (const key of ['name', 'role', 'email', 'useCase']) {
+  for (const key of ['name', 'role', 'company', 'email', 'useCase']) {
     assert.equal(missingField(values({ [key]: '  ' })), key);
   }
   assert.equal(missingField(values({ email: 'ada@' })), 'email');

@@ -3,7 +3,7 @@ import { POSTHOG_PROJECT_TOKEN } from '../autolab-posthog-v1.js';
 const POSTHOG_CAPTURE_ENDPOINT = 'https://us.i.posthog.com/i/v0/e/';
 const SCHEDULE_URL = 'https://calendar.superhuman.com/book/11Wx5q95SPgTTclPo4/KrRGA';
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const LIMITS = Object.freeze({ name: 120, role: 120, email: 254, useCase: 2000 });
+const LIMITS = Object.freeze({ name: 120, role: 120, company: 120, email: 254, useCase: 2000 });
 const REQUEST_TIMEOUT_MS = 5000;
 
 function json(body, status, headers = {}) {
@@ -27,6 +27,7 @@ export function normalizeDemoRequest(body) {
   const fields = {
     name: cleanText(body?.name, LIMITS.name),
     role: cleanText(body?.role, LIMITS.role),
+    company: cleanText(body?.company, LIMITS.company),
     email: EMAIL_PATTERN.test(email) ? email : '',
     useCase: cleanText(body?.useCase, LIMITS.useCase),
   };
@@ -38,7 +39,7 @@ function plain(text) {
   return text.replace(/[\\*_~`|>[\]]/g, '\\$&');
 }
 
-export function discordMessage({ name, role, email, useCase }, submittedAt) {
+export function discordMessage({ name, role, company, email, useCase }, submittedAt) {
   return {
     // Never let submitted text ping @everyone, roles or users.
     allowed_mentions: { parse: [] },
@@ -49,6 +50,7 @@ export function discordMessage({ name, role, email, useCase }, submittedAt) {
       fields: [
         { name: 'Name', value: plain(name), inline: true },
         { name: 'Role', value: plain(role), inline: true },
+        { name: 'Company', value: plain(company) },
         { name: 'Work email', value: plain(email) },
       ],
       timestamp: submittedAt,
@@ -107,9 +109,10 @@ export function createDemoHandler({
           distinct_id: fields.email,
           email: fields.email,
           role: fields.role,
+          company: fields.company,
           source: 'demo_page',
           submitted_at: submittedAt,
-          $set: { email: fields.email, role: fields.role },
+          $set: { email: fields.email, role: fields.role, company: fields.company },
         },
       }),
     ]);

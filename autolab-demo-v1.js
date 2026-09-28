@@ -1,4 +1,4 @@
-const FIELDS = ['name', 'role', 'email', 'useCase'];
+const FIELDS = ['name', 'role', 'company', 'email', 'useCase'];
 
 export function isValidEmail(value) {
   const email = value.trim();
@@ -31,7 +31,7 @@ export async function sendDemoRequest({ endpoint, values, website = '', fetchImp
 }
 
 const messages = Object.freeze({
-  invalid: { name: 'Enter your name.', role: 'Enter your role.', email: 'Enter a valid work email.', useCase: 'Tell us a bit about your use case.' },
+  invalid: { name: 'Enter your name.', role: 'Enter your role.', company: 'Enter your company.', email: 'Enter a valid work email.', useCase: 'Tell us a bit about your use case.' },
   pending: 'Sending...',
   failure: 'Could not submit. Try again or email team@autolab.ai.',
 });
@@ -45,6 +45,8 @@ export function initDemoForm(root = document) {
   const link = root.querySelector('[data-demo-schedule]');
   const greeting = root.querySelector('[data-demo-greeting]');
   const view = root.defaultView || window;
+
+  form.addEventListener('input', event => event.target.removeAttribute('aria-invalid'));
 
   form.addEventListener('submit', async event => {
     event.preventDefault();

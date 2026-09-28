@@ -14,6 +14,7 @@ const POSTHOG = 'https://us.i.posthog.com/i/v0/e/';
 const validFields = (overrides = {}) => ({
   name: '  Ada Lovelace ',
   role: 'ML Lead',
+  company: ' Analytical Engines ',
   email: '  Ada@Example.com ',
   useCase: 'Speed up our fine-tuning loop.',
   website: '',
@@ -45,10 +46,11 @@ test('requires all four fields and a valid email', () => {
   assert.deepEqual(normalizeDemoRequest(validFields()), {
     name: 'Ada Lovelace',
     role: 'ML Lead',
+    company: 'Analytical Engines',
     email: 'ada@example.com',
     useCase: 'Speed up our fine-tuning loop.',
   });
-  for (const key of ['name', 'role', 'email', 'useCase']) {
+  for (const key of ['name', 'role', 'company', 'email', 'useCase']) {
     assert.equal(normalizeDemoRequest(validFields({ [key]: '   ' })), null, key);
     assert.equal(normalizeDemoRequest(validFields({ [key]: 42 })), null, key);
   }
@@ -85,9 +87,10 @@ test('a valid request notifies Discord, records PostHog, and returns the schedul
   const posthog = calls.find(call => call.url === POSTHOG);
   assert.deepEqual(discord.body.allowed_mentions, { parse: [] });
   assert.equal(discord.body.embeds[0].description, 'Speed up our fine-tuning loop.');
-  assert.deepEqual(discord.body.embeds[0].fields.map(field => field.value), ['Ada Lovelace', 'ML Lead', 'ada@example.com']);
+  assert.deepEqual(discord.body.embeds[0].fields.map(field => field.value), ['Ada Lovelace', 'ML Lead', 'Analytical Engines', 'ada@example.com']);
   assert.equal(posthog.body.event, 'demo_requested');
   assert.equal(posthog.body.properties.email, 'ada@example.com');
+  assert.equal(posthog.body.properties.company, 'Analytical Engines');
   assert.ok(!JSON.stringify(posthog.body).includes('fine-tuning'), 'free text stays out of analytics');
 });
 
@@ -95,6 +98,7 @@ test('submitted text cannot ping anyone or inject markdown into Discord', () => 
   const message = discordMessage({
     name: '@everyone',
     role: '**boss** [x](https://evil.example)',
+    company: '@here Corp',
     email: 'a@b.co',
     useCase: '@here `code` ||spoiler||',
   }, NOW);
