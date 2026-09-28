@@ -9,7 +9,6 @@ import {
   surfaceAlignmentFor,
   poseForExperiment,
   endingPose,
-  navigationTelemetryFor,
 } from './autolab-a3-motion-v1.js';
 
 const RESEARCH_STATUS = Object.freeze([
@@ -56,8 +55,6 @@ const metricBest = document.querySelector('#metric-best');
 const metricALabel = document.querySelector('#metric-a-label');
 const metricBLabel = document.querySelector('#metric-b-label');
 const researchStatus = run.querySelector('[data-research-status]');
-const navStatus = topbar.querySelector('.nav-status');
-const navStatusCopy = navStatus.querySelector('.nav-status-copy');
 const resultCard = document.querySelector('#result-card');
 const slingshotTear = document.querySelector('#slingshot-tear');
 const rebirthSeed = run.querySelector('.rebirth-seed');
@@ -436,14 +433,6 @@ function updateMetrics() {
   }
 }
 
-function updateNavigationTelemetry() {
-  const telemetry = navigationTelemetryFor(progress);
-  topbar.classList.toggle('has-telemetry', telemetry.visible);
-  navStatus.classList.toggle('is-live', telemetry.visible);
-  navStatus.setAttribute('aria-hidden', String(!telemetry.visible));
-  navStatusCopy.textContent = telemetry.text;
-}
-
 function updatePointer() {
   const rect = run.getBoundingClientRect();
   const inRun = rect.top <= 0 && rect.bottom >= height;
@@ -478,7 +467,6 @@ function updateScroll() {
   updateField();
   updateStory(stageFor(phase));
   updateMetrics();
-  updateNavigationTelemetry();
   progressEl.style.width = `${progress * 100}%`;
 
   updatePointer();

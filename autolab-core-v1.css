@@ -104,8 +104,8 @@ button { color: inherit; font: inherit; }
   display: grid;
   place-items: center;
 }
-.nav-links,.nav-status { grid-area: 1 / 1; }
 .nav-links {
+  grid-area: 1 / 1;
   display: flex;
   align-items: center;
   gap: 28px;
@@ -117,43 +117,6 @@ button { color: inherit; font: inherit; }
 }
 .nav-links a { transition: color .2s; }
 .nav-links a:hover { color: var(--ink); }
-.topbar.has-telemetry .nav-links {
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(-4px) scale(.97);
-  transition: opacity .2s ease,transform .3s cubic-bezier(.2,.75,.2,1),visibility 0s linear .3s;
-}
-.nav-status {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--mint-deep);
-  font: 500 10px/1 "IBM Plex Mono",monospace;
-  letter-spacing: .07em;
-  white-space: nowrap;
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(4px) scale(.96);
-  transform-origin: center;
-  transition: opacity .28s ease, transform .36s cubic-bezier(.2,.75,.2,1), visibility 0s linear .36s;
-}
-.nav-status.is-live {
-  opacity: 1;
-  visibility: visible;
-  transform: none;
-  transition-delay: 0s;
-}
-.nav-status i {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: var(--mint);
-  box-shadow: 0 0 0 5px rgba(47,206,150,.12);
-  animation: status-breathe 2.2s ease-in-out infinite;
-}
-@keyframes status-breathe {
-  50% { box-shadow: 0 0 0 7px rgba(47,206,150,.04),0 0 16px rgba(47,206,150,.28); }
-}
 .nav-actions {
   grid-area: action;
   justify-self: end;
