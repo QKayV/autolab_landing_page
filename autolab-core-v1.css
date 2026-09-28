@@ -95,7 +95,7 @@ button { color: inherit; font: inherit; }
   margin-left: .1em;
   background: var(--mint);
   transform-origin: center;
-  animation: blink 1.08s steps(1) infinite;
+  visibility: hidden; /* still measured by autolab-a3-scene-v1.js as the scroll-animation launch point */
 }
 @keyframes blink { 50% { opacity: 0; } }
 .nav-center {
