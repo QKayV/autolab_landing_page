@@ -1,0 +1,62 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Autolab public intake API",
+    "version": "1.0.0",
+    "description": "Two public form endpoints on autolab.ai: request a demo and request early access. Submissions are reviewed by the Autolab team. Only submit on behalf of a person who has asked you to."
+  },
+  "servers": [{ "url": "https://www.autolab.ai" }],
+  "paths": {
+    "/api/demo": {
+      "post": {
+        "operationId": "requestDemo",
+        "summary": "Request an Autolab demo",
+        "description": "Sends a demo request to the Autolab team. On success returns a scheduling URL for picking a time.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "role", "company", "email", "useCase"],
+                "properties": {
+                  "name": { "type": "string", "maxLength": 120 },
+                  "role": { "type": "string", "maxLength": 120 },
+                  "company": { "type": "string", "maxLength": 120 },
+                  "email": { "type": "string", "format": "email", "maxLength": 254 },
+                  "useCase": { "type": "string", "maxLength": 2000, "description": "What the person wants to improve (model, metric, GPUs)." }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Request received",
+            "content": { "application/json": { "schema": { "type": "object", "properties": { "ok": { "type": "boolean" }, "scheduleUrl": { "type": "string", "format": "uri" } } } } }
+          },
+          "400": { "description": "Invalid or missing fields" }
+        }
+      }
+    },
+    "/api/interest": {
+      "post": {
+        "operationId": "requestEarlyAccess",
+        "summary": "Request early access",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["email"],
+                "properties": { "email": { "type": "string", "format": "email", "maxLength": 254 } }
+              }
+            }
+          }
+        },
+        "responses": { "201": { "description": "Request received" }, "400": { "description": "Invalid email" } }
+      }
+    }
+  }
+}

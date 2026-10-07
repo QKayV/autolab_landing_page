@@ -3,12 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Book a demo | Autolab</title>
+  <title>Book an Autolab Demo | Autonomous AI Model Optimization</title>
   <meta name="description" content="Book a demo of Autolab, the autonomous research platform for improving AI models on your GPUs. Tell us about your use case and pick a time.">
   <meta name="robots" content="index,follow">
   <link rel="canonical" href="https://www.autolab.ai/demo">
-  <meta property="og:title" content="Book a demo | Autolab">
-  <meta property="og:description" content="Book a demo of Autolab and see autonomous AI research running on your GPUs.">
+  <link rel="alternate" type="text/markdown" href="https://www.autolab.ai/md/demo.md">
+  <link rel="ai-catalog" href="/.well-known/ai-catalog.json">
+  <link rel="api-catalog" href="/.well-known/api-catalog">
+  <meta property="og:title" content="Book an Autolab Demo | Autonomous AI Model Optimization">
+  <meta property="og:description" content="Book a demo of Autolab, the autonomous research platform for improving AI models on your GPUs. Tell us about your use case and pick a time.">
   <meta property="og:type" content="website">
   <meta property="og:locale" content="en_US">
   <meta property="og:url" content="https://www.autolab.ai/demo">
@@ -18,8 +21,8 @@
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="Autolab autonomous AI research">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Book a demo | Autolab">
-  <meta name="twitter:description" content="Book a demo of Autolab and see autonomous AI research running on your GPUs.">
+  <meta name="twitter:title" content="Book an Autolab Demo | Autonomous AI Model Optimization">
+  <meta name="twitter:description" content="Book a demo of Autolab, the autonomous research platform for improving AI models on your GPUs. Tell us about your use case and pick a time.">
   <meta name="twitter:image" content="https://www.autolab.ai/og.png">
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='4' fill='%230A0A0A'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='monospace' font-weight='500' font-size='20' fill='%2334d399'%3E/%3C/text%3E%3C/svg%3E">
 <link rel="icon" href="/favicon.ico">
@@ -273,7 +276,7 @@
       <div class="demo-card">
         <div class="demo-card-head"><span>Autolab / demo request</span><span>● booking open</span></div>
 
-        <form action="/api/demo" method="post" data-demo-form data-ph-no-capture novalidate>
+        <form action="/api/demo" method="post" toolname="request_autolab_demo" tooldescription="Request an Autolab demo. Only submit with details the user has confirmed; returns a scheduling link." data-demo-form data-ph-no-capture novalidate>
           <div class="field-trap" aria-hidden="true">
             <label for="demo-website">Website</label>
             <input id="demo-website" type="text" name="website" tabindex="-1" autocomplete="off">
@@ -282,24 +285,24 @@
             <div class="demo-row">
               <div>
                 <label for="demo-name">Your name</label>
-                <input id="demo-name" type="text" name="name" autocomplete="name" maxlength="120" required placeholder="Ada Lovelace">
+                <input toolparamdescription="Full name of the person requesting the demo" id="demo-name" type="text" name="name" autocomplete="name" maxlength="120" required placeholder="Ada Lovelace">
               </div>
               <div>
                 <label for="demo-role">Your role</label>
-                <input id="demo-role" type="text" name="role" autocomplete="organization-title" maxlength="120" required placeholder="ML lead">
+                <input toolparamdescription="Their job role, e.g. ML lead" id="demo-role" type="text" name="role" autocomplete="organization-title" maxlength="120" required placeholder="ML lead">
               </div>
             </div>
             <div>
               <label for="demo-company">Your company</label>
-              <input id="demo-company" type="text" name="company" autocomplete="organization" maxlength="120" required placeholder="Analytical Engines Inc.">
+              <input toolparamdescription="Their company name" id="demo-company" type="text" name="company" autocomplete="organization" maxlength="120" required placeholder="Analytical Engines Inc.">
             </div>
             <div>
               <label for="demo-email">Work email</label>
-              <input id="demo-email" type="email" name="email" autocomplete="email" inputmode="email" maxlength="254" required placeholder="you@company.com">
+              <input toolparamdescription="Work email address" id="demo-email" type="email" name="email" autocomplete="email" inputmode="email" maxlength="254" required placeholder="you@company.com">
             </div>
             <div>
               <label for="demo-use-case">Tell us about your use case</label>
-              <textarea id="demo-use-case" name="useCase" maxlength="2000" required placeholder="What are you trying to improve, and what do you run today?"></textarea>
+              <textarea toolparamdescription="What the user wants to improve and what they run today" id="demo-use-case" name="useCase" maxlength="2000" required placeholder="What are you trying to improve, and what do you run today?"></textarea>
             </div>
           </div>
           <button data-demo-submit type="submit">Continue to scheduling →</button>
@@ -321,5 +324,6 @@
   <script type="module" src="/autolab-demo-v1.js"></script>
   <script type="module" src="/autolab-github-stars-v1.js"></script>
   <script type="module" src="/autolab-posthog-v1.js"></script>
+  <script src="/autolab-webmcp-v1.js" defer></script>
 </body>
 </html>

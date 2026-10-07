@@ -12,6 +12,8 @@ Key facts:
 - Install: `curl -fsSL app.autolab.ai/install.sh | sh`, then `autolab init` and `autolab start`. Integrations exist for Claude Code and Codex.
 - Built by ML researchers from MIT, Harvard, Stanford, Google DeepMind, Imperial College London, Reality Labs, Uber, and AWS. Based in San Francisco, California.
 - Community: Discord at https://discord.gg/2ZVZmE8Ppb
+- Every page is also served as Markdown: send `Accept: text/markdown`, or fetch https://www.autolab.ai/md/<page>.md
+- Machine-readable: [OpenAPI](https://www.autolab.ai/openapi.json), [API catalog](https://www.autolab.ai/.well-known/api-catalog), [AI catalog](https://www.autolab.ai/.well-known/ai-catalog.json), [agent skills](https://www.autolab.ai/.well-known/agent-skills/index.json)
 - Contact: team@autolab.ai
 
 ## Pages
@@ -24,3 +26,5 @@ Key facts:
 - [Research](https://www.autolab.ai/research/): blog posts and research by the Autolab team
 - [How to pick the best model for autoresearch](https://www.autolab.ai/research/blog-1-how-to-pick-the-best-model/): why single runs lie, why rankings do not transfer between problems, and which metric to optimize
 - [Running model comparison](https://www.autolab.ai/research/best-model/): continuously updated benchmark of frontier models on real autoresearch tasks
+- [Book a demo](https://www.autolab.ai/demo): request a demo and pick a time
+- [Early access](https://www.autolab.ai/interest.html): request access to the platform

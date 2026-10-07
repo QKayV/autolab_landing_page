@@ -60,7 +60,7 @@ test('interest page publishes consistent social metadata and appears in the site
   ]);
 
   assert.match(html, /<link rel="canonical" href="https:\/\/www\.autolab\.ai\/interest\.html">/);
-  assert.match(html, /<meta property="og:title" content="Get early access \| Autolab">/);
+  assert.match(html, /<meta property="og:title" content="Get Early Access to Autolab \| Autonomous AI Research">/);
   assert.match(html, /<meta property="og:type" content="website">/);
   assert.match(html, /<meta property="og:url" content="https:\/\/www\.autolab\.ai\/interest\.html">/);
   assert.match(html, /<meta property="og:image" content="https:\/\/www\.autolab\.ai\/og\.png">/);

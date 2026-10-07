@@ -1,7 +1,9 @@
 # autolab.ai — all crawlers welcome, including AI assistants.
+# Content-Signal: search and AI answers/grounding are welcome; model training is not.
 # /.superpowers/ and /docs/ are internal working files, not site content.
 
 User-agent: *
+Content-Signal: ai-train=no, search=yes, ai-input=yes
 Allow: /
 Disallow: /.superpowers/
 Disallow: /docs/

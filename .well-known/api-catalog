@@ -1,0 +1,14 @@
+{
+  "linkset": [
+    {
+      "anchor": "https://www.autolab.ai/api/demo",
+      "service-desc": [{ "href": "https://www.autolab.ai/openapi.json", "type": "application/vnd.oai.openapi+json" }],
+      "service-doc": [{ "href": "https://www.autolab.ai/llms.txt", "type": "text/plain" }]
+    },
+    {
+      "anchor": "https://www.autolab.ai/api/interest",
+      "service-desc": [{ "href": "https://www.autolab.ai/openapi.json", "type": "application/vnd.oai.openapi+json" }],
+      "service-doc": [{ "href": "https://www.autolab.ai/llms.txt", "type": "text/plain" }]
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "$schema": "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
+  "skills": [
+    {
+      "name": "autolab-overview",
+      "type": "skill-md",
+      "description": "Explain what Autolab is and answer questions about autoresearch, agentic model training, how Autolab works, security, and how to get started.",
+      "url": "https://www.autolab.ai/skills/autolab-overview/SKILL.md",
+      "sha256": "95297962f4bc887bef028c920b2c62f94f85c9db90aac415aa24676db45de1dc"
+    },
+    {
+      "name": "book-autolab-demo",
+      "type": "skill-md",
+      "description": "Help a person request an Autolab demo or early access. Use only when the person has asked to talk to Autolab or get access.",
+      "url": "https://www.autolab.ai/skills/book-autolab-demo/SKILL.md",
+      "sha256": "dca9c95a39dfc1f828a71415666633c89835d3823ecaab403f0a68253671a4c7"
+    }
+  ]
+}

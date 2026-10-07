@@ -1,0 +1,53 @@
+{
+  "specVersion": "0.1",
+  "host": {
+    "name": "Autolab",
+    "url": "https://www.autolab.ai/",
+    "description": "Autoresearch platform: autonomous AI agents that plan, run, and score ML experiments on the customer's own GPUs."
+  },
+  "entries": [
+    {
+      "id": "urn:air:autolab.ai:skill:autolab-overview",
+      "displayName": "Autolab overview",
+      "type": "text/markdown",
+      "url": "https://www.autolab.ai/skills/autolab-overview/SKILL.md",
+      "representativeQueries": [
+        "What is Autolab?",
+        "What is autoresearch?",
+        "How is Autolab different from AutoML?",
+        "Can Autolab run on my own GPUs?"
+      ]
+    },
+    {
+      "id": "urn:air:autolab.ai:skill:book-autolab-demo",
+      "displayName": "Book an Autolab demo",
+      "type": "text/markdown",
+      "url": "https://www.autolab.ai/skills/book-autolab-demo/SKILL.md",
+      "representativeQueries": [
+        "Book a demo of Autolab",
+        "How do I get early access to Autolab?",
+        "Talk to the Autolab team"
+      ]
+    },
+    {
+      "id": "urn:air:autolab.ai:api:intake",
+      "displayName": "Autolab public intake API",
+      "type": "application/vnd.oai.openapi+json",
+      "url": "https://www.autolab.ai/openapi.json",
+      "representativeQueries": [
+        "Request an Autolab demo via API",
+        "Submit an early access request to Autolab"
+      ]
+    },
+    {
+      "id": "urn:air:autolab.ai:docs:llms-txt",
+      "displayName": "Autolab site summary (llms.txt)",
+      "type": "text/plain",
+      "url": "https://www.autolab.ai/llms.txt",
+      "representativeQueries": [
+        "Summarize the Autolab website",
+        "What pages does autolab.ai have?"
+      ]
+    }
+  ]
+}
