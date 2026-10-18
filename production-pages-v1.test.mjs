@@ -4,7 +4,6 @@ import { access, readFile } from 'node:fs/promises';
 
 const ROOT = new URL('./', import.meta.url);
 const HOME_URL = new URL('./index.html', ROOT);
-const PRODUCT_URL = new URL('./product.html', ROOT);
 const SOURCE_ROOT = new URL('./.superpowers/brainstorm/39694-1784238160/content/', ROOT);
 
 const approvedFaq = [
@@ -43,24 +42,18 @@ const visibleText = html => html
 
 const readOrEmpty = url => readFile(url, 'utf8').catch(() => '');
 
-test('Vercel root publishes the approved Rebirth homepage and Product page', async () => {
-  const [home, product] = await Promise.all([
-    readOrEmpty(HOME_URL),
-    readOrEmpty(PRODUCT_URL),
-  ]);
+test('Vercel root publishes the approved Rebirth homepage', async () => {
+  const home = await readOrEmpty(HOME_URL);
 
   assert.match(home, /<body data-ending="rebirth">/);
   assert.match(home, /Autolab \/ model improvement loop/);
-  assert.match(home, /href="product\.html"[^>]*>Product<\/a>/);
-  assert.match(product, /<body class="product-page">/);
-  assert.match(product, /href="\/" class="wordmark"/);
-  assert.doesNotMatch(`${home}\n${product}`, /\.superpowers\/|autolab-(?:mog-)?(?:a3-rebirth|product)-v1\.html/);
+  assert.doesNotMatch(home, /href="product\.html"/);
+  assert.doesNotMatch(home, /\.superpowers\/|autolab-(?:mog-)?(?:a3-rebirth|product)-v1\.html/);
 });
 
 test('production pages retain SEO metadata and expose only existing local assets', async () => {
-  const [home, product, sitemap] = await Promise.all([
+  const [home, sitemap] = await Promise.all([
     readOrEmpty(HOME_URL),
-    readOrEmpty(PRODUCT_URL),
     readFile(new URL('./sitemap.xml', ROOT), 'utf8'),
   ]);
 
@@ -72,55 +65,21 @@ test('production pages retain SEO metadata and expose only existing local assets
     '"@type": "SoftwareApplication"',
   ]) assert.ok(home.includes(marker), 'missing homepage metadata: ' + marker);
 
-  for (const marker of [
-    '<link rel="canonical" href="https://www.autolab.ai/product.html">',
-    'property="og:image" content="https://www.autolab.ai/og.png"',
-    'name="twitter:card" content="summary_large_image"',
-    '"@type": "FAQPage"',
-  ]) assert.ok(product.includes(marker), 'missing Product metadata: ' + marker);
-
-  const pages = [home, product];
+  const pages = [home];
   const assetPaths = new Set(pages.flatMap(html => [...html.matchAll(
     /(?:href|src)="([^"?#]+\.(?:css|js))"/g,
   )].map(match => match[1].replace(/^\//, ''))));
   assert.ok(assetPaths.size > 0);
   for (const assetPath of assetPaths) await access(new URL(assetPath, ROOT));
 
-  assert.match(sitemap, /<loc>https:\/\/www\.autolab\.ai\/product\.html<\/loc>/);
-});
-
-test('production Product FAQ matches the approved visible and structured copy', async () => {
-  const product = await readOrEmpty(PRODUCT_URL);
-  const faqSection = product.match(/<section class="product-faq"[\s\S]*?<\/section>/)?.[0] || '';
-  const faqText = visibleText(faqSection);
-  const schemas = [...product.matchAll(
-    /<script type="application\/ld\+json">([\s\S]*?)<\/script>/g,
-  )].map(match => JSON.parse(match[1]));
-  const faqSchema = schemas.find(schema => schema['@type'] === 'FAQPage');
-
-  assert.equal((faqSection.match(/<details/g) || []).length, 6);
-  assert.equal(faqSchema?.mainEntity?.length, 6);
-  let previousQuestion = -1;
-  for (const [index, [question, answer]] of approvedFaq.entries()) {
-    const questionIndex = faqText.indexOf(question);
-    assert.ok(questionIndex > previousQuestion, 'missing or unordered FAQ: ' + question);
-    assert.ok(faqText.includes(answer), 'visible answer differs: ' + question);
-    assert.equal(faqSchema.mainEntity[index].name, question);
-    assert.equal(
-      faqSchema.mainEntity[index].acceptedAnswer.text,
-      answer.replace(/ Read the full explanation →$/, ''),
-    );
-    previousQuestion = questionIndex;
-  }
+  assert.doesNotMatch(sitemap, /product\.html/);
 });
 
 test('landing headers expose the full navigation in the mobile menu', async () => {
   const pages = [
     ['homepage', await readOrEmpty(HOME_URL)],
-    ['product', await readOrEmpty(PRODUCT_URL)],
   ];
   const expectedLinks = [
-    ['Product', /product\.html/],
     ['How it works', /#research-run/],
     ['Research', /(?:research\/index\.html|\/research\/)/],
     ['Careers', /careers\.html/],
@@ -142,16 +101,12 @@ test('promoted modules stay byte-identical to the approved design sources', asyn
     'autolab-core-v1.css',
     'autolab-a3-core-v1.css',
     'autolab-gpu-v1.css',
-    'autolab-product-v1.css',
     'autolab-a3-motion-v1.js',
     'autolab-a3-scene-v1.js',
     'autolab-a3-onboarding-v1.js',
     'autolab-hero-cycle-v1.js',
     'autolab-gpu-motion-v1.js',
     'autolab-gpu-scene-v1.js',
-    'autolab-product-motion-v1.js',
-    'autolab-product-scene-v1.js',
-    'autolab-product-explainer-v2.js',
   ];
 
   for (const asset of promotedAssets) {

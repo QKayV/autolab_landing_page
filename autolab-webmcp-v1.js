@@ -2,7 +2,6 @@
 const ORIGIN = 'https://www.autolab.ai';
 const PAGES = [
   { title: 'Home', url: `${ORIGIN}/`, about: 'Product overview of the autoresearch platform' },
-  { title: 'Product', url: `${ORIGIN}/product.html`, about: 'Illustrated explanation of the complete Autolab research loop' },
   { title: 'What is autoresearch?', url: `${ORIGIN}/autoresearch.html`, about: 'Definition, how agentic model training works, comparison with AutoML' },
   { title: 'Vision', url: `${ORIGIN}/manifesto.html`, about: 'Why AI research is becoming an engineering discipline' },
   { title: 'Research', url: `${ORIGIN}/research/`, about: 'Blog posts and the running model comparison' },

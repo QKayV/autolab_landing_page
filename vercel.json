@@ -4,6 +4,16 @@
       "source": "/demo.html",
       "destination": "/demo",
       "permanent": true
+    },
+    {
+      "source": "/product.html",
+      "destination": "/",
+      "permanent": true
+    },
+    {
+      "source": "/product",
+      "destination": "/",
+      "permanent": true
     }
   ],
   "rewrites": [
@@ -17,28 +27,6 @@
         }
       ],
       "destination": "/md/index.md"
-    },
-    {
-      "source": "/product.html",
-      "has": [
-        {
-          "type": "header",
-          "key": "accept",
-          "value": ".*text/markdown.*"
-        }
-      ],
-      "destination": "/md/product.md"
-    },
-    {
-      "source": "/product",
-      "has": [
-        {
-          "type": "header",
-          "key": "accept",
-          "value": ".*text/markdown.*"
-        }
-      ],
-      "destination": "/md/product.md"
     },
     {
       "source": "/autoresearch.html",

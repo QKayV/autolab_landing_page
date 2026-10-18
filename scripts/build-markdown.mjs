@@ -10,7 +10,6 @@ const ORIGIN = 'https://www.autolab.ai';
 
 export const PAGES = [
   ['index.html', 'index', '/'],
-  ['product.html', 'product', '/product.html'],
   ['autoresearch.html', 'autoresearch', '/autoresearch.html'],
   ['manifesto.html', 'manifesto', '/manifesto.html'],
   ['careers.html', 'careers', '/careers.html'],
